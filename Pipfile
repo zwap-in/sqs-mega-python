@@ -11,4 +11,4 @@ vcrpy = "*"
 boto3 = ">= 1.13"
 
 [requires]
-python_version = ">= 3.7"
+python_version = ">= 3.3"
