@@ -1,3 +1,2 @@
-from .payload import Event, EventObject, Payload
-
+PROTOCOL_NAME = 'mega'
 PROTOCOL_VERSION = 1
