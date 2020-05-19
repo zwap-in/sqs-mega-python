@@ -91,8 +91,9 @@ def test_decode_data_from_valid_json_made_of_plaintext():
         'one': 1,
         'embedded': {
             'a': 'b',
-            'list': ['one', 2, 'three', 49]
-        }
+            'list': ['one', 2.123, 'three', 49, {}]
+        },
+        '1': ['a']
     }
     plaintext = json.dumps(data)
 

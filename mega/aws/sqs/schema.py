@@ -14,7 +14,7 @@ class SqsMessageSchema(Schema):
         unknown = EXCLUDE
 
     message_id = fields.String(data_key='MessageId', required=True, allow_none=False)
-    topic_arn = fields.String(data_key='ReceiptHandle', required=True, allow_none=False)
+    receipt_handle = fields.String(data_key='ReceiptHandle', required=True, allow_none=False)
     body = fields.String(data_key='Body', required=True, allow_none=False)
 
     @post_load

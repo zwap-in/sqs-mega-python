@@ -221,16 +221,6 @@ def assert_mega_payload_matches_data(mega_payload, data):
     assert mega_payload.extra == data['extra']
 
 
-def test_deserialize_sns_notification_without_subject():
-    data = build_sns_notification_data()
-    del data['Subject']
-
-    message = deserialize_sns_message(data)
-
-    assert_is_sns_notification(message)
-    assert message.subject is None
-
-
 def test_deserialize_sns_notification_with_plaintext_payload():
     plaintext = 'Hello world!'
     data = build_sns_notification_data(Message=plaintext)
@@ -313,6 +303,16 @@ def test_deserialize_sns_notification_with_mega_payload_over_binary_bson():
     assert_sns_notification_matches_data_attributes(message, data)
     assert_has_mega_payload(message)
     assert_mega_payload_matches_data(message.payload, mega_data)
+
+
+def test_deserialize_sns_notification_without_subject():
+    data = build_sns_notification_data()
+    del data['Subject']
+
+    message = deserialize_sns_message(data)
+
+    assert_is_sns_notification(message)
+    assert message.subject is None
 
 
 def test_deserialize_sns_subscription_confirmation():

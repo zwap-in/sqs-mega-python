@@ -94,3 +94,47 @@ def test_create_event_object_without_optional_attribute_should_use_default(attri
 
     event_object = EventObject(**kwargs)
     assert getattr(event_object, attribute_name) == expected_default
+
+
+def test_objects_are_equal_when_all_attributes_are_equal():
+    kwargs = build_event_object_kwargs()
+
+    this = EventObject(**kwargs)
+    that = EventObject(**kwargs)
+
+    assert this.__eq__(that) is True
+    assert that.__eq__(this) is True
+    assert this == that
+    assert not (this != that)
+
+
+@parameterized.expand([
+    ['current', {'some': 'thing', 'else': True}],
+    ['type', 'another_type'],
+    ['id', 'some_other_id'],
+    ['version', 666],
+    ['previous', {'foo': 'bar'}],
+])
+def test_objects_are_not_equal_if_one_attribute_is_different(attribute_name, different_value):
+    this_kwargs = build_event_object_kwargs()
+    this = EventObject(**this_kwargs)
+
+    that_kwargs = build_event_object_kwargs()
+    that_kwargs[attribute_name] = different_value
+    that = EventObject(**that_kwargs)
+
+    assert this.__eq__(that) is False
+    assert that.__eq__(this) is False
+    assert this != that
+    assert not (this == that)
+
+
+@parameterized.expand([
+    [None],
+    [1],
+    [object()],
+    ['foobar']
+])
+def test_an_object_is_not_equal_to(another_thing):
+    event_object = EventObject(**build_event_object_kwargs())
+    assert event_object != another_thing

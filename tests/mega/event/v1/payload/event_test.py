@@ -69,3 +69,49 @@ def test_create_event_with_additional_kwargs_should_be_added_to_the_event_attrib
         'foo': 'bar',
         'test': 123
     }
+
+
+def test_events_are_equal_when_all_attributes_are_equal():
+    kwargs = build_event_kwargs()
+
+    this = Event(**kwargs)
+    that = Event(**kwargs)
+
+    assert this.__eq__(that) is True
+    assert that.__eq__(this) is True
+    assert this == that
+    assert not (this != that)
+
+
+@parameterized.expand([
+    ['name', 'some_other_event_name'],
+    ['timestamp', dateutil.parser.parse('2020-05-10T14:30:05.123Z')],
+    ['version', 10],
+    ['domain', 'a_different_domain'],
+    ['subject', 'a_different_subject'],
+    ['publisher', 'a_different_publisher'],
+    ['attributes', {'some': 'thing', 'different': True}]
+])
+def test_events_are_not_equal_if_one_attribute_is_different(attribute_name, different_value):
+    this_kwargs = build_event_kwargs()
+    this = Event(**this_kwargs)
+
+    that_kwargs = build_event_kwargs()
+    that_kwargs[attribute_name] = different_value
+    that = Event(**that_kwargs)
+
+    assert this.__eq__(that) is False
+    assert that.__eq__(this) is False
+    assert this != that
+    assert not (this == that)
+
+
+@parameterized.expand([
+    [None],
+    [1],
+    [object()],
+    ['foobar']
+])
+def test_an_event_is_not_equal_to(another_thing):
+    event = Event(**build_event_kwargs())
+    assert event != another_thing

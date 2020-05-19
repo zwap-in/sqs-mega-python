@@ -29,6 +29,20 @@ class Event:
         self.attributes.update(attributes or {})
         self.attributes.update(kwargs or {})
 
+    def __eq__(self, other):
+        if not isinstance(other, Event):
+            return NotImplemented
+
+        return (
+                self.name == other.name and
+                self.timestamp == other.timestamp and
+                self.version == other.version and
+                self.domain == other.domain and
+                self.subject == other.subject and
+                self.publisher == other.publisher and
+                self.attributes == other.attributes
+        )
+
 
 class EventObject:
     DEFAULT_VERSION = 1
@@ -46,6 +60,18 @@ class EventObject:
         self.id = id
         self.version = version if version else self.DEFAULT_VERSION
         self.previous = previous
+
+    def __eq__(self, other):
+        if not isinstance(other, EventObject):
+            return NotImplemented
+
+        return (
+                self.current == other.current and
+                self.type == other.type and
+                self.id == other.id and
+                self.version == other.version and
+                self.previous == other.previous
+        )
 
 
 class MegaPayload:
@@ -65,3 +91,13 @@ class MegaPayload:
         self.extra = {}
         self.extra.update(extra or {})
         self.extra.update(kwargs or {})
+
+    def __eq__(self, other):
+        if not isinstance(other, MegaPayload):
+            return NotImplemented
+
+        return (
+                self.event == other.event and
+                self.object == other.object and
+                self.extra == other.extra
+        )
