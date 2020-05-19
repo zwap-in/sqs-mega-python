@@ -31,7 +31,7 @@ class SnsMessageSchema(Schema):
     subscribe_url = fields.String(data_key='SubscribeURL', required=False)
 
     @post_load
-    def make_object(self, data, **_kwargs):
+    def make_object(self, data, **kwargs):
         type_ = data['type']
 
         if type_ == SnsMessageType.NOTIFICATION.value:

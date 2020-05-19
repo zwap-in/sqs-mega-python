@@ -21,7 +21,7 @@ class EventSchema(Schema):
     attributes = fields.Dict(keys=fields.String(), required=False, allow_none=True, default={})
 
     @post_load
-    def make_object(self, data, **_kwargs):
+    def make_object(self, data, **kwargs):
         return Event(**data)
 
     def handle_error(self, exc, data, **kwargs):
@@ -39,7 +39,7 @@ class EventObjectSchema(Schema):
     previous = fields.Dict(required=False, allow_none=True, default=None)
 
     @post_load
-    def make_object(self, data, **_kwargs):
+    def make_object(self, data, **kwargs):
         return EventObject(**data)
 
     def handle_error(self, exc, data, **kwargs):
@@ -57,7 +57,7 @@ class MegaPayloadSchema(Schema):
     extra = fields.Dict(keys=fields.String(), required=False, allow_none=True, default={})
 
     @post_load
-    def make_object(self, data, **_kwargs):
+    def make_object(self, data, **kwargs):
         return MegaPayload(**data)
 
     def handle_error(self, exc, data, **kwargs):
