@@ -64,5 +64,5 @@ class MegaPayloadSchema(Schema):
         raise MegaSchemaError("Invalid MEGA payload: {0}".format(exc))
 
 
-def deserialize_mega_payload(data: dict):
+def deserialize_mega_payload(data: dict) -> MegaPayload:
     return MegaPayloadSchema().load(data)

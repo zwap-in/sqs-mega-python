@@ -2,18 +2,18 @@ from typing import Optional
 
 from mega.aws.message import Message, PayloadType, Payload, MessageType
 from mega.aws.payload import parse_payload
-from mega.aws.sns.message import SnsMessage
-
-
 # TODO: test
+from mega.aws.sns.schema import matches_sns_message, deserialize_sns_message
+
+
 class SqsMessage(Message):
     def __init__(self, message_id: str, receipt_handle: str, body: str):
-        self._id = message_id
+        self._message_id = message_id
         self._receipt_handle = receipt_handle
 
         payload, payload_type = parse_payload(body)
-        if payload_type == PayloadType.DATA and SnsMessage.matches(payload):
-            sns = SnsMessage.deserialize(payload)
+        if payload_type == PayloadType.DATA and matches_sns_message(payload):
+            sns = deserialize_sns_message(payload)
             self._payload = sns.payload
             self._payload_type = sns.payload_type
             self._embedded_message = sns
@@ -23,28 +23,28 @@ class SqsMessage(Message):
             self._embedded_message = None
 
     @property
-    def id(self) -> str:
-        return self._id
+    def message_id(self) -> str:
+        return self._message_id
 
     @property
-    def type(self) -> MessageType:
+    def message_type(self) -> MessageType:
         return MessageType.SQS
-
-    @property
-    def receipt_handle(self) -> str:
-        return self._receipt_handle
 
     @property
     def payload_type(self) -> PayloadType:
         return self._payload_type
 
     @property
-    def payload(self) -> Payload:
+    def payload(self) -> Optional[Payload]:
         return self._payload
 
     @property
     def embedded_message(self) -> Optional[Message]:
         return self._embedded_message
+
+    @property
+    def receipt_handle(self) -> str:
+        return self._receipt_handle
 
     # TODO: test
     @classmethod

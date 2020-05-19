@@ -8,6 +8,7 @@ Payload = Union[bytes, str, dict, MegaPayload]
 
 
 class PayloadType(Enum):
+    NONE = 0
     BINARY = 1
     PLAINTEXT = 2
     DATA = 4

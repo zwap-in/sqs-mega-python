@@ -1,42 +1,53 @@
+from abc import ABC, abstractmethod
 from datetime import datetime
+from enum import Enum
 from typing import Optional
 
-from dateutil import parser
-
-from mega.aws.message import Message, PayloadType, Payload, MessageType
-from mega.aws.payload import parse_payload
+from mega.aws.message import Message, MessageType
+from mega.aws.payload import PayloadType, Payload
 
 
-# TODO: test
-class SnsMessage(Message):
-    def __init__(self, message_id: str, topic_arn: str, timestamp: datetime, raw_message: str):
+class SnsMessageType(Enum):
+    NOTIFICATION = 'Notification'
+    SUBSCRIPTION_CONFIRMATION = 'SubscriptionConfirmation'
+    UNSUBSCRIBE_CONFIRMATION = 'UnsubscribeConfirmation'
+
+    @classmethod
+    def values(cls):
+        return (
+            cls.NOTIFICATION.value,
+            cls.SUBSCRIPTION_CONFIRMATION.value,
+            cls.UNSUBSCRIBE_CONFIRMATION.value
+        )
+
+
+class SnsMessage(Message, ABC):
+    def __init__(
+            self,
+            message_id: str,
+            topic_arn: str,
+            timestamp: datetime
+    ):
         self._message_id = message_id
         self._topic_arn = topic_arn
         self._timestamp = timestamp
 
-        payload, payload_type = parse_payload(raw_message)
-        self._payload = payload
-        self._payload_type = payload_type
-
     @property
-    def id(self) -> str:
+    def message_id(self) -> str:
         return self._message_id
 
     @property
-    def type(self) -> MessageType:
+    def message_type(self) -> MessageType:
         return MessageType.SNS
-
-    @property
-    def payload_type(self) -> PayloadType:
-        return self._payload_type
-
-    @property
-    def payload(self) -> Payload:
-        return self._payload
 
     @property
     def embedded_message(self) -> Optional[Message]:
         return None
+
+    @property
+    @abstractmethod
+    def sns_message_type(self) -> SnsMessageType:
+        pass
 
     @property
     def topic_arn(self) -> str:
@@ -46,22 +57,98 @@ class SnsMessage(Message):
     def timestamp(self) -> datetime:
         return self._timestamp
 
-    # TODO: test
-    @classmethod
-    def matches(cls, data: dict):
-        return (
-                'MessageId' in data and
-                'TopicArn' in data and
-                'Message' in data and
-                'Timestamp' in data
-        )
 
-    # TODO: test
-    @classmethod
-    def deserialize(cls, data: dict):
-        return SnsMessage(
-            message_id=data['MessageId'],
-            topic_arn=data['TopicArn'],
-            timestamp=parser.parse(data['Timestamp']),
-            raw_message=data['Message']
+class SnsNotification(SnsMessage):
+
+    def __init__(
+            self,
+            message_id: str,
+            topic_arn: str,
+            timestamp: datetime,
+            payload: Payload,
+            payload_type: PayloadType,
+            subject: Optional[str],
+            unsubscribe_url: str
+    ):
+        super().__init__(
+            message_id=message_id,
+            topic_arn=topic_arn,
+            timestamp=timestamp
         )
+        self._payload = payload
+        self._payload_type = payload_type
+        self._subject = subject
+        self._unsubscribe_url = unsubscribe_url
+
+    @property
+    def sns_message_type(self) -> SnsMessageType:
+        return SnsMessageType.NOTIFICATION
+
+    @property
+    def payload_type(self) -> PayloadType:
+        return self._payload_type
+
+    @property
+    def payload(self) -> Optional[Payload]:
+        return self._payload
+
+    @property
+    def subject(self) -> Optional[str]:
+        return self._subject
+
+    @property
+    def unsubscribe_url(self) -> str:
+        return self._unsubscribe_url
+
+
+class SnsConfirmation(SnsMessage, ABC):
+
+    def __init__(
+            self,
+            message_id: str,
+            topic_arn: str,
+            timestamp: datetime,
+            token: str,
+            subscribe_url: str,
+            raw_message: str
+    ):
+        super().__init__(
+            message_id=message_id,
+            topic_arn=topic_arn,
+            timestamp=timestamp
+        )
+        self._token = token
+        self._subscribe_url = subscribe_url
+        self._raw_message = raw_message
+
+    @property
+    def payload_type(self) -> PayloadType:
+        return PayloadType.NONE
+
+    @property
+    def payload(self) -> Optional[Payload]:
+        return None
+
+    @property
+    def token(self) -> str:
+        return self._token
+
+    @property
+    def subscribe_url(self) -> str:
+        return self._subscribe_url
+
+    @property
+    def raw_message(self) -> str:
+        return self._raw_message
+
+
+class SnsSubscriptionConfirmation(SnsConfirmation):
+    @property
+    def sns_message_type(self) -> SnsMessageType:
+        return SnsMessageType.SUBSCRIPTION_CONFIRMATION
+
+
+class SnsUnsubscribeConfirmation(SnsConfirmation):
+    @property
+    def sns_message_type(self) -> SnsMessageType:
+        return SnsMessageType.UNSUBSCRIBE_CONFIRMATION

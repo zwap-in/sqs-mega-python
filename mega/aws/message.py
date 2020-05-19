@@ -11,27 +11,27 @@ class MessageType(Enum):
 
 
 class Message(ABC):
-    @abstractmethod
     @property
-    def id(self) -> str:
+    @abstractmethod
+    def message_id(self) -> str:
         pass
 
-    @abstractmethod
     @property
-    def type(self) -> MessageType:
+    @abstractmethod
+    def message_type(self) -> MessageType:
         pass
 
-    @abstractmethod
     @property
+    @abstractmethod
     def payload_type(self) -> PayloadType:
         pass
 
-    @abstractmethod
     @property
-    def payload(self) -> Payload:
+    @abstractmethod
+    def payload(self) -> Optional[Payload]:
         pass
 
-    @abstractmethod
     @property
+    @abstractmethod
     def embedded_message(self) -> Optional['Message']:
         pass
