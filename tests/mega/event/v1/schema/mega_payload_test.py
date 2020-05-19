@@ -137,7 +137,7 @@ def test_mega_payload_matches_data_when_protocol_and_version_match():
         'protocol': 'mega',
         'version': 1
     }
-    assert MegaPayload.matches(data) is True
+    assert matches_mega_payload(data) is True
 
 
 @parameterized.expand([

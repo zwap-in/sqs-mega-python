@@ -1,7 +1,7 @@
 from typing import Optional
 
 from mega.aws.message import Message, PayloadType, Payload, MessageType
-from mega.aws.payload import parse_payload
+from mega.aws.payload import deserialize_payload
 # TODO: test
 from mega.aws.sns.schema import matches_sns_message, deserialize_sns_message
 
@@ -11,7 +11,7 @@ class SqsMessage(Message):
         self._message_id = message_id
         self._receipt_handle = receipt_handle
 
-        payload, payload_type = parse_payload(body)
+        payload, payload_type = deserialize_payload(body)
         if payload_type == PayloadType.DATA and matches_sns_message(payload):
             sns = deserialize_sns_message(payload)
             self._payload = sns.payload

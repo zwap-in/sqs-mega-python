@@ -27,7 +27,7 @@ def try_decode_json(plaintext: Union[str, bytes]) -> Tuple[Optional[dict], Optio
         return None, e
 
 
-def decode(plaintext: str) -> Union[bytes, str, dict]:
+def decode_value(plaintext: str) -> Union[bytes, str, dict]:
     blob, _ = try_decode_base64(plaintext)
     if blob:
         data, _ = try_decode_bson(blob)

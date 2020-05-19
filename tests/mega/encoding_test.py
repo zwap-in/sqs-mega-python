@@ -4,7 +4,7 @@ from base64 import b64encode
 
 import bson
 
-from mega.aws.decoding import try_decode_base64, try_decode_bson, try_decode_json, decode
+from mega.aws.encoding import try_decode_base64, try_decode_bson, try_decode_json, decode_value
 
 
 def test_decode_bytes_from_valid_base64():
@@ -153,7 +153,7 @@ def test_do_not_decode_data_from_invalid_json_made_of_bytes():
 
 def test_decode_plaintext():
     plaintext = 'the quick brown fox jumps over the lazy dog'
-    decoded = decode(plaintext)
+    decoded = decode_value(plaintext)
 
     assert type(decoded) == str
     assert decoded == plaintext
@@ -167,7 +167,7 @@ def test_decode_binary():
     )
 
     plaintext = b64encode(blob).decode()
-    decoded = decode(plaintext)
+    decoded = decode_value(plaintext)
 
     assert type(decoded) == bytes
     assert decoded == blob
@@ -182,7 +182,7 @@ def test_decode_data_from_plaintext_json():
     }
 
     plaintext = json.dumps(data)
-    decoded = decode(plaintext)
+    decoded = decode_value(plaintext)
 
     assert type(decoded) == dict
     assert decoded == data
@@ -198,7 +198,7 @@ def test_decode_data_from_base64_encoded_binary_bson():
 
     blob = bson.dumps(data)
     plaintext = b64encode(blob).decode()
-    decoded = decode(plaintext)
+    decoded = decode_value(plaintext)
 
     assert type(decoded) == dict
     assert decoded == data

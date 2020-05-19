@@ -1,6 +1,6 @@
 from marshmallow import Schema, EXCLUDE, fields, post_load, validate
 
-from mega.aws.payload import parse_payload
+from mega.aws.payload import deserialize_payload
 from mega.aws.sns.message import SnsMessage, SnsMessageType, SnsNotification, SnsSubscriptionConfirmation, \
     SnsUnsubscribeConfirmation
 
@@ -45,7 +45,7 @@ class SnsMessageSchema(Schema):
 
     @staticmethod
     def __build_sns_notification(data):
-        payload, payload_type = parse_payload(data['message'])
+        payload, payload_type = deserialize_payload(data['message'])
         return SnsNotification(
             message_id=data['message_id'],
             topic_arn=data['topic_arn'],

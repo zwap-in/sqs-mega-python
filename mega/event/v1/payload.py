@@ -65,10 +65,3 @@ class MegaPayload:
         self.extra = {}
         self.extra.update(extra or {})
         self.extra.update(kwargs or {})
-
-    @classmethod
-    def matches(cls, data: dict):
-        return (
-                data.get('protocol') == cls.protocol and
-                data.get('version') == cls.version
-        )

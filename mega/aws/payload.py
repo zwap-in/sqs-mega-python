@@ -1,8 +1,8 @@
 from enum import Enum
 from typing import Tuple, Union
 
-from mega.aws.decoding import decode
-from mega.event import MegaPayload, deserialize_mega_payload
+from mega.aws.encoding import decode_value
+from mega.event import MegaPayload, deserialize_mega_payload, matches_mega_payload
 
 Payload = Union[bytes, str, dict, MegaPayload]
 
@@ -15,19 +15,17 @@ class PayloadType(Enum):
     MEGA = 5
 
 
-# TODO: test
-def parse_payload(body) -> Tuple[Payload, PayloadType]:
-    decoded = decode(body)
-    _type = type(decoded)
-    if _type == bytes:
-        return decoded, PayloadType.BINARY
-    elif _type == str:
-        return decoded, PayloadType.PLAINTEXT
-    elif _type == dict:
-        data = decoded
-        if MegaPayload.matches(data):
-            return deserialize_mega_payload(data), PayloadType.MEGA
-        else:
-            return data, PayloadType.DATA
-    else:
-        raise ValueError("Don't know how to parse: {}".format(_type))
+def deserialize_payload(plaintext: str) -> Tuple[Payload, PayloadType]:
+    value = decode_value(plaintext)
+    value_type = type(value)
+
+    if value_type == bytes:
+        return value, PayloadType.BINARY
+    elif value_type == str:
+        return value, PayloadType.PLAINTEXT
+    elif value_type == dict:
+        if matches_mega_payload(value):
+            return deserialize_mega_payload(value), PayloadType.MEGA
+        return value, PayloadType.DATA
+
+    raise ValueError("Don't know how to deserialize payload with value: {}".format(value_type))
