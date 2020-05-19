@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Tuple, Union
 
-from mega.aws.decoding import decode_string
+from mega.aws.decoding import decode
 from mega.event import MegaPayload, deserialize_mega_payload
 
 Payload = Union[bytes, str, dict, MegaPayload]
@@ -17,7 +17,7 @@ class PayloadType(Enum):
 
 # TODO: test
 def parse_payload(body) -> Tuple[Payload, PayloadType]:
-    decoded = decode_string(body)
+    decoded = decode(body)
     _type = type(decoded)
     if _type == bytes:
         return decoded, PayloadType.BINARY

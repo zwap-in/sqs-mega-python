@@ -27,18 +27,15 @@ def try_decode_json(plaintext: Union[str, bytes]) -> Tuple[Optional[dict], Optio
         return None, e
 
 
-# TODO: test
-def decode_string(plaintext: str) -> Union[bytes, str, dict]:
+def decode(plaintext: str) -> Union[bytes, str, dict]:
     blob, _ = try_decode_base64(plaintext)
     if blob:
         data, _ = try_decode_bson(blob)
         if data is not None:
             return data
-        else:
-            return blob
+        return blob
     else:
         data, _ = try_decode_json(plaintext)
         if data is not None:
             return data
-        else:
-            return plaintext
+        return plaintext
