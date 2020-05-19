@@ -28,7 +28,7 @@ def test_do_not_decode_invalid_base64_made_of_bytes():
     decoded, error = try_decode_base64(blob)
     assert decoded is None
     assert type(error) == binascii.Error
-    assert str(error) == 'Incorrect padding'
+    assert str(error) == 'Non-base64 digit found'
 
 
 def test_do_not_decode_invalid_base64_made_of_plaintext():
@@ -37,7 +37,7 @@ def test_do_not_decode_invalid_base64_made_of_plaintext():
     decoded, error = try_decode_base64(plaintext)
     assert decoded is None
     assert type(error) == binascii.Error
-    assert str(error) == 'Incorrect padding'
+    assert str(error) == 'Non-base64 digit found'
 
 
 def test_decode_data_from_valid_bson():
@@ -152,7 +152,7 @@ def test_do_not_decode_data_from_invalid_json_made_of_bytes():
 
 
 def test_decode_plaintext():
-    plaintext = 'the quick brown fox jumps over the lazy dog'
+    plaintext = '{"the quick brown fox jumps overt the lazy dog!"}'
     decoded = decode_value(plaintext)
 
     assert type(decoded) == str
