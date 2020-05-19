@@ -8,7 +8,7 @@ class SqsMessage(Message):
             self,
             message_id: str,
             receipt_handle: str,
-            payload: Payload,
+            payload: Optional[Payload],
             payload_type: PayloadType,
             embedded_message: Optional[Message] = None
     ):
