@@ -66,3 +66,13 @@ class MegaPayloadSchema(Schema):
 
 def deserialize_mega_payload(data: dict) -> MegaPayload:
     return MegaPayloadSchema().load(data)
+
+
+def matches_mega_payload(data: dict) -> bool:
+    if not data:
+        return False
+
+    return (
+            data.get('protocol') == PROTOCOL_NAME and
+            data.get('version') == PROTOCOL_VERSION
+    )

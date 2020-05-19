@@ -3,7 +3,7 @@ import pytest
 from parameterized import parameterized
 
 from mega.event.v1.payload import EventObject, Event, MegaPayload
-from mega.event.v1.schema import deserialize_mega_payload, MegaSchemaError
+from mega.event.v1.schema import deserialize_mega_payload, MegaSchemaError, matches_mega_payload
 from tests.mega.event.v1.schema.event_object_test import build_event_object_data
 from tests.mega.event.v1.schema.event_test import build_event_data
 
@@ -130,3 +130,59 @@ def test_fail_to_deserialize_mega_payload_data_with_invalid_object_section():
 
     assert str(e.value) == "Invalid MEGA payload. Could not deserialize the 'object' section: " \
                            "{'current': ['Field may not be null.']}"
+
+
+def test_mega_payload_matches_data_when_protocol_and_version_match():
+    data = {
+        'protocol': 'mega',
+        'version': 1
+    }
+    assert MegaPayload.matches(data) is True
+
+
+@parameterized.expand([
+    [None],
+    [''],
+    ['MEGA'],
+    ['Mega'],
+    ['MeGa'],
+    ['_mega'],
+    [' mega'],
+    ['mega_'],
+    ['123foobar']
+])
+def test_mega_payload_does_not_match_data_when_protocol_is(protocol):
+    data = {
+        'protocol': protocol,
+        'version': 1
+    }
+    assert matches_mega_payload(data) is False
+
+
+@parameterized.expand([
+    [None],
+    ['1'],
+    [2],
+    [0],
+    [-1]
+])
+def test_mega_payload_does_not_match_data_when_version_is(version):
+    data = {
+        'protocol': 'mega',
+        'version': version
+    }
+    assert matches_mega_payload(data) is False
+
+
+def test_mega_payload_does_match_data_when_protocol_is_missing():
+    data = {'version': 1}
+    assert matches_mega_payload(data) is False
+
+
+def test_mega_payload_does_match_data_when_version_is_missing():
+    data = {'protocol': 'mega'}
+    assert matches_mega_payload(data) is False
+
+
+def test_null_does_not_match_mega_payload():
+    assert matches_mega_payload(None) is False
