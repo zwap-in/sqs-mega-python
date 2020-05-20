@@ -1,10 +1,11 @@
 import binascii
 import json
-from base64 import b64encode
+from base64 import b64encode, b64decode
 
 import bson
 
-from mega.aws.encoding import try_decode_base64, try_decode_bson, try_decode_json, decode_value
+from mega.aws.encoding import try_decode_base64, try_decode_bson, try_decode_json, decode_value, encode_blob, \
+    encode_json, encode_bson, encode_data
 
 
 def test_decode_bytes_from_valid_base64():
@@ -203,3 +204,58 @@ def test_decode_data_from_base64_encoded_binary_bson():
 
     assert type(decoded) == dict
     assert decoded == data
+
+
+def test_encode_blob():
+    blob = b'\x9cz\xab\xb5\x04\x97\x8e\xdf^cr\x81\xb1\x83s\xf2\xb0\xa1[2\xd0\x9f|V\xb0\xc3'
+    encoded = encode_blob(blob)
+    assert b64decode(encoded) == blob
+
+
+def test_encode_json():
+    data = {
+        'foo': 'bar',
+        'one': 123,
+        'two': {'aha': True},
+        'three': [1, 2, 3, 'four']
+    }
+    encoded = encode_json(data)
+    assert json.loads(encoded) == data
+
+
+def test_encode_bson():
+    data = {
+        'foo': 'bar',
+        'one': 123,
+        'two': {'aha': True},
+        'three': [1, 2, 3, 'four']
+    }
+    encoded = encode_bson(data)
+
+    decoded = b64decode(encoded)
+    assert bson.loads(decoded) == data
+
+
+def test_encode_data_using_plaintext_encoding():
+    data = {
+        'foo': 'bar',
+        'one': 123,
+        'two': {'aha': True},
+        'three': [1, 2, 3, 'four']
+    }
+    encoded = encode_data(data)
+
+    assert json.loads(encoded) == data
+
+
+def test_encode_data_using_binary_encoding():
+    data = {
+        'foo': 'bar',
+        'one': 123,
+        'two': {'aha': True},
+        'three': [1, 2, 3, 'four']
+    }
+    encoded = encode_data(data, binary_encoding=True)
+
+    decoded = b64decode(encoded)
+    assert bson.loads(decoded) == data
