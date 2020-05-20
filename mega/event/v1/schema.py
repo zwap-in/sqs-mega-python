@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load, EXCLUDE
+from marshmallow import Schema, fields, post_load, EXCLUDE, post_dump
 
 from mega.event.v1 import PROTOCOL_VERSION, PROTOCOL_NAME
 from mega.event.v1.payload import MegaPayload, EventObject, Event
@@ -8,10 +8,19 @@ class MegaSchemaError(Exception):
     pass
 
 
-class EventSchema(Schema):
+class BaseSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
+    @post_dump
+    def remove_empty_attributes(self, data, **kwargs):
+        return {
+            key: value for key, value in data.items()
+            if value not in (None, {})
+        }
+
+
+class EventSchema(BaseSchema):
     name = fields.String(required=True, allow_none=False)
     timestamp = fields.DateTime(format='iso', required=True, allow_none=False)
     version = fields.Integer(required=False, allow_none=True, default=1)
@@ -25,13 +34,10 @@ class EventSchema(Schema):
         return Event(**data)
 
     def handle_error(self, exc, data, **kwargs):
-        raise MegaSchemaError("Invalid MEGA payload. Could not deserialize the 'event' section: {0}".format(exc))
+        raise MegaSchemaError("Invalid MEGA payload. There is an error in the 'event' section: {0}".format(exc))
 
 
-class EventObjectSchema(Schema):
-    class Meta:
-        unknown = EXCLUDE
-
+class EventObjectSchema(BaseSchema):
     type = fields.String(required=False, allow_none=True, default=None)
     id = fields.String(required=False, allow_none=True, default=None)
     version = fields.Integer(required=False, allow_none=True, default=1)
@@ -43,13 +49,10 @@ class EventObjectSchema(Schema):
         return EventObject(**data)
 
     def handle_error(self, exc, data, **kwargs):
-        raise MegaSchemaError("Invalid MEGA payload. Could not deserialize the 'object' section: {0}".format(exc))
+        raise MegaSchemaError("Invalid MEGA payload. There is an error in the 'object' section: {0}".format(exc))
 
 
-class MegaPayloadSchema(Schema):
-    class Meta:
-        unknown = EXCLUDE
-
+class MegaPayloadSchema(BaseSchema):
     protocol = fields.Constant(PROTOCOL_NAME, dump_only=True)
     version = fields.Constant(PROTOCOL_VERSION, dump_only=True)
     event = fields.Nested(EventSchema, required=True)
@@ -64,10 +67,6 @@ class MegaPayloadSchema(Schema):
         raise MegaSchemaError("Invalid MEGA payload: {0}".format(exc))
 
 
-def deserialize_mega_payload(data: dict) -> MegaPayload:
-    return MegaPayloadSchema().load(data)
-
-
 def matches_mega_payload(data: dict) -> bool:
     if not data:
         return False
@@ -76,3 +75,14 @@ def matches_mega_payload(data: dict) -> bool:
             data.get('protocol') == PROTOCOL_NAME and
             data.get('version') == PROTOCOL_VERSION
     )
+
+
+def deserialize_mega_payload(data: dict) -> MegaPayload:
+    return MegaPayloadSchema().load(data)
+
+
+def serialize_mega_payload(payload: MegaPayload) -> dict:
+    schema = MegaPayloadSchema()
+    data = schema.dump(payload)
+    schema.validate(data)
+    return data

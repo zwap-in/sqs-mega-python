@@ -8,6 +8,14 @@ from mega.event.v1.payload import Event
 from mega.event.v1.schema import EventSchema, MegaSchemaError
 
 
+def build_event_attributes():
+    return {
+        'item_id': '61fcc874-624e-40f8-8fd7-0e663c7837e8',
+        'quantity': 5,
+        'active': True
+    }
+
+
 def build_event_data(**kwargs):
     data = {
         'name': 'shopping_cart.item.added',
@@ -16,10 +24,7 @@ def build_event_data(**kwargs):
         'domain': 'shopping_cart',
         'subject': '987650',
         'publisher': 'shopping-cart-service',
-        'attributes': {
-            'item_id': '61fcc874-624e-40f8-8fd7-0e663c7837e8',
-            'quantity': 5
-        }
+        'attributes': build_event_attributes()
     }
     data.update(kwargs)
     return data
@@ -103,7 +108,7 @@ def test_fail_to_deserialize_event_data_without_required_attribute(attribute_key
         EventSchema().load(data)
 
     assert str(e.value) == (
-        "Invalid MEGA payload. Could not deserialize the 'event' section: "
+        "Invalid MEGA payload. There is an error in the 'event' section: "
         "{{'{0}': ['Missing data for required field.']}}".format(attribute_key)
     )
 
@@ -120,7 +125,7 @@ def test_fail_to_deserialize_event_data_with_required_attribute_set_to_null(attr
         EventSchema().load(data)
 
     assert str(e.value) == (
-        "Invalid MEGA payload. Could not deserialize the 'event' section: "
+        "Invalid MEGA payload. There is an error in the 'event' section: "
         "{{'{0}': ['Field may not be null.']}}".format(attribute_key)
     )
 
