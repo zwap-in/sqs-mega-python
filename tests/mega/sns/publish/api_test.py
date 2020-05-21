@@ -241,6 +241,15 @@ def test_publish_overriding_default_topic_arn(sns):
     assert get_topic_arn(request_data) == another_topic_arn
 
 
+def test_fail_if_no_topic_arn_is_provided():
+    sns = SnsPublishApi()
+
+    with pytest.raises(ValueError) as e:
+        sns.publish_payload('hello world!')
+
+    assert str(e.value) == 'Missing Topic ARN'
+
+
 def test_log_published_messages(sns, caplog):
     with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
         with vcr.use_cassette('publish_plaintext_payload') as cassette:
