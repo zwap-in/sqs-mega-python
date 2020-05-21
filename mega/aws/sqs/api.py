@@ -13,10 +13,10 @@ class BaseSqsApi(ABC):
 
     def __init__(
             self,
-            queue_url: str,
             aws_access_key_id: Optional[str] = None,
             aws_secret_access_key: Optional[str] = None,
-            region_name: Optional[str] = None
+            region_name: Optional[str] = None,
+            queue_url: Optional[str] = None
     ):
         self._client = boto3.client(
             'sqs',
@@ -30,8 +30,17 @@ class BaseSqsApi(ABC):
     def queue_url(self):
         return self._queue_url
 
-    def _log(self, level, message_id=None, msg=None):
+    @staticmethod
+    def _log(level, queue_url, message_id=None, msg=None):
         if message_id:
-            logger.log(level, '[{0}][{1}] {2}'.format(self._queue_url, message_id, msg))
+            logger.log(level, '[{0}][{1}] {2}'.format(queue_url, message_id, msg))
         else:
-            logger.log(level, '[{0}] {1}'.format(self._queue_url, msg))
+            logger.log(level, '[{0}] {1}'.format(queue_url, msg))
+
+    def _get_queue_url(self, override_queue_url: Optional[str]) -> str:
+        queue_url = override_queue_url or self._queue_url
+
+        if not queue_url:
+            raise ValueError('Missing Queue URL')
+
+        return queue_url

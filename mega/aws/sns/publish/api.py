@@ -31,7 +31,7 @@ class SnsPublishApi:
         return self._topic_arn
 
     def publish_payload(self, payload: Payload, topic_arn: Optional[str] = None, binary_encoding=False):
-        serialized = serialize_payload(payload, binary_encoding)
+        serialized = serialize_payload(payload, binary_encoding=binary_encoding)
         self.publish_raw_message(serialized, topic_arn=topic_arn)
 
     def publish_raw_message(self, message: str, topic_arn: Optional[str] = None):
@@ -46,7 +46,7 @@ class SnsPublishApi:
         logger.info('[{0}][{1}] Published SNS message'.format(topic_arn, message_id))
         logger.debug('[{0}][{1}] {2}'.format(topic_arn, message_id, message))
 
-    def _get_topic_arn(self, override_topic_arn: str):
+    def _get_topic_arn(self, override_topic_arn: Optional[str]) -> str:
         topic_arn = override_topic_arn or self._topic_arn
 
         if not topic_arn:

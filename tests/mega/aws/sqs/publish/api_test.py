@@ -244,7 +244,28 @@ def test_send_mega_payload_as_binary_bson(sqs):
     assert deserialize_mega_payload(bson.loads(blob)) == mega
 
 
-def test_log_published_messages(sqs, caplog):
+def test_publish_overriding_default_topic_arn(sqs):
+    another_queue_url = 'https://sqs.us-east-2.amazonaws.com/424566909325/another-queue'
+    data = build_generic_data()
+
+    with vcr.use_cassette('send_overriding_default_queue_url') as cassette:
+        sqs.send_payload(data, queue_url=another_queue_url)
+
+    assert cassette.all_played
+    request_data = get_sqs_request_data(cassette)
+    assert get_queue_url(request_data) == another_queue_url
+
+
+def test_fail_if_no_topic_arn_is_provided():
+    sqs = SqsPublishApi()
+
+    with pytest.raises(ValueError) as e:
+        sqs.send_payload('hello world!')
+
+    assert str(e.value) == 'Missing Queue URL'
+
+
+def test_log_sent_messages(sqs, caplog):
     with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
         with vcr.use_cassette('send_plaintext_payload') as cassette:
             sqs.send_payload('hello world!')
