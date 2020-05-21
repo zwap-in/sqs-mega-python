@@ -10,7 +10,7 @@ from mega.aws.payload import PayloadType
 from mega.aws.sns.message import SnsNotification, SnsMessageType
 from mega.aws.sqs.schema import deserialize_sqs_message, SqsSchemaError
 from mega.event import deserialize_mega_payload
-from tests.mega.sns.schema_test import build_sns_notification_data
+from tests.mega.aws.sns.schema_test import build_sns_notification_data
 
 
 def build_sqs_message_data(**kwargs):
