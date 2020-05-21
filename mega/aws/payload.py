@@ -2,8 +2,7 @@ from enum import Enum
 from typing import Tuple, Union
 
 from mega.aws.encoding import decode_value, encode_blob, encode_data
-from mega.event import MegaPayload, deserialize_mega_payload, matches_mega_payload
-from mega.event.v1.schema import serialize_mega_payload
+from mega.event import MegaPayload, deserialize_mega_payload, serialize_mega_payload, matches_mega_payload
 
 Payload = Union[bytes, str, dict, MegaPayload]
 

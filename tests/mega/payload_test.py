@@ -7,6 +7,7 @@ import pytest
 
 from mega.aws.payload import deserialize_payload, PayloadType, serialize_payload
 from mega.event import MegaPayload, Event, EventObject
+from mega.event.v1.schema import MegaSchemaError
 
 
 def test_deserialize_plaintext_payload():
@@ -192,6 +193,24 @@ def test_serialize_mega_payload_as_bson_encoded_as_base64_string():
             'current': {'foo': 'bar'}
         }
     }
+
+
+def test_fail_to_serialize_invalid_mega_payload():
+    payload = MegaPayload(
+        event=Event(
+            name='foo.bar',
+            subject='991'
+        ),
+        object=EventObject(
+            current={'foo': 'bar'}
+        )
+    )
+    payload.event = None
+
+    with pytest.raises(MegaSchemaError) as e:
+        serialize_payload(payload)
+
+    assert str(e.value) == "Invalid MEGA payload: {'event': ['Missing data for required field.']}"
 
 
 def test_fail_to_serialize_null_payload():
