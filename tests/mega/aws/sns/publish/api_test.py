@@ -90,6 +90,12 @@ def get_message_id(response_body: str):
     return match.group(1)
 
 
+def assert_matches_message_id(cassette, message_id):
+    response_body = get_sns_response_body(cassette)
+    response_message_id = get_message_id(response_body)
+    assert response_message_id == message_id
+
+
 @pytest.fixture
 def sns():
     return SnsPublisher(
@@ -101,13 +107,14 @@ def test_publish_raw_plaintext_message(sns):
     plaintext = 'hello world!'
 
     with vcr.use_cassette('publish_raw_plaintext_message') as cassette:
-        sns.publish_raw_message(plaintext)
+        message_id = sns.publish_raw_message(plaintext)
 
     assert cassette.all_played
 
     request_data = get_sns_request_data(cassette)
     assert get_topic_arn(request_data) == sns.topic_arn
     assert get_message(request_data) == plaintext
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_publish_raw_json_message(sns):
@@ -115,25 +122,27 @@ def test_publish_raw_json_message(sns):
     plaintext_json = json.dumps(data, sort_keys=True)
 
     with vcr.use_cassette('publish_raw_json_message') as cassette:
-        sns.publish_raw_message(plaintext_json)
+        message_id = sns.publish_raw_message(plaintext_json)
 
     assert cassette.all_played
 
     request_data = get_sns_request_data(cassette)
     assert get_topic_arn(request_data) == sns.topic_arn
     assert json.loads(get_message(request_data)) == data
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_publish_plaintext_payload(sns):
     plaintext = 'hello world!'
     with vcr.use_cassette('publish_plaintext_payload') as cassette:
-        sns.publish_payload(plaintext)
+        message_id = sns.publish_payload(plaintext)
 
     assert cassette.all_played
 
     request_data = get_sns_request_data(cassette)
     assert get_topic_arn(request_data) == sns.topic_arn
     assert get_message(request_data) == plaintext
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_publish_blob_payload(sns):
@@ -160,33 +169,35 @@ def test_publish_blob_payload(sns):
     )
 
     with vcr.use_cassette('publish_blob_payload') as cassette:
-        sns.publish_payload(blob)
+        message_id = sns.publish_payload(blob)
 
     assert cassette.all_played
 
     request_data = get_sns_request_data(cassette)
     assert get_topic_arn(request_data) == sns.topic_arn
     assert b64decode(get_message(request_data)) == blob
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_publish_data_payload_as_plaintext_json(sns):
     data = build_generic_data()
 
     with vcr.use_cassette('publish_data_payload_as_plaintext_json') as cassette:
-        sns.publish_payload(data)
+        message_id = sns.publish_payload(data)
 
     assert cassette.all_played
 
     request_data = get_sns_request_data(cassette)
     assert get_topic_arn(request_data) == sns.topic_arn
     assert json.loads(get_message(request_data)) == data
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_publish_mega_payload_as_plaintext_json(sns):
     mega = build_mega_payload()
 
     with vcr.use_cassette('publish_mega_payload_as_plaintext_json') as cassette:
-        sns.publish_payload(mega)
+        message_id = sns.publish_payload(mega)
 
     assert cassette.all_played
 
@@ -195,13 +206,14 @@ def test_publish_mega_payload_as_plaintext_json(sns):
 
     message = get_message(request_data)
     assert deserialize_mega_payload(json.loads(message)) == mega
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_publish_data_payload_as_binary_bson(sns):
     data = build_generic_data()
 
     with vcr.use_cassette('publish_data_payload_as_binary_bson') as cassette:
-        sns.publish_payload(data, binary_encoding=True)
+        message_id = sns.publish_payload(data, binary_encoding=True)
 
     assert cassette.all_played
 
@@ -211,13 +223,14 @@ def test_publish_data_payload_as_binary_bson(sns):
     message = get_message(request_data)
     blob = b64decode(message)
     assert bson.loads(blob) == data
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_publish_mega_payload_as_binary_bson(sns):
     mega = build_mega_payload()
 
     with vcr.use_cassette('publish_mega_payload_as_binary_bson') as cassette:
-        sns.publish_payload(mega, binary_encoding=True)
+        message_id = sns.publish_payload(mega, binary_encoding=True)
 
     assert cassette.all_played
 
@@ -227,6 +240,7 @@ def test_publish_mega_payload_as_binary_bson(sns):
     message = get_message(request_data)
     blob = b64decode(message)
     assert deserialize_mega_payload(bson.loads(blob)) == mega
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_publish_overriding_default_topic_arn(sns):
@@ -234,11 +248,12 @@ def test_publish_overriding_default_topic_arn(sns):
     data = build_generic_data()
 
     with vcr.use_cassette('publish_overriding_default_topic_arn') as cassette:
-        sns.publish_payload(data, topic_arn=another_topic_arn)
+        message_id = sns.publish_payload(data, topic_arn=another_topic_arn)
 
     assert cassette.all_played
     request_data = get_sns_request_data(cassette)
     assert get_topic_arn(request_data) == another_topic_arn
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_fail_if_no_topic_arn_is_provided():
@@ -252,11 +267,8 @@ def test_fail_if_no_topic_arn_is_provided():
 
 def test_log_published_messages(sns, caplog):
     with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
-        with vcr.use_cassette('publish_plaintext_payload') as cassette:
-            sns.publish_payload('hello world!')
-
-    response_body = get_sns_response_body(cassette)
-    message_id = get_message_id(response_body)
+        with vcr.use_cassette('publish_plaintext_payload'):
+            message_id = sns.publish_payload('hello world!')
 
     records = caplog.records
     assert len(records) == 2

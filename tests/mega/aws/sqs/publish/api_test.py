@@ -97,42 +97,28 @@ def get_message_id(response_body: str):
     return match.group(1)
 
 
-def test_send_raw_plaintext_message(sqs):
-    plaintext = 'hello world!'
-
-    with vcr.use_cassette('send_raw_plaintext_message') as cassette:
-        sqs.send_raw_message(plaintext)
-
-    assert cassette.all_played
-
-    request_data = get_sqs_request_data(cassette)
-    assert get_queue_url(request_data) == sqs.queue_url
-    assert get_message_body(request_data) == plaintext
-
-
 def assert_matches_message_id(cassette, message_id):
     response_body = get_sqs_response_body(cassette)
     response_message_id = get_message_id(response_body)
     assert response_message_id == message_id
 
 
+def test_send_raw_plaintext_message(sqs):
+    plaintext = 'hello world!'
+
+    with vcr.use_cassette('send_raw_plaintext_message') as cassette:
+        message_id = sqs.send_raw_message(plaintext)
+
+    assert cassette.all_played
+
+    request_data = get_sqs_request_data(cassette)
+    assert get_queue_url(request_data) == sqs.queue_url
+    assert get_message_body(request_data) == plaintext
+    assert_matches_message_id(cassette, message_id)
+
+
 def test_send_raw_json_message(sqs):
-    data = {
-        'foo': 'bar',
-        'one': 1,
-        'embedded': {
-            'a': 'b',
-            'true': True,
-            'list': [
-                'one',
-                2.01,
-                'three',
-                None,
-                49,
-                {'a': 'ha!'}
-            ]
-        }
-    }
+    data = build_generic_data()
     plaintext_json = json.dumps(data, sort_keys=True)
 
     with vcr.use_cassette('send_raw_json_message') as cassette:
@@ -281,7 +267,7 @@ def test_fail_if_no_topic_arn_is_provided():
 
 def test_log_sent_messages(sqs, caplog):
     with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
-        with vcr.use_cassette('send_plaintext_payload') as cassette:
+        with vcr.use_cassette('send_plaintext_payload'):
             message_id = sqs.send_payload('hello world!')
 
     records = caplog.records
