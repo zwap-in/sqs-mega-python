@@ -1,9 +1,9 @@
 from parameterized import parameterized
 
-from mega.event.v1.payload import EventObject
+from mega.event.v1.payload import MegaObject
 
 
-def build_event_object_kwargs():
+def build_mega_object_kwargs():
     return dict(
         type='shopping_cart',
         id='18a3f92e-1fbf-45eb-8769-d836d0a1be55',
@@ -71,15 +71,15 @@ def build_event_object_kwargs():
     )
 
 
-def test_create_event_object():
-    kwargs = build_event_object_kwargs()
-    event_object = EventObject(**kwargs)
+def test_create_mega_object():
+    kwargs = build_mega_object_kwargs()
+    mega_object = MegaObject(**kwargs)
 
-    assert event_object.id == kwargs['id']
-    assert event_object.type == kwargs['type']
-    assert event_object.version == kwargs['version']
-    assert event_object.current == kwargs['current']
-    assert event_object.previous == kwargs['previous']
+    assert mega_object.id == kwargs['id']
+    assert mega_object.type == kwargs['type']
+    assert mega_object.version == kwargs['version']
+    assert mega_object.current == kwargs['current']
+    assert mega_object.previous == kwargs['previous']
 
 
 @parameterized.expand([
@@ -88,19 +88,19 @@ def test_create_event_object():
     ['version', 1],
     ['previous', None]
 ])
-def test_create_event_object_without_optional_attribute_should_use_default(attribute_name, expected_default):
-    kwargs = build_event_object_kwargs()
+def test_create_mega_object_without_optional_attribute_should_use_default(attribute_name, expected_default):
+    kwargs = build_mega_object_kwargs()
     del kwargs[attribute_name]
 
-    event_object = EventObject(**kwargs)
-    assert getattr(event_object, attribute_name) == expected_default
+    mega_object = MegaObject(**kwargs)
+    assert getattr(mega_object, attribute_name) == expected_default
 
 
 def test_objects_are_equal_when_all_attributes_are_equal():
-    kwargs = build_event_object_kwargs()
+    kwargs = build_mega_object_kwargs()
 
-    this = EventObject(**kwargs)
-    that = EventObject(**kwargs)
+    this = MegaObject(**kwargs)
+    that = MegaObject(**kwargs)
 
     assert this.__eq__(that) is True
     assert that.__eq__(this) is True
@@ -116,12 +116,12 @@ def test_objects_are_equal_when_all_attributes_are_equal():
     ['previous', {'foo': 'bar'}],
 ])
 def test_objects_are_not_equal_if_one_attribute_is_different(attribute_name, different_value):
-    this_kwargs = build_event_object_kwargs()
-    this = EventObject(**this_kwargs)
+    this_kwargs = build_mega_object_kwargs()
+    this = MegaObject(**this_kwargs)
 
-    that_kwargs = build_event_object_kwargs()
+    that_kwargs = build_mega_object_kwargs()
     that_kwargs[attribute_name] = different_value
-    that = EventObject(**that_kwargs)
+    that = MegaObject(**that_kwargs)
 
     assert this.__eq__(that) is False
     assert that.__eq__(this) is False
@@ -136,5 +136,5 @@ def test_objects_are_not_equal_if_one_attribute_is_different(attribute_name, dif
     ['foobar']
 ])
 def test_an_object_is_not_equal_to(another_thing):
-    event_object = EventObject(**build_event_object_kwargs())
-    assert event_object != another_thing
+    mega_object = MegaObject(**build_mega_object_kwargs())
+    assert mega_object != another_thing

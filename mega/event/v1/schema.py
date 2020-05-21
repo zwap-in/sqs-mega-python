@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE, post_dump
 
 from mega.event.v1 import PROTOCOL_VERSION, PROTOCOL_NAME
-from mega.event.v1.payload import MegaPayload, EventObject, Event
+from mega.event.v1.payload import MegaPayload, MegaObject, MegaEvent
 
 
 class MegaSchemaError(Exception):
@@ -20,7 +20,7 @@ class BaseSchema(Schema):
         }
 
 
-class EventSchema(BaseSchema):
+class MegaEventSchema(BaseSchema):
     name = fields.String(required=True, allow_none=False)
     timestamp = fields.DateTime(format='iso', required=True, allow_none=False)
     version = fields.Integer(required=False, allow_none=True, default=1)
@@ -31,13 +31,13 @@ class EventSchema(BaseSchema):
 
     @post_load
     def build_object(self, data, **kwargs):
-        return Event(**data)
+        return MegaEvent(**data)
 
     def handle_error(self, exc, data, **kwargs):
         raise MegaSchemaError("Invalid MEGA payload. There is an error in the 'event' section: {0}".format(exc))
 
 
-class EventObjectSchema(BaseSchema):
+class MegaObjectSchema(BaseSchema):
     type = fields.String(required=False, allow_none=True, default=None)
     id = fields.String(required=False, allow_none=True, default=None)
     version = fields.Integer(required=False, allow_none=True, default=1)
@@ -46,7 +46,7 @@ class EventObjectSchema(BaseSchema):
 
     @post_load
     def build_object(self, data, **kwargs):
-        return EventObject(**data)
+        return MegaObject(**data)
 
     def handle_error(self, exc, data, **kwargs):
         raise MegaSchemaError("Invalid MEGA payload. There is an error in the 'object' section: {0}".format(exc))
@@ -55,8 +55,8 @@ class EventObjectSchema(BaseSchema):
 class MegaPayloadSchema(BaseSchema):
     protocol = fields.Constant(PROTOCOL_NAME, dump_only=True)
     version = fields.Constant(PROTOCOL_VERSION, dump_only=True)
-    event = fields.Nested(EventSchema, required=True)
-    object = fields.Nested(EventObjectSchema, required=False, allow_none=True, default=None)
+    event = fields.Nested(MegaEventSchema, required=True)
+    object = fields.Nested(MegaObjectSchema, required=False, allow_none=True, default=None)
     extra = fields.Dict(keys=fields.String(), required=False, allow_none=True, default={})
 
     @post_load

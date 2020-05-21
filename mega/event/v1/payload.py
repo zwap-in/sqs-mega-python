@@ -4,7 +4,7 @@ from typing import Optional
 from mega.event.v1 import PROTOCOL_NAME, PROTOCOL_VERSION
 
 
-class Event:
+class MegaEvent:
     DEFAULT_VERSION = 1
 
     def __init__(
@@ -30,7 +30,7 @@ class Event:
         self.attributes.update(kwargs or {})
 
     def __eq__(self, other):
-        if not isinstance(other, Event):
+        if not isinstance(other, MegaEvent):
             return NotImplemented
 
         return (
@@ -44,7 +44,7 @@ class Event:
         )
 
 
-class EventObject:
+class MegaObject:
     DEFAULT_VERSION = 1
 
     def __init__(
@@ -62,7 +62,7 @@ class EventObject:
         self.previous = previous
 
     def __eq__(self, other):
-        if not isinstance(other, EventObject):
+        if not isinstance(other, MegaObject):
             return NotImplemented
 
         return (
@@ -80,8 +80,8 @@ class MegaPayload:
 
     def __init__(
             self,
-            event: Event,
-            object: Optional[EventObject] = None,
+            event: MegaEvent,
+            object: Optional[MegaObject] = None,
             extra: dict = None,
             **kwargs
     ):

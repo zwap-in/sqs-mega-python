@@ -10,7 +10,7 @@ import pytest
 
 from mega.aws.sqs import LOGGER_NAME
 from mega.aws.sqs.publish.api import SqsPublisher
-from mega.event import MegaPayload, Event, EventObject, deserialize_mega_payload
+from mega.event import MegaPayload, MegaEvent, MegaObject, deserialize_mega_payload
 from tests.vcr import build_vcr
 
 vcr = build_vcr(
@@ -47,7 +47,7 @@ def build_generic_data():
 
 def build_mega_payload():
     return MegaPayload(
-        event=Event(
+        event=MegaEvent(
             name='user.updated',
             timestamp=dateutil.parser.parse('2020-05-04T15:53:27.823'),
             domain='user',
@@ -58,7 +58,7 @@ def build_mega_payload():
                 'username': 'john.doe'
             }
         ),
-        object=EventObject(
+        object=MegaObject(
             current={
                 'id': 987650,
                 'full_name': 'John Doe',

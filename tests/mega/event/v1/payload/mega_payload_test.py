@@ -1,14 +1,14 @@
 from parameterized import parameterized
 
-from mega.event.v1.payload import MegaPayload, Event, EventObject
-from tests.mega.event.v1.payload.event_object_test import build_event_object_kwargs
-from tests.mega.event.v1.payload.event_test import build_event_kwargs
+from mega.event.v1.payload import MegaPayload, MegaEvent, MegaObject
+from tests.mega.event.v1.payload.mega_event_test import build_mega_event_kwargs
+from tests.mega.event.v1.payload.mega_object_test import build_mega_object_kwargs
 
 
 def build_mega_payload_kwargs():
     return dict(
-        event=Event(**build_event_kwargs()),
-        object=EventObject(**build_event_object_kwargs()),
+        event=MegaEvent(**build_mega_event_kwargs()),
+        object=MegaObject(**build_mega_object_kwargs()),
         extra={
             'channel': 'web/desktop',
             'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) '
@@ -18,16 +18,16 @@ def build_mega_payload_kwargs():
     )
 
 
-def test_create_event():
+def test_create_mega_payload():
     kwargs = build_mega_payload_kwargs()
     payload = MegaPayload(**kwargs)
 
     assert payload.event is not None
-    assert isinstance(payload.event, Event)
+    assert isinstance(payload.event, MegaEvent)
     assert payload.event == kwargs['event']
 
     assert payload.object is not None
-    assert isinstance(payload.object, EventObject)
+    assert isinstance(payload.object, MegaObject)
     assert payload.object == kwargs['object']
 
     assert payload.extra is not None
@@ -47,7 +47,7 @@ def test_create_mega_payload_without_optional_attribute_should_use_default(attri
 
 
 def test_create_mega_payload_with_additional_kwargs_should_be_added_to_the_extra_dictionary():
-    payload = MegaPayload(event=Event(**build_event_kwargs()), foo='bar', test=123)
+    payload = MegaPayload(event=MegaEvent(**build_mega_event_kwargs()), foo='bar', test=123)
 
     assert payload.extra == {
         'foo': 'bar',
@@ -56,19 +56,19 @@ def test_create_mega_payload_with_additional_kwargs_should_be_added_to_the_extra
 
 
 def test_mega_payloads_are_equal_when_all_attributes_are_equal():
-    event = Event(**build_event_kwargs())
-    event_object = EventObject(**build_event_object_kwargs())
+    event = MegaEvent(**build_mega_event_kwargs())
+    mega_object = MegaObject(**build_mega_object_kwargs())
     extra = {'foo': 'bar', 'one': 1}
 
     this = MegaPayload(
         event=event,
-        object=event_object,
+        object=mega_object,
         extra=extra
     )
 
     that = MegaPayload(
         event=event,
-        object=event_object,
+        object=mega_object,
         extra=extra
     )
 
@@ -79,8 +79,8 @@ def test_mega_payloads_are_equal_when_all_attributes_are_equal():
 
 
 @parameterized.expand([
-    ['event', Event(name='foo.bar')],
-    ['object', EventObject(current={'foo': 'bar'})],
+    ['event', MegaEvent(name='foo.bar')],
+    ['object', MegaObject(current={'foo': 'bar'})],
     ['extra', {'one': 1, 'two': [3, 4]}]
 ])
 def test_mega_payloads_are_not_equal_if_one_attribute_is_different(attribute_name, different_value):

@@ -6,7 +6,7 @@ import dateutil.parser
 import pytest
 
 from mega.aws.payload import deserialize_payload, PayloadType, serialize_payload
-from mega.event import MegaPayload, Event, EventObject
+from mega.event import MegaPayload, MegaEvent, MegaObject
 from mega.event.v1.schema import MegaSchemaError
 
 
@@ -131,12 +131,12 @@ def test_serialize_data_payload_as_bson_encoded_as_base64_string():
 def test_serialize_mega_payload_as_json_string():
     timestamp = '2020-05-20T20:07:22.589063'
     payload = MegaPayload(
-        event=Event(
+        event=MegaEvent(
             name='foo.bar',
             timestamp=dateutil.parser.parse(timestamp),
             subject='991'
         ),
-        object=EventObject(
+        object=MegaObject(
             current={'foo': 'bar'}
         )
     )
@@ -164,12 +164,12 @@ def test_serialize_mega_payload_as_json_string():
 def test_serialize_mega_payload_as_bson_encoded_as_base64_string():
     timestamp = '2020-05-20T20:07:22.589063'
     payload = MegaPayload(
-        event=Event(
+        event=MegaEvent(
             name='foo.bar',
             timestamp=dateutil.parser.parse(timestamp),
             subject='991'
         ),
-        object=EventObject(
+        object=MegaObject(
             current={'foo': 'bar'}
         )
     )
@@ -197,11 +197,11 @@ def test_serialize_mega_payload_as_bson_encoded_as_base64_string():
 
 def test_fail_to_serialize_invalid_mega_payload():
     payload = MegaPayload(
-        event=Event(
+        event=MegaEvent(
             name='foo.bar',
             subject='991'
         ),
-        object=EventObject(
+        object=MegaObject(
             current={'foo': 'bar'}
         )
     )
