@@ -11,7 +11,7 @@ from mega.event import MegaPayload, Event, EventObject, deserialize_mega_payload
 from tests.vcr import build_vcr
 
 vcr = build_vcr(
-    path='aws/sqs/api',
+    path='aws/sqs/publish/api',
     match_on=['method', 'scheme', 'host', 'port', 'path', 'query']
 )
 
@@ -87,7 +87,7 @@ def test_send_raw_plaintext_message(sqs):
     plaintext = 'hello world!'
 
     with vcr.use_cassette('send_raw_plaintext_message') as cassette:
-        sqs.send_message(plaintext)
+        sqs.send_raw_message(plaintext)
 
     assert cassette.all_played
 
@@ -116,7 +116,7 @@ def test_send_raw_json_message(sqs):
     plaintext_json = json.dumps(data, sort_keys=True)
 
     with vcr.use_cassette('send_raw_json_message') as cassette:
-        sqs.send_message(plaintext_json)
+        sqs.send_raw_message(plaintext_json)
 
     assert cassette.all_played
 
