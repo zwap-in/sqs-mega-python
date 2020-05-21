@@ -27,3 +27,6 @@ class BaseSqsApi(ABC):
     @property
     def queue_url(self):
         return self._queue_url
+
+    def _log(self, level, message_id, msg):
+        logger.log(level, '[{0}][{1}] {2}'.format(self._queue_url, message_id, msg))

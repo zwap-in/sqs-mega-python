@@ -1,9 +1,7 @@
-import logging
+from logging import INFO, DEBUG
 
 from mega.aws.payload import Payload, serialize_payload
 from mega.aws.sqs.api import BaseSqsApi
-
-logger = logging.getLogger('mega.aws.sqs')
 
 
 class SqsPublishApi(BaseSqsApi):
@@ -15,8 +13,8 @@ class SqsPublishApi(BaseSqsApi):
         )
 
         message_id = response.get('MessageId')
-        logger.info('[{0}][{1}] Sent message'.format(self._queue_url, message_id))
-        logger.debug('[{0}][{1}] Message body: {2}'.format(self._queue_url, message_id, body))
+        self._log(INFO, message_id, 'Sent message')
+        self._log(DEBUG, message_id, body)
 
     def send_payload(self, payload: Payload, binary_encoding=False):
         serialized = serialize_payload(payload, binary_encoding)
