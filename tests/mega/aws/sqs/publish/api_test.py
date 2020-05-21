@@ -9,7 +9,7 @@ import dateutil.parser
 import pytest
 
 from mega.aws.sqs import LOGGER_NAME
-from mega.aws.sqs.publish.api import SqsPublishApi
+from mega.aws.sqs.publish.api import SqsPublisher
 from mega.event import MegaPayload, Event, EventObject, deserialize_mega_payload
 from tests.vcr import build_vcr
 
@@ -21,7 +21,7 @@ vcr = build_vcr(
 
 @pytest.fixture
 def sqs():
-    return SqsPublishApi(
+    return SqsPublisher(
         queue_url='https://sqs.us-east-2.amazonaws.com/424566909325/sqs-mega-test'
     )
 
@@ -257,7 +257,7 @@ def test_publish_overriding_default_topic_arn(sqs):
 
 
 def test_fail_if_no_topic_arn_is_provided():
-    sqs = SqsPublishApi()
+    sqs = SqsPublisher()
 
     with pytest.raises(ValueError) as e:
         sqs.send_payload('hello world!')

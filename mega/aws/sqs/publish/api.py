@@ -5,7 +5,7 @@ from mega.aws.payload import Payload, serialize_payload
 from mega.aws.sqs.api import BaseSqsApi
 
 
-class SqsPublishApi(BaseSqsApi):
+class SqsPublisher(BaseSqsApi):
 
     def send_payload(self, payload: Payload, queue_url: Optional[str] = None, binary_encoding=False):
         serialized = serialize_payload(payload, binary_encoding=binary_encoding)
