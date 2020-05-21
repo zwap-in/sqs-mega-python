@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: Action=SendMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MessageBody=hello+world%21
+    headers:
+      Content-Length:
+      - '146'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xMiBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjEy
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjFUMDAxNDM2Wg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><SendMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><SendMessageResult><MessageId>6548d0ea-7801-4edb-acd3-2ebcb3c9c09e</MessageId><MD5OfMessageBody>fc3ff98e8c6a0d3087d515c0473f8677</MD5OfMessageBody></SendMessageResult><ResponseMetadata><RequestId>e0dd6cf6-e0d8-5956-9e70-3bc92af51074</RequestId></ResponseMetadata></SendMessageResponse>
+    headers:
+      Content-Length:
+      - '378'
+      Content-Type:
+      - text/xml
+      Date:
+      - Thu, 21 May 2020 00:14:37 GMT
+      x-amzn-RequestId:
+      - e0dd6cf6-e0d8-5956-9e70-3bc92af51074
+    status:
+      code: 200
+      message: OK
+version: 1

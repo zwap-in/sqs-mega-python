@@ -62,8 +62,8 @@ def encode_blob(blob: bytes) -> str:
     return b64encode(blob).decode()
 
 
-def encode_json(data):
-    return json.dumps(data)
+def encode_json(data, sort_keys=True):
+    return json.dumps(data, sort_keys=sort_keys)
 
 
 def encode_bson(data):

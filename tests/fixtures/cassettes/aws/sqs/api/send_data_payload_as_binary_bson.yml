@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: Action=SendMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MessageBody=hQAAAAJmb28ABAAAAGJhcgAQb25lAAEAAAADZW1iZWRkZWQAYAAAAAJhAAIAAABiAAh0cnVlAAEEbGlzdABFAAAAAjAABAAAAG9uZQABMQAUrkfhehQAQAIyAAYAAAB0aHJlZQAKMwAQNAAxAAAAAzUAEAAAAAJhAAQAAABoYSEAAAAAAA%3D%3D
+    headers:
+      Content-Length:
+      - '316'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xMiBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjEy
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjFUMDExMDUwWg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><SendMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><SendMessageResult><MessageId>99b67643-1e98-45c9-9fdf-d318c56e260c</MessageId><MD5OfMessageBody>864814f405de89ae028aa42e8470dea8</MD5OfMessageBody></SendMessageResult><ResponseMetadata><RequestId>f31f7c76-b1dd-5b18-88e4-2b496686eb21</RequestId></ResponseMetadata></SendMessageResponse>
+    headers:
+      Content-Length:
+      - '378'
+      Content-Type:
+      - text/xml
+      Date:
+      - Thu, 21 May 2020 01:10:51 GMT
+      x-amzn-RequestId:
+      - f31f7c76-b1dd-5b18-88e4-2b496686eb21
+    status:
+      code: 200
+      message: OK
+version: 1

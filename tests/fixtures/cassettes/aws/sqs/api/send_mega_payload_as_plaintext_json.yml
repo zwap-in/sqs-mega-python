@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: Action=SendMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MessageBody=%7B%22event%22%3A+%7B%22attributes%22%3A+%7B%22email%22%3A+%22johndoe_84%40example.com%22%2C+%22username%22%3A+%22john.doe%22%7D%2C+%22domain%22%3A+%22user%22%2C+%22name%22%3A+%22user.updated%22%2C+%22publisher%22%3A+%22user-service%22%2C+%22subject%22%3A+%22987650%22%2C+%22timestamp%22%3A+%222020-05-04T15%3A53%3A27.823000%22%2C+%22version%22%3A+1%7D%2C+%22object%22%3A+%7B%22current%22%3A+%7B%22birthdate%22%3A+%221986-02-15%22%2C+%22created_at%22%3A+%222020-05-03T12%3A20%3A23.000%22%2C+%22email%22%3A+%22johndoe_86%40example.com%22%2C+%22full_name%22%3A+%22John+Doe%22%2C+%22id%22%3A+987650%2C+%22ssn%22%3A+%22497279436%22%2C+%22updated_at%22%3A+%222020-05-04T15%3A52%3A01.000%22%2C+%22username%22%3A+%22john.doe%22%7D%2C+%22version%22%3A+1%7D%2C+%22protocol%22%3A+%22mega%22%2C+%22version%22%3A+1%7D
+    headers:
+      Content-Length:
+      - '937'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xMiBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjEy
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjFUMDEwODEwWg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><SendMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><SendMessageResult><MessageId>b3b0a9c3-9102-4584-92eb-36767a6839c1</MessageId><MD5OfMessageBody>ee7922b35da718c5eed4e71e2ca0a2e2</MD5OfMessageBody></SendMessageResult><ResponseMetadata><RequestId>42bba390-0fd7-5df3-98d8-f4afd96c9151</RequestId></ResponseMetadata></SendMessageResponse>
+    headers:
+      Content-Length:
+      - '378'
+      Content-Type:
+      - text/xml
+      Date:
+      - Thu, 21 May 2020 01:08:11 GMT
+      x-amzn-RequestId:
+      - 42bba390-0fd7-5df3-98d8-f4afd96c9151
+    status:
+      code: 200
+      message: OK
+version: 1

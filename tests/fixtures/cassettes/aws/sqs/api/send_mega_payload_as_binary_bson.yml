@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: Action=SendMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MessageBody=CAIAABB2ZXJzaW9uAAEAAAACcHJvdG9jb2wABQAAAG1lZ2EAA2V2ZW50AN4AAAAQdmVyc2lvbgABAAAAAnRpbWVzdGFtcAAbAAAAMjAyMC0wNS0wNFQxNTo1MzoyNy44MjMwMDAAAnB1Ymxpc2hlcgANAAAAdXNlci1zZXJ2aWNlAANhdHRyaWJ1dGVzAD4AAAACZW1haWwAFwAAAGpvaG5kb2VfODRAZXhhbXBsZS5jb20AAnVzZXJuYW1lAAkAAABqb2huLmRvZQAAAnN1YmplY3QABwAAADk4NzY1MAACZG9tYWluAAUAAAB1c2VyAAJuYW1lAA0AAAB1c2VyLnVwZGF0ZWQAAANvYmplY3QA9gAAAANjdXJyZW50ANsAAAAQaWQAAhIPAAJmdWxsX25hbWUACQAAAEpvaG4gRG9lAAJ1c2VybmFtZQAJAAAAam9obi5kb2UAAmVtYWlsABcAAABqb2huZG9lXzg2QGV4YW1wbGUuY29tAAJzc24ACgAAADQ5NzI3OTQzNgACYmlydGhkYXRlAAsAAAAxOTg2LTAyLTE1AAJjcmVhdGVkX2F0ABgAAAAyMDIwLTA1LTAzVDEyOjIwOjIzLjAwMAACdXBkYXRlZF9hdAAYAAAAMjAyMC0wNS0wNFQxNTo1MjowMS4wMDAAABB2ZXJzaW9uAAEAAAAAAA%3D%3D
+    headers:
+      Content-Length:
+      - '832'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xMiBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjEy
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjFUMDExMzA5Wg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><SendMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><SendMessageResult><MessageId>372bc049-ea0f-4454-86fe-a69dba83fa45</MessageId><MD5OfMessageBody>bed90ff61fbf106363a12d6f34fe52b6</MD5OfMessageBody></SendMessageResult><ResponseMetadata><RequestId>a50ce185-6c0d-5ed8-886c-b6babbeb01d0</RequestId></ResponseMetadata></SendMessageResponse>
+    headers:
+      Content-Length:
+      - '378'
+      Content-Type:
+      - text/xml
+      Date:
+      - Thu, 21 May 2020 01:13:10 GMT
+      x-amzn-RequestId:
+      - a50ce185-6c0d-5ed8-886c-b6babbeb01d0
+    status:
+      code: 200
+      message: OK
+version: 1

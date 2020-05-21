@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: Action=SendMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MessageBody=AQIDAHhRxPJRRr93flcb8fFOcf%2FAlIRvdpowHUPP0gZyNArnbQEKUXt3YjZYnHqrtQSXjt9eY3KBsYNz8rChWzLQn3xWsMOww7DDsMMBAgMAeFHE8lFGv3d%2BVxvx8U5x%2F8CUhG92mjAdQ8%2FSBnI0CudtAQpRe3diNlicequ1BJeO315jcoGxg3PysKFbMtCffFaww7DDsMOwwwECAwB4UcTyUUa%2Fd35XG%2FHxTnH%2FwJSEb3aaMB1Dz9IGcjQK520BClF7d2I2WJx6q7UEl47fXmNygbGDc%2FKwoVsy0J98VrDDsMOww7DDAQIDAHhRxPJRRr93flcb8fFOcf%2FAlIRvdpowHUPP0gZyNArnbQEKUXt3YjZYnHqrtQSXjt9eY3KBsYNz8rChWzLQn3xWsMOww7DDsMMBAgMAeFHE8lFGv3d%2BVxvx8U5x%2F8CUhG92mjAdQ8%2FSBnI0CudtAQpRe3diNlicequ1BJeO315jcoGxg3PysKFbMtCffFaww7DDsMOwwwECAwB4UcTyUUa%2Fd35XG%2FHxTnH%2FwJSEb3aaMB1Dz9IGcjQK520BClF7d2I2WJx6q7UEl47fXmNygbGDc%2FKwoVsy0J98VrDDsMOww7DDAQIDAHhRxPJRRr93flcb8fFOcf%2FAlIRvdpowHUPP0gZyNArnbQEKUXt3YjZYnHqrtQSXjt9eY3KBsYNz8rChWzLQn3xWsMOww7DDsMMBAgMAeFHE8lFGv3d%2BVxvx8U5x%2F8CUhG92mjAdQ8%2FSBnI0CudtAQpRe3diNlicequ1BJeO315jcoGxg3PysKFbMtCffFaww7DDsMOwwwECAwB4UcTyUUa%2Fd35XG%2FHxTnH%2FwJSEb3aaMB1Dz9IGcjQK520BClF7d2I2WJx6q7UEl47fXmNygbGDc%2FKwoVsy0J98VrDDsMOww7DDIA%3D%3D
+    headers:
+      Content-Length:
+      - '1112'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xMiBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjEy
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjFUMDAyNzQ1Wg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><SendMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><SendMessageResult><MessageId>bd26ca32-374a-4b9a-a5b1-01d13b9cf779</MessageId><MD5OfMessageBody>2fc06e3c1a3e9b737494a28d7d0c3283</MD5OfMessageBody></SendMessageResult><ResponseMetadata><RequestId>cc135913-19fb-5200-87f2-0e2cd4b8889c</RequestId></ResponseMetadata></SendMessageResponse>
+    headers:
+      Content-Length:
+      - '378'
+      Content-Type:
+      - text/xml
+      Date:
+      - Thu, 21 May 2020 00:27:47 GMT
+      x-amzn-RequestId:
+      - cc135913-19fb-5200-87f2-0e2cd4b8889c
+    status:
+      code: 200
+      message: OK
+version: 1
