@@ -1,4 +1,6 @@
 import json
+import logging
+import re
 from base64 import b64decode
 from urllib.parse import parse_qs
 
@@ -6,6 +8,7 @@ import bson
 import dateutil.parser
 import pytest
 
+from mega.aws.sqs import LOGGER_NAME
 from mega.aws.sqs.publish.api import SqsPublishApi
 from mega.event import MegaPayload, Event, EventObject, deserialize_mega_payload
 from tests.vcr import build_vcr
@@ -81,6 +84,17 @@ def get_queue_url(request_data):
 
 def get_message_body(request_data):
     return request_data['MessageBody'][0]
+
+
+def get_sqs_response_body(cassette) -> str:
+    return cassette.responses[0]['body']['string'].decode()
+
+
+def get_message_id(response_body: str):
+    match = re.search(r'<MessageId>(.+)</MessageId>', response_body)
+    if not match:
+        return None
+    return match.group(1)
 
 
 def test_send_raw_plaintext_message(sqs):
@@ -228,3 +242,19 @@ def test_send_mega_payload_as_binary_bson(sqs):
     message_body = get_message_body(request_data)
     blob = b64decode(message_body)
     assert deserialize_mega_payload(bson.loads(blob)) == mega
+
+
+def test_log_published_messages(sqs, caplog):
+    with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
+        with vcr.use_cassette('send_plaintext_payload') as cassette:
+            sqs.send_payload('hello world!')
+
+    response_body = get_sqs_response_body(cassette)
+    message_id = get_message_id(response_body)
+
+    records = caplog.records
+    assert len(records) == 2
+    assert records[0].levelno == logging.INFO
+    assert records[0].message == '[{}][{}] Sent SQS message'.format(sqs.queue_url, message_id)
+    assert records[1].levelno == logging.DEBUG
+    assert records[1].message == '[{}][{}] hello world!'.format(sqs.queue_url, message_id)

@@ -6,7 +6,9 @@ from typing import Optional, Tuple, Union
 
 import bson
 
-logger = getLogger('mega.aws')
+from mega.aws import LOGGER_NAME
+
+logger = getLogger(LOGGER_NAME)
 
 
 def try_decode_base64(plaintext: str) -> Tuple[Optional[bytes], Optional[Exception]]:
