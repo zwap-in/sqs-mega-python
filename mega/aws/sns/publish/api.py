@@ -9,7 +9,7 @@ from mega.aws.sns import LOGGER_NAME
 logger = logging.getLogger(LOGGER_NAME)
 
 
-class SnsPublishApi:
+class SnsPublisher:
 
     def __init__(
             self,

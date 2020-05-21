@@ -9,7 +9,7 @@ import dateutil.parser
 import pytest
 
 from mega.aws.sns import LOGGER_NAME
-from mega.aws.sns.publish.api import SnsPublishApi
+from mega.aws.sns.publish.api import SnsPublisher
 from mega.event import deserialize_mega_payload, MegaPayload, Event, EventObject
 from tests.vcr import build_vcr
 
@@ -92,7 +92,7 @@ def get_message_id(response_body: str):
 
 @pytest.fixture
 def sns():
-    return SnsPublishApi(
+    return SnsPublisher(
         topic_arn='arn:aws:sns:us-east-2:424566909325:sqs-mega-test'
     )
 
@@ -242,7 +242,7 @@ def test_publish_overriding_default_topic_arn(sns):
 
 
 def test_fail_if_no_topic_arn_is_provided():
-    sns = SnsPublishApi()
+    sns = SnsPublisher()
 
     with pytest.raises(ValueError) as e:
         sns.publish_payload('hello world!')
