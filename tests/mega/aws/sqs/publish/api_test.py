@@ -110,6 +110,12 @@ def test_send_raw_plaintext_message(sqs):
     assert get_message_body(request_data) == plaintext
 
 
+def assert_matches_message_id(cassette, message_id):
+    response_body = get_sqs_response_body(cassette)
+    response_message_id = get_message_id(response_body)
+    assert response_message_id == message_id
+
+
 def test_send_raw_json_message(sqs):
     data = {
         'foo': 'bar',
@@ -130,25 +136,27 @@ def test_send_raw_json_message(sqs):
     plaintext_json = json.dumps(data, sort_keys=True)
 
     with vcr.use_cassette('send_raw_json_message') as cassette:
-        sqs.send_raw_message(plaintext_json)
+        message_id = sqs.send_raw_message(plaintext_json)
 
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
     assert get_queue_url(request_data) == sqs.queue_url
     assert get_message_body(request_data) == plaintext_json
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_send_plaintext_payload(sqs):
     plaintext = 'hello world!'
     with vcr.use_cassette('send_plaintext_payload') as cassette:
-        sqs.send_payload(plaintext)
+        message_id = sqs.send_payload(plaintext)
 
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
     assert get_queue_url(request_data) == sqs.queue_url
     assert get_message_body(request_data) == plaintext
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_send_blob_payload(sqs):
@@ -175,33 +183,35 @@ def test_send_blob_payload(sqs):
     )
 
     with vcr.use_cassette('send_blob_payload') as cassette:
-        sqs.send_payload(blob)
+        message_id = sqs.send_payload(blob)
 
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
     assert get_queue_url(request_data) == sqs.queue_url
     assert b64decode(get_message_body(request_data)) == blob
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_send_data_payload_as_plaintext_json(sqs):
     data = build_generic_data()
 
     with vcr.use_cassette('send_data_payload_as_plaintext_json') as cassette:
-        sqs.send_payload(data)
+        message_id = sqs.send_payload(data)
 
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
     assert get_queue_url(request_data) == sqs.queue_url
     assert json.loads(get_message_body(request_data)) == data
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_send_mega_payload_as_plaintext_json(sqs):
     mega = build_mega_payload()
 
     with vcr.use_cassette('send_mega_payload_as_plaintext_json') as cassette:
-        sqs.send_payload(mega)
+        message_id = sqs.send_payload(mega)
 
     assert cassette.all_played
 
@@ -210,13 +220,14 @@ def test_send_mega_payload_as_plaintext_json(sqs):
 
     message_body = get_message_body(request_data)
     assert deserialize_mega_payload(json.loads(message_body)) == mega
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_send_data_payload_as_binary_bson(sqs):
     data = build_generic_data()
 
     with vcr.use_cassette('send_data_payload_as_binary_bson') as cassette:
-        sqs.send_payload(data, binary_encoding=True)
+        message_id = sqs.send_payload(data, binary_encoding=True)
 
     assert cassette.all_played
 
@@ -226,13 +237,14 @@ def test_send_data_payload_as_binary_bson(sqs):
     message_body = get_message_body(request_data)
     blob = b64decode(message_body)
     assert bson.loads(blob) == data
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_send_mega_payload_as_binary_bson(sqs):
     mega = build_mega_payload()
 
     with vcr.use_cassette('send_mega_payload_as_binary_bson') as cassette:
-        sqs.send_payload(mega, binary_encoding=True)
+        message_id = sqs.send_payload(mega, binary_encoding=True)
 
     assert cassette.all_played
 
@@ -242,6 +254,7 @@ def test_send_mega_payload_as_binary_bson(sqs):
     message_body = get_message_body(request_data)
     blob = b64decode(message_body)
     assert deserialize_mega_payload(bson.loads(blob)) == mega
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_publish_overriding_default_topic_arn(sqs):
@@ -249,11 +262,12 @@ def test_publish_overriding_default_topic_arn(sqs):
     data = build_generic_data()
 
     with vcr.use_cassette('send_overriding_default_queue_url') as cassette:
-        sqs.send_payload(data, queue_url=another_queue_url)
+        message_id = sqs.send_payload(data, queue_url=another_queue_url)
 
     assert cassette.all_played
     request_data = get_sqs_request_data(cassette)
     assert get_queue_url(request_data) == another_queue_url
+    assert_matches_message_id(cassette, message_id)
 
 
 def test_fail_if_no_topic_arn_is_provided():
@@ -268,10 +282,7 @@ def test_fail_if_no_topic_arn_is_provided():
 def test_log_sent_messages(sqs, caplog):
     with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
         with vcr.use_cassette('send_plaintext_payload') as cassette:
-            sqs.send_payload('hello world!')
-
-    response_body = get_sqs_response_body(cassette)
-    message_id = get_message_id(response_body)
+            message_id = sqs.send_payload('hello world!')
 
     records = caplog.records
     assert len(records) == 2
