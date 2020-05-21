@@ -1,0 +1,38 @@
+interactions:
+- request:
+    body: Action=Publish&Version=2010-03-31&TopicArn=arn%3Aaws%3Asns%3Aus-east-2%3A424566909325%3Asqs-mega-test&Message=CAIAAAJwcm90b2NvbAAFAAAAbWVnYQADZXZlbnQA3gAAAAJ0aW1lc3RhbXAAGwAAADIwMjAtMDUtMDRUMTU6NTM6MjcuODIzMDAwAAJkb21haW4ABQAAAHVzZXIAEHZlcnNpb24AAQAAAAJwdWJsaXNoZXIADQAAAHVzZXItc2VydmljZQACbmFtZQANAAAAdXNlci51cGRhdGVkAANhdHRyaWJ1dGVzAD4AAAACZW1haWwAFwAAAGpvaG5kb2VfODRAZXhhbXBsZS5jb20AAnVzZXJuYW1lAAkAAABqb2huLmRvZQAAAnN1YmplY3QABwAAADk4NzY1MAAAEHZlcnNpb24AAQAAAANvYmplY3QA9gAAABB2ZXJzaW9uAAEAAAADY3VycmVudADbAAAAEGlkAAISDwACZnVsbF9uYW1lAAkAAABKb2huIERvZQACdXNlcm5hbWUACQAAAGpvaG4uZG9lAAJlbWFpbAAXAAAAam9obmRvZV84NkBleGFtcGxlLmNvbQACc3NuAAoAAAA0OTcyNzk0MzYAAmJpcnRoZGF0ZQALAAAAMTk4Ni0wMi0xNQACY3JlYXRlZF9hdAAYAAAAMjAyMC0wNS0wM1QxMjoyMDoyMy4wMDAAAnVwZGF0ZWRfYXQAGAAAADIwMjAtMDUtMDRUMTU6NTI6MDEuMDAwAAAAAA%3D%3D
+    headers:
+      Content-Length:
+      - '810'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xMiBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjEy
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjFUMTYzNzI3Wg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://sns.us-east-2.amazonaws.com/
+  response:
+    body:
+      string: "<PublishResponse xmlns=\"http://sns.amazonaws.com/doc/2010-03-31/\"\
+        >\n  <PublishResult>\n    <MessageId>ab566a1b-b94a-572e-9ace-3d5b09c28df7</MessageId>\n\
+        \  </PublishResult>\n  <ResponseMetadata>\n    <RequestId>3876e28f-a603-5aef-affb-b5cf168b8036</RequestId>\n\
+        \  </ResponseMetadata>\n</PublishResponse>\n"
+    headers:
+      Content-Length:
+      - '294'
+      Content-Type:
+      - text/xml
+      Date:
+      - Thu, 21 May 2020 16:37:28 GMT
+      x-amzn-RequestId:
+      - 3876e28f-a603-5aef-affb-b5cf168b8036
+    status:
+      code: 200
+      message: OK
+version: 1

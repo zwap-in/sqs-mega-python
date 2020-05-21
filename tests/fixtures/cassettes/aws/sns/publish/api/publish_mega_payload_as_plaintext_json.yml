@@ -1,0 +1,38 @@
+interactions:
+- request:
+    body: Action=Publish&Version=2010-03-31&TopicArn=arn%3Aaws%3Asns%3Aus-east-2%3A424566909325%3Asqs-mega-test&Message=%7B%22event%22%3A+%7B%22attributes%22%3A+%7B%22email%22%3A+%22johndoe_84%40example.com%22%2C+%22username%22%3A+%22john.doe%22%7D%2C+%22domain%22%3A+%22user%22%2C+%22name%22%3A+%22user.updated%22%2C+%22publisher%22%3A+%22user-service%22%2C+%22subject%22%3A+%22987650%22%2C+%22timestamp%22%3A+%222020-05-04T15%3A53%3A27.823000%22%2C+%22version%22%3A+1%7D%2C+%22object%22%3A+%7B%22current%22%3A+%7B%22birthdate%22%3A+%221986-02-15%22%2C+%22created_at%22%3A+%222020-05-03T12%3A20%3A23.000%22%2C+%22email%22%3A+%22johndoe_86%40example.com%22%2C+%22full_name%22%3A+%22John+Doe%22%2C+%22id%22%3A+987650%2C+%22ssn%22%3A+%22497279436%22%2C+%22updated_at%22%3A+%222020-05-04T15%3A52%3A01.000%22%2C+%22username%22%3A+%22john.doe%22%7D%2C+%22version%22%3A+1%7D%2C+%22protocol%22%3A+%22mega%22%2C+%22version%22%3A+1%7D
+    headers:
+      Content-Length:
+      - '915'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xMiBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjEy
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjFUMTYzNzI2Wg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://sns.us-east-2.amazonaws.com/
+  response:
+    body:
+      string: "<PublishResponse xmlns=\"http://sns.amazonaws.com/doc/2010-03-31/\"\
+        >\n  <PublishResult>\n    <MessageId>66bef93e-45d5-5b7e-a212-ae7ef5529a66</MessageId>\n\
+        \  </PublishResult>\n  <ResponseMetadata>\n    <RequestId>52b85a20-a0bb-5e3c-b6ff-0d60103cdf24</RequestId>\n\
+        \  </ResponseMetadata>\n</PublishResponse>\n"
+    headers:
+      Content-Length:
+      - '294'
+      Content-Type:
+      - text/xml
+      Date:
+      - Thu, 21 May 2020 16:37:26 GMT
+      x-amzn-RequestId:
+      - 52b85a20-a0bb-5e3c-b6ff-0d60103cdf24
+    status:
+      code: 200
+      message: OK
+version: 1

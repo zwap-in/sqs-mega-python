@@ -1,0 +1,38 @@
+interactions:
+- request:
+    body: Action=Publish&Version=2010-03-31&TopicArn=arn%3Aaws%3Asns%3Aus-east-2%3A424566909325%3Asqs-mega-test&Message=%7B%22embedded%22%3A+%7B%22a%22%3A+%22b%22%2C+%22list%22%3A+%5B%22one%22%2C+2.01%2C+%22three%22%2C+null%2C+49%2C+%7B%22a%22%3A+%22ha%21%22%7D%5D%2C+%22true%22%3A+true%7D%2C+%22foo%22%3A+%22bar%22%2C+%22one%22%3A+1%7D
+    headers:
+      Content-Length:
+      - '326'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xMiBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjEy
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjFUMTYzNzI1Wg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://sns.us-east-2.amazonaws.com/
+  response:
+    body:
+      string: "<PublishResponse xmlns=\"http://sns.amazonaws.com/doc/2010-03-31/\"\
+        >\n  <PublishResult>\n    <MessageId>6ef797ac-1ace-5dab-bad5-c0ecaa481bb9</MessageId>\n\
+        \  </PublishResult>\n  <ResponseMetadata>\n    <RequestId>d99ea538-4528-5bc4-aad9-f278f5ae9dd6</RequestId>\n\
+        \  </ResponseMetadata>\n</PublishResponse>\n"
+    headers:
+      Content-Length:
+      - '294'
+      Content-Type:
+      - text/xml
+      Date:
+      - Thu, 21 May 2020 16:37:25 GMT
+      x-amzn-RequestId:
+      - d99ea538-4528-5bc4-aad9-f278f5ae9dd6
+    status:
+      code: 200
+      message: OK
+version: 1
