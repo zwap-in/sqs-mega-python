@@ -1,4 +1,5 @@
 import json
+import logging
 from base64 import b64decode
 
 import bson
@@ -7,6 +8,7 @@ import pytest
 from mega.aws.message import MessageType
 from mega.aws.payload import PayloadType
 from mega.aws.sns.message import SnsNotification, SnsMessageType
+from mega.aws.sqs import LOGGER_NAME
 from mega.aws.sqs.message import SqsMessage
 from mega.aws.sqs.schema import deserialize_sqs_message
 from mega.aws.sqs.subscribe.api import SqsReceiver
@@ -296,6 +298,31 @@ def test_receive_many_messages_with_mixed_payloads(queue_url):
     assert_request_match_sqs_receiver_attributes(cassette, sqs)
 
 
+def test_log_received_messages(queue_url, caplog):
+    sqs = SqsReceiver(
+        queue_url=queue_url,
+        max_number_of_messages=1
+    )
+
+    with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
+        with vcr.use_cassette('receive_message_with_plaintext_json_payload') as cassette:
+            sqs.receive_messages()
+
+    response = get_sqs_receive_message_response_data(cassette)
+    message_id = response['Message']['MessageId']
+    message_body = response['Message']['Body']
+
+    records = caplog.records
+    assert len(records) == 3
+    assert records[0].levelno == logging.DEBUG
+    assert records[0].message == '[{}] Querying messages. ' \
+                                 'MaxNumberOfMessages=1; WaitTimeSeconds=20; VisibilityTimeout=30'.format(sqs.queue_url)
+    assert records[1].levelno == logging.INFO
+    assert records[1].message == '[{}][{}] Received message'.format(sqs.queue_url, message_id)
+    assert records[2].levelno == logging.DEBUG
+    assert records[2].message == '[{}][{}] {}'.format(sqs.queue_url, message_id, message_body)
+
+
 def test_delete_message_that_exists(queue_url):
     sqs = SqsReceiver(queue_url=queue_url)
 
@@ -349,3 +376,33 @@ def test_delete_message_that_has_already_been_deleted(queue_url):
     request = get_sqs_request_data(cassette)
     assert get_request_attribute(request, 'ReceiptHandle') == receipt_handle
     assert get_queue_url_from_request(request) == sqs.queue_url
+
+
+def test_log_deleted_message(queue_url, caplog):
+    sqs = SqsReceiver(queue_url=queue_url)
+
+    message_id = '96427844-a8c4-41e5-beed-dab5780cc681'
+    receipt_handle = (
+        'AQEBY/+I4IQJzCkjsop/FaaKLb5VKXL9JHF4BWbJwOD0osZbenehbjp4xQ59r1DD0pEonhUCaILKkQfq7FrPhUomHBzOzK+e4qCGI62QgkLt6V'
+        '8vYJtHlhSNrroy+c9LyuZFKtVNJQ/8rjFwEDQ/jnFdA6MLGnG2Aaj+8LTdvXb4aG+r1PwkS4AEEa4IvMty5NJOwmd70QynfopkRO18EGe6pKkE'
+        '6d0j1XvZNkd7peisPLxwU9cljjyu+Hdds12atn71Ss7nn/jr2ElhsnzJrB3eQ4XCtjYP/9sfXT8+0BT5SPb2zCIe1bDzXCLxZypikkdEkQq33z'
+        '/TtjWk0/b8yyReM4o52m83tYP6fB0XNlQnWebpO/9leappxF5mFXl7kO2N4ga0dBJ0ts+I/j4rn6GP5w=='
+    )
+
+    message = SqsMessage(
+        message_id=message_id,
+        receipt_handle=receipt_handle,
+        payload='hello world!',
+        payload_type=PayloadType.PLAINTEXT
+    )
+
+    with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
+        with vcr.use_cassette('delete_message_that_exists'):
+            sqs.delete_message(message)
+
+    records = caplog.records
+    assert len(records) == 2
+    assert records[0].levelno == logging.INFO
+    assert records[0].message == '[{}][{}] Deleted message'.format(sqs.queue_url, message_id)
+    assert records[1].levelno == logging.DEBUG
+    assert records[1].message == '[{}][{}] ReceiptHandle={}'.format(sqs.queue_url, message_id, receipt_handle)

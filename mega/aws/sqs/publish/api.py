@@ -20,14 +20,6 @@ class SqsPublisher(BaseSqsApi):
         )
 
         message_id = response.get('MessageId')
-        self._log(INFO, queue_url, message_id, 'Sent SQS message')
-        self._log(DEBUG, queue_url, message_id, body)
+        self._log_message(INFO, queue_url, message_id, 'Sent SQS message')
+        self._log_message(DEBUG, queue_url, message_id, body)
         return message_id
-
-    def _get_queue_url(self, override_queue_url: Optional[str]) -> str:
-        queue_url = override_queue_url or self.queue_url
-
-        if not queue_url:
-            raise ValueError('Missing Queue URL')
-
-        return queue_url

@@ -234,7 +234,7 @@ def test_publish_overriding_default_topic_arn(sqs):
     assert get_message_id_from_response(cassette) == message_id
 
 
-def test_fail_if_no_topic_arn_is_provided():
+def test_fail_if_no_queue_url_is_provided():
     sqs = SqsPublisher()
 
     with pytest.raises(ValueError) as e:

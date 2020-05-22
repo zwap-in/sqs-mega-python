@@ -41,36 +41,61 @@ class SqsReceiver(BaseSqsApi):
     def visibility_timeout(self) -> int:
         return self._visibility_timeout
 
-    def receive_messages(self) -> List[SqsMessage]:
-        response = self._client.receive_message(
-            QueueUrl=self._queue_url,
-            MaxNumberOfMessages=self._max_number_of_messages,
-            WaitTimeSeconds=self._wait_time_seconds,
-            VisibilityTimeout=self._visibility_timeout
-        )
+    def receive_messages(
+            self,
+            queue_url: Optional[str] = None,
+            max_number_of_messages: Optional[int] = None,
+            wait_time_seconds: Optional[int] = None,
+            visibility_timeout: Optional[int] = None
+    ) -> List[SqsMessage]:
+        queue_url = self._get_queue_url(queue_url)
+        max_number_of_messages = \
+            self._max_number_of_messages if max_number_of_messages is None else max_number_of_messages
+        wait_time_seconds = self._wait_time_seconds if wait_time_seconds is None else wait_time_seconds
+        visibility_timeout = self._visibility_timeout if visibility_timeout is None else visibility_timeout
+
+        response = self.__receive_raw_messages(queue_url, max_number_of_messages, wait_time_seconds, visibility_timeout)
 
         if 'Messages' not in response:
-            self._log(DEBUG, 'No messages received')
+            self._log(DEBUG, queue_url, 'No messages received')
             return []
 
-        return self.__extract_messages(response)
+        return self.__extract_messages(queue_url, response)
 
-    def __extract_messages(self, response):
+    def __receive_raw_messages(self, queue_url, max_number_of_messages, wait_time_seconds, visibility_timeout):
+        self._log(
+            DEBUG, queue_url,
+            'Querying messages. MaxNumberOfMessages={}; WaitTimeSeconds={}; VisibilityTimeout={}'.format(
+                max_number_of_messages, wait_time_seconds, visibility_timeout
+            )
+        )
+        response = self._client.receive_message(
+            QueueUrl=queue_url,
+            MaxNumberOfMessages=max_number_of_messages,
+            WaitTimeSeconds=wait_time_seconds,
+            VisibilityTimeout=visibility_timeout
+        )
+        return response
+
+    def __extract_messages(self, queue_url, response):
         messages = []
         for data in response['Messages']:
-            self.__log_message_data(data)
+            self.__log_message_data(queue_url, data)
             messages.append(deserialize_sqs_message(data))
         return messages
 
-    def __log_message_data(self, data):
+    def __log_message_data(self, queue_url, data):
         message_id = data.get('MessageId')
-        self._log(INFO, message_id, 'Received message')
-        self._log(DEBUG, message_id, data.get('Body'))
+        self._log_message(INFO, queue_url, message_id, 'Received message')
+        self._log_message(DEBUG, queue_url, message_id, data.get('Body'))
 
-    def delete_message(self, message: SqsMessage):
+    def delete_message(self, message: SqsMessage, queue_url: Optional[str] = None):
+        queue_url = self._get_queue_url(queue_url)
+
         self._client.delete_message(
-            QueueUrl=self._queue_url,
+            QueueUrl=queue_url,
             ReceiptHandle=message.receipt_handle
         )
 
-        self._log(INFO, message.message_id, 'Deleted message')
+        self._log_message(INFO, queue_url, message.message_id, 'Deleted message')
+        self._log_message(DEBUG, queue_url, message.message_id, 'ReceiptHandle={}'.format(message.receipt_handle))
