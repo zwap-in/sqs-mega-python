@@ -1,8 +1,6 @@
 import json
 import logging
-import re
 from base64 import b64decode
-from urllib.parse import parse_qs
 
 import bson
 import dateutil.parser
@@ -11,6 +9,7 @@ import pytest
 from mega.aws.sqs import LOGGER_NAME
 from mega.aws.sqs.publish.api import SqsPublisher
 from mega.event import MegaPayload, MegaEvent, MegaObject, deserialize_mega_payload
+from tests.mega.aws.sqs import get_sqs_request_data, get_queue_url_from_request, get_sqs_response_data
 from tests.vcr import build_vcr
 
 vcr = build_vcr(
@@ -73,34 +72,13 @@ def build_mega_payload():
     )
 
 
-def get_sqs_request_data(cassette):
-    request_body = cassette.requests[0].body.decode()
-    return parse_qs(request_body)
-
-
-def get_queue_url(request_data):
-    return request_data['QueueUrl'][0]
-
-
-def get_message_body(request_data):
+def get_message_body_from_request(request_data):
     return request_data['MessageBody'][0]
 
 
-def get_sqs_response_body(cassette) -> str:
-    return cassette.responses[0]['body']['string'].decode()
-
-
-def get_message_id(response_body: str):
-    match = re.search(r'<MessageId>(.+)</MessageId>', response_body)
-    if not match:
-        return None
-    return match.group(1)
-
-
-def assert_matches_message_id(cassette, message_id):
-    response_body = get_sqs_response_body(cassette)
-    response_message_id = get_message_id(response_body)
-    assert response_message_id == message_id
+def get_message_id_from_response(cassette):
+    response = get_sqs_response_data(cassette)
+    return response['SendMessageResponse']['SendMessageResult']['MessageId']
 
 
 def test_send_raw_plaintext_message(sqs):
@@ -112,9 +90,9 @@ def test_send_raw_plaintext_message(sqs):
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
-    assert get_queue_url(request_data) == sqs.queue_url
-    assert get_message_body(request_data) == plaintext
-    assert_matches_message_id(cassette, message_id)
+    assert get_queue_url_from_request(request_data) == sqs.queue_url
+    assert get_message_body_from_request(request_data) == plaintext
+    assert get_message_id_from_response(cassette) == message_id
 
 
 def test_send_raw_json_message(sqs):
@@ -127,9 +105,9 @@ def test_send_raw_json_message(sqs):
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
-    assert get_queue_url(request_data) == sqs.queue_url
-    assert get_message_body(request_data) == plaintext_json
-    assert_matches_message_id(cassette, message_id)
+    assert get_queue_url_from_request(request_data) == sqs.queue_url
+    assert get_message_body_from_request(request_data) == plaintext_json
+    assert get_message_id_from_response(cassette) == message_id
 
 
 def test_send_plaintext_payload(sqs):
@@ -140,9 +118,9 @@ def test_send_plaintext_payload(sqs):
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
-    assert get_queue_url(request_data) == sqs.queue_url
-    assert get_message_body(request_data) == plaintext
-    assert_matches_message_id(cassette, message_id)
+    assert get_queue_url_from_request(request_data) == sqs.queue_url
+    assert get_message_body_from_request(request_data) == plaintext
+    assert get_message_id_from_response(cassette) == message_id
 
 
 def test_send_blob_payload(sqs):
@@ -174,9 +152,9 @@ def test_send_blob_payload(sqs):
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
-    assert get_queue_url(request_data) == sqs.queue_url
-    assert b64decode(get_message_body(request_data)) == blob
-    assert_matches_message_id(cassette, message_id)
+    assert get_queue_url_from_request(request_data) == sqs.queue_url
+    assert b64decode(get_message_body_from_request(request_data)) == blob
+    assert get_message_id_from_response(cassette) == message_id
 
 
 def test_send_data_payload_as_plaintext_json(sqs):
@@ -188,9 +166,9 @@ def test_send_data_payload_as_plaintext_json(sqs):
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
-    assert get_queue_url(request_data) == sqs.queue_url
-    assert json.loads(get_message_body(request_data)) == data
-    assert_matches_message_id(cassette, message_id)
+    assert get_queue_url_from_request(request_data) == sqs.queue_url
+    assert json.loads(get_message_body_from_request(request_data)) == data
+    assert get_message_id_from_response(cassette) == message_id
 
 
 def test_send_mega_payload_as_plaintext_json(sqs):
@@ -202,11 +180,11 @@ def test_send_mega_payload_as_plaintext_json(sqs):
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
-    assert get_queue_url(request_data) == sqs.queue_url
+    assert get_queue_url_from_request(request_data) == sqs.queue_url
 
-    message_body = get_message_body(request_data)
+    message_body = get_message_body_from_request(request_data)
     assert deserialize_mega_payload(json.loads(message_body)) == mega
-    assert_matches_message_id(cassette, message_id)
+    assert get_message_id_from_response(cassette) == message_id
 
 
 def test_send_data_payload_as_binary_bson(sqs):
@@ -218,12 +196,12 @@ def test_send_data_payload_as_binary_bson(sqs):
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
-    assert get_queue_url(request_data) == sqs.queue_url
+    assert get_queue_url_from_request(request_data) == sqs.queue_url
 
-    message_body = get_message_body(request_data)
+    message_body = get_message_body_from_request(request_data)
     blob = b64decode(message_body)
     assert bson.loads(blob) == data
-    assert_matches_message_id(cassette, message_id)
+    assert get_message_id_from_response(cassette) == message_id
 
 
 def test_send_mega_payload_as_binary_bson(sqs):
@@ -235,12 +213,12 @@ def test_send_mega_payload_as_binary_bson(sqs):
     assert cassette.all_played
 
     request_data = get_sqs_request_data(cassette)
-    assert get_queue_url(request_data) == sqs.queue_url
+    assert get_queue_url_from_request(request_data) == sqs.queue_url
 
-    message_body = get_message_body(request_data)
+    message_body = get_message_body_from_request(request_data)
     blob = b64decode(message_body)
     assert deserialize_mega_payload(bson.loads(blob)) == mega
-    assert_matches_message_id(cassette, message_id)
+    assert get_message_id_from_response(cassette) == message_id
 
 
 def test_publish_overriding_default_topic_arn(sqs):
@@ -252,8 +230,8 @@ def test_publish_overriding_default_topic_arn(sqs):
 
     assert cassette.all_played
     request_data = get_sqs_request_data(cassette)
-    assert get_queue_url(request_data) == another_queue_url
-    assert_matches_message_id(cassette, message_id)
+    assert get_queue_url_from_request(request_data) == another_queue_url
+    assert get_message_id_from_response(cassette) == message_id
 
 
 def test_fail_if_no_topic_arn_is_provided():

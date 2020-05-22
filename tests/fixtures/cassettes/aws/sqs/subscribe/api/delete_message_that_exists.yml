@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: Action=DeleteMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&ReceiptHandle=AQEBY%2F%2BI4IQJzCkjsop%2FFaaKLb5VKXL9JHF4BWbJwOD0osZbenehbjp4xQ59r1DD0pEonhUCaILKkQfq7FrPhUomHBzOzK%2Be4qCGI62QgkLt6V8vYJtHlhSNrroy%2Bc9LyuZFKtVNJQ%2F8rjFwEDQ%2FjnFdA6MLGnG2Aaj%2B8LTdvXb4aG%2Br1PwkS4AEEa4IvMty5NJOwmd70QynfopkRO18EGe6pKkE6d0j1XvZNkd7peisPLxwU9cljjyu%2BHdds12atn71Ss7nn%2Fjr2ElhsnzJrB3eQ4XCtjYP%2F9sfXT8%2B0BT5SPb2zCIe1bDzXCLxZypikkdEkQq33z%2FTtjWk0%2Fb8yyReM4o52m83tYP6fB0XNlQnWebpO%2F9leappxF5mFXl7kO2N4ga0dBJ0ts%2BI%2Fj4rn6GP5w%3D%3D
+    headers:
+      Content-Length:
+      - '588'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xNSBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjE1
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjJUMDIwODUzWg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><DeleteMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ResponseMetadata><RequestId>fbafe110-a0a9-588b-b0e8-b65196dfcfd4</RequestId></ResponseMetadata></DeleteMessageResponse>
+    headers:
+      Content-Length:
+      - '215'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 22 May 2020 02:08:54 GMT
+      x-amzn-RequestId:
+      - fbafe110-a0a9-588b-b0e8-b65196dfcfd4
+    status:
+      code: 200
+      message: OK
+version: 1

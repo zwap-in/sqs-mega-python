@@ -8,6 +8,7 @@ pytest = "*"
 vcrpy = "*"
 parameterized = "*"
 freezegun = "*"
+xmltodict = "*"
 
 [packages]
 boto3 = ">= 1.13"

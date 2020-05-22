@@ -1,0 +1,36 @@
+interactions:
+- request:
+    body: Action=ReceiveMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MaxNumberOfMessages=1&WaitTimeSeconds=20&VisibilityTimeout=30
+    headers:
+      Content-Length:
+      - '184'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xMiBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjEy
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjJUMDEyMzM4Wg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ReceiveMessageResult><Message><MessageId>96427844-a8c4-41e5-beed-dab5780cc681</MessageId><ReceiptHandle>AQEBY/+I4IQJzCkjsop/FaaKLb5VKXL9JHF4BWbJwOD0osZbenehbjp4xQ59r1DD0pEonhUCaILKkQfq7FrPhUomHBzOzK+e4qCGI62QgkLt6V8vYJtHlhSNrroy+c9LyuZFKtVNJQ/8rjFwEDQ/jnFdA6MLGnG2Aaj+8LTdvXb4aG+r1PwkS4AEEa4IvMty5NJOwmd70QynfopkRO18EGe6pKkE6d0j1XvZNkd7peisPLxwU9cljjyu+Hdds12atn71Ss7nn/jr2ElhsnzJrB3eQ4XCtjYP/9sfXT8+0BT5SPb2zCIe1bDzXCLxZypikkdEkQq33z/TtjWk0/b8yyReM4o52m83tYP6fB0XNlQnWebpO/9leappxF5mFXl7kO2N4ga0dBJ0ts+I/j4rn6GP5w==</ReceiptHandle><MD5OfBody>fc3ff98e8c6a0d3087d515c0473f8677</MD5OfBody><Body>hello
+        world!</Body></Message></ReceiveMessageResult><ResponseMetadata><RequestId>b3b9dc19-9067-57ba-85df-8b58bbbcd739</RequestId></ResponseMetadata></ReceiveMessageResponse>
+    headers:
+      Content-Length:
+      - '863'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 22 May 2020 01:23:39 GMT
+      x-amzn-RequestId:
+      - b3b9dc19-9067-57ba-85df-8b58bbbcd739
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -1,0 +1,38 @@
+interactions:
+- request:
+    body: Action=ReceiveMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MaxNumberOfMessages=1&WaitTimeSeconds=20&VisibilityTimeout=30
+    headers:
+      Content-Length:
+      - '183'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xMiBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjEy
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjJUMDAzNjAzWg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: '<?xml version="1.0"?><ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ReceiveMessageResult><Message><MessageId>401107ad-c2fa-40df-a778-fd4990405ed8</MessageId><ReceiptHandle>AQEBtRUpBzuCEloPvW5IplhtbJRGnRoVhD3I4cDD0XSSISOT54SzFXfNqiCpVPtAzY6Uv8CzSSbFmcTEKPU+Zjq9d8ZPxwUqsk2JdLuVb6rq26x+pSVLwxCrEIGR5FS+KqFgi60nYZEWMj9zJTTOxF7UAQ+TgZ5SIXaSj0/bv6T+gYDe2XCmZQ9UAOPHhjFTCJSfJLdFjA7IFCSfpYmBpT1KMoc006d2UbZmWVMhPb+HfrrXoNP6Xgdd9fotZw93V0Ppc6wl78Ri/ma0ZstrMys9ipPdT6g6el3vf2JDLw5CjF8i9NmRrmH0RIINTm9rVtQuE41FeNR0zGIeCEEfLjsV566z5iOIva6uIVyYyv7xd2/mTrFcmsiMa+oycGd1UA/IfBSpb4oI1mnLKDGaWAX/TA==</ReceiptHandle><MD5OfBody>a755c4908ec0bec57afdaad6f6f3b23f</MD5OfBody><Body>{&quot;foo&quot;:
+        &quot;bar&quot;, &quot;one&quot;: 1, &quot;embedded&quot;: {&quot;a&quot;:
+        &quot;b&quot;, &quot;true&quot;: true, &quot;list&quot;: [&quot;one&quot;,
+        2.01, &quot;three&quot;, null, 49, {&quot;a&quot;: &quot;ha!&quot;}]}}</Body></Message></ReceiveMessageResult><ResponseMetadata><RequestId>e3bdc1ee-312a-51ac-b267-96af119e0c37</RequestId></ResponseMetadata></ReceiveMessageResponse>'
+    headers:
+      Content-Length:
+      - '1089'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 22 May 2020 00:36:04 GMT
+      x-amzn-RequestId:
+      - e3bdc1ee-312a-51ac-b267-96af119e0c37
+    status:
+      code: 200
+      message: OK
+version: 1

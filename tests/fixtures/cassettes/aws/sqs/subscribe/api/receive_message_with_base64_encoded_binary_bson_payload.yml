@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: Action=ReceiveMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MaxNumberOfMessages=1&WaitTimeSeconds=20&VisibilityTimeout=30
+    headers:
+      Content-Length:
+      - '184'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xNSBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjE1
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjJUMDIyOTQ4Wg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: <?xml version="1.0"?><ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ReceiveMessageResult><Message><MessageId>0952fe33-e1ec-4636-9b00-8cc90e8df1e2</MessageId><ReceiptHandle>AQEBmup3pQOYHXiY1EsSVHDYkx4ue3u2XmFssPhm6CydcmMvtUi38UT4DaYO7kssaJ+C04G82Lcmm3Ey2LDgIOq09nRREf7vdQpRoR0UFIqiiprq/x1CHeZYcq0Y8/ayRB4fBmQWcFT4UoWVRYm41/HCeT7O0+WqfTSlzsAdn1+D2VWrd23QNIQBY/W8a3zq2QPjL2uIpv15tomhqmJ+NoSh1pQFPQttq6c+BHWoHmPe1+quYdXlRQOZXN0+Q6ohhjYWFuBHISV6vT0kqjaXnjb67w48XwpkWJglfUinC3kQkm5hNBPyCyZeDwBt40gPnbUpgTZEI1vUPjM3nvh69jPSFHMxIbhjWWtaatBhbtEJwzf1AfKJNlX+ANk85lCeCShkQRtPka4VdJgrjwjzSp5SRg==</ReceiptHandle><MD5OfBody>864814f405de89ae028aa42e8470dea8</MD5OfBody><Body>hQAAAAJmb28ABAAAAGJhcgAQb25lAAEAAAADZW1iZWRkZWQAYAAAAAJhAAIAAABiAAh0cnVlAAEEbGlzdABFAAAAAjAABAAAAG9uZQABMQAUrkfhehQAQAIyAAYAAAB0aHJlZQAKMwAQNAAxAAAAAzUAEAAAAAJhAAQAAABoYSEAAAAAAA==</Body></Message></ReceiveMessageResult><ResponseMetadata><RequestId>838f0508-d392-5faf-836e-5249e8cf044b</RequestId></ResponseMetadata></ReceiveMessageResponse>
+    headers:
+      Content-Length:
+      - '1031'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 22 May 2020 02:29:49 GMT
+      x-amzn-RequestId:
+      - 838f0508-d392-5faf-836e-5249e8cf044b
+    status:
+      code: 200
+      message: OK
+version: 1

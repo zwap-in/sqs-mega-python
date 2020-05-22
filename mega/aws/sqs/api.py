@@ -36,11 +36,3 @@ class BaseSqsApi(ABC):
             logger.log(level, '[{0}][{1}] {2}'.format(queue_url, message_id, msg))
         else:
             logger.log(level, '[{0}] {1}'.format(queue_url, msg))
-
-    def _get_queue_url(self, override_queue_url: Optional[str]) -> str:
-        queue_url = override_queue_url or self._queue_url
-
-        if not queue_url:
-            raise ValueError('Missing Queue URL')
-
-        return queue_url

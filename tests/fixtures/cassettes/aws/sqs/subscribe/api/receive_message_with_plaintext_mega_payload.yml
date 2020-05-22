@@ -1,0 +1,46 @@
+interactions:
+- request:
+    body: Action=ReceiveMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MaxNumberOfMessages=1&WaitTimeSeconds=20&VisibilityTimeout=30
+    headers:
+      Content-Length:
+      - '184'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xNSBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjE1
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjJUMDIyMTQ5Wg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: '<?xml version="1.0"?><ReceiveMessageResponse xmlns="http://queue.amazonaws.com/doc/2012-11-05/"><ReceiveMessageResult><Message><MessageId>52aae34a-82f2-407b-b662-d97ca0550550</MessageId><ReceiptHandle>AQEBDmMqouoa19Y9vg2u1oe0bDJ6iRGSd1jMJJ512S808Tx3lA8hPAQfr9O1gFqGRAM4MT4sigXsWqr0fLrB0HRQzb5mawRhQcvcbDSGRvkJoZeqBzuxxfcHdmaIwkJEFs+8OdmljEbAUNV0tCYVyXf3s8lJApVXSliKQUJCW6FQJYh1oN24Svnqtc3OLHwiZX1v07y66AJpMwwzQe39Z8IUEvxXHF9xQLrrqcjDUfnezbd1BP0fTAW366LTrr5GT3uphhUjfA81PF7boT1gFjqNgo0JY3ty4r95o592S2SzidO1fl+BziaZ2aARUITAzMUNqQxkP45LY61r4j1p4+e3/QUO1ajpOYKeJi3Ub71ZOXywfkd/rZp8Q5DFHOLDyDcudFJt/9MaG1UsXeWkjIMYZw==</ReceiptHandle><MD5OfBody>ee7922b35da718c5eed4e71e2ca0a2e2</MD5OfBody><Body>{&quot;event&quot;:
+        {&quot;attributes&quot;: {&quot;email&quot;: &quot;johndoe_84@example.com&quot;,
+        &quot;username&quot;: &quot;john.doe&quot;}, &quot;domain&quot;: &quot;user&quot;,
+        &quot;name&quot;: &quot;user.updated&quot;, &quot;publisher&quot;: &quot;user-service&quot;,
+        &quot;subject&quot;: &quot;987650&quot;, &quot;timestamp&quot;: &quot;2020-05-04T15:53:27.823000&quot;,
+        &quot;version&quot;: 1}, &quot;object&quot;: {&quot;current&quot;: {&quot;birthdate&quot;:
+        &quot;1986-02-15&quot;, &quot;created_at&quot;: &quot;2020-05-03T12:20:23.000&quot;,
+        &quot;email&quot;: &quot;johndoe_86@example.com&quot;, &quot;full_name&quot;:
+        &quot;John Doe&quot;, &quot;id&quot;: 987650, &quot;ssn&quot;: &quot;497279436&quot;,
+        &quot;updated_at&quot;: &quot;2020-05-04T15:52:01.000&quot;, &quot;username&quot;:
+        &quot;john.doe&quot;}, &quot;version&quot;: 1}, &quot;protocol&quot;: &quot;mega&quot;,
+        &quot;version&quot;: 1}</Body></Message></ReceiveMessageResult><ResponseMetadata><RequestId>c710addd-e1f9-5500-82e5-fa9cd887b49a</RequestId></ResponseMetadata></ReceiveMessageResponse>'
+    headers:
+      Content-Length:
+      - '1766'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 22 May 2020 02:21:50 GMT
+      x-amzn-RequestId:
+      - c710addd-e1f9-5500-82e5-fa9cd887b49a
+    status:
+      code: 200
+      message: OK
+version: 1
