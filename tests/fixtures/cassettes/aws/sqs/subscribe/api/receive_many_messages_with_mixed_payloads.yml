@@ -1,0 +1,176 @@
+interactions:
+- request:
+    body: Action=ReceiveMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MaxNumberOfMessages=10&WaitTimeSeconds=20&VisibilityTimeout=30
+    headers:
+      Content-Length:
+      - '185'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xNSBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjE1
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjJUMTkzNzAxWg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: "<?xml version=\"1.0\"?><ReceiveMessageResponse xmlns=\"http://queue.amazonaws.com/doc/2012-11-05/\"\
+        ><ReceiveMessageResult><Message><MessageId>e52958d4-4a15-4fc4-b5bf-ecb7bf7371c9</MessageId><ReceiptHandle>AQEBCtFmbbMLG+3JZnznCuxa1+YBqKwl8oWi4oll1Pxd/rEOqckIy2dZ/k4pU26UM4PDtrY8UBn2BwyJ7TqLckJe60AEGl/0IpdMi80dwu92rKpuXuS3PHc31Ilp6r/yM5rM79uLdo3wRowzEIRLEPLoOXs0S4nxJn4r653x6B1mobXL7tPIuJMXcxj4k1Y1fGCXN5btX8PgLkqqnob04FardwouLKfmVopEtesKkGVnQe7gtujuNVnaEQyJaJFnpTMBzT6kZcVjVCi822MQfU85J4sZDiQkK8siXy6eepivF9bVkx/n4imI5IyeISy4Tw3LIXhJwMYR5VnjiBFNdFjiAmHyZoaqTC6GC/ixx6imOMprKPjqp4t7U8Ia4jCazLhv5YIvAFtkxrKZXQi0Hmj+XA==</ReceiptHandle><MD5OfBody>864814f405de89ae028aa42e8470dea8</MD5OfBody><Body>hQAAAAJmb28ABAAAAGJhcgAQb25lAAEAAAADZW1iZWRkZWQAYAAAAAJhAAIAAABiAAh0cnVlAAEEbGlzdABFAAAAAjAABAAAAG9uZQABMQAUrkfhehQAQAIyAAYAAAB0aHJlZQAKMwAQNAAxAAAAAzUAEAAAAAJhAAQAAABoYSEAAAAAAA==</Body></Message><Message><MessageId>ee95bf16-3c59-4aae-a3ac-dd32ae66dbc7</MessageId><ReceiptHandle>AQEBRgLwgx4C/tOUWoJt+PST5lNlpVYsxkcaJVFaaePi3Uc/bCAN35L3pu3/C+vnOwuWEAj6EyIaWZfQFjCGuiO1+6CF/4m7cY0+8FFkGXBbvP+zClWTpJ8H1L6jrn6k0tnYwAqKcaKtI7MqovB388Gdm8ZEyV79lDAmi/CxaOHciCc8LErrUyg4RwyF74kcVpZLA6t4hLBZsw2LG669j8KkKnhOBT3sNUyZfs3c/3q2eMYorJ4eeZqaDeY2rxDnKUp5ZpfJBq6nuda1v6sW5pxGEuGFBKlLNroD+HulmnW8hLCGP03W+SC5GgMzdqonWidXX+Aotyra+4tDBLBf7Nbie6r6aBK2KEAuSlq8djuQZH9EIrIXPte+iC63hQavUdg+JlbWW26lFagAZlse3mXK1g==</ReceiptHandle><MD5OfBody>d6adec580b05f66cbc4ec84a8caf82c3</MD5OfBody><Body>&lt;\xE1\
+        \xE9\xED\xF3\xFA\xE3\xF5\xE2\xEA\xEE\xF4\xFB\xE0\xE8\xEC\xF2\xF9\xE7\xC1\xC9\
+        \xCD\xD3\xDA\xC3\xD5\xC2\xCA\xCE\xD4\xDB\xC0\xC8\xCC\xD2\xD9\xC7!@#$%^&amp;*()-_=+`~'&quot;;:.,/&gt;</Body></Message><Message><MessageId>0a4e3984-9aed-49b4-a76d-7972dadd673b</MessageId><ReceiptHandle>AQEBPOwrWOQ6QOMSmAKW5FtsS6KOVAymfBgGcvd6zHvn9OQeIZinAtsY4sdXuuVye6xa1FIUChclGdJzebWoiiBVu608HsHbo4aduLnBEppexBnIyP49it7cjYfy1559Odxdq41CqidoITs0rpJpe4yQoT6V84AQCl97tQvbNpyhaTTQ98s2Z3NP0s0FhVMcU2/6jsKk96BF3nmSqZ/8mV5FlK14OeQkSt8Hnvs49LkglP2soL+sgs6kb7JzEAT6YNq/G0ucMLXjOGLG9SfDzPPG3uYHUHL5Hs5AtKeFFfP99ky+yEa7dY6UReLd8JOB6z2tWq3B6szq3zDsx9DSIHqh1R/PEjq8/epJBXGQAAlW2JaFijgMMertwdsda1F700SovHy27HV8vF4FGJuzdKxmxA==</ReceiptHandle><MD5OfBody>61fb3a022d0436d5a629c474aca161ff</MD5OfBody><Body>{\n\
+        \  &quot;Type&quot; : &quot;Notification&quot;,\n  &quot;MessageId&quot; :\
+        \ &quot;c82a9e3b-5a98-57ed-aa00-c9797118381c&quot;,\n  &quot;TopicArn&quot;\
+        \ : &quot;arn:aws:sns:us-east-2:424566909325:sqs-mega-test&quot;,\n  &quot;Message&quot;\
+        \ : &quot;{\\&quot;strange\\&quot;: \\&quot;&lt;\\\\u00e1\\\\u00e9\\\\u00ed\\\
+        \\u00f3\\\\u00fa\\\\u00e3\\\\u00f5\\\\u00e2\\\\u00ea\\\\u00ee\\\\u00f4\\\\\
+        u00fb\\\\u00e0\\\\u00e8\\\\u00ec\\\\u00f2\\\\u00f9\\\\u00e7\\\\u00c1\\\\u00c9\\\
+        \\u00cd\\\\u00d3\\\\u00da\\\\u00c3\\\\u00d5\\\\u00c2\\\\u00ca\\\\u00ce\\\\\
+        u00d4\\\\u00db\\\\u00c0\\\\u00c8\\\\u00cc\\\\u00d2\\\\u00d9\\\\u00c7!@#$%^&amp;*()-_=+`~'\\\
+        \\\\&quot;;:.,/&gt;\\&quot;}&quot;,\n  &quot;Timestamp&quot; : &quot;2020-05-22T19:34:24.257Z&quot;,\n\
+        \  &quot;SignatureVersion&quot; : &quot;1&quot;,\n  &quot;Signature&quot;\
+        \ : &quot;OugwjaMZ2pL+L+f6mgyepMKAs4a+j6uZjLSF7tG8oOZ3LtgC+3Bo13W+7nAbY6BDAnuh2bEUU1VJCkPrUNPgmRenhqYu+LAFScvHQ/mlgTuWxXkrPBQ+HcBY0Pfa0EnJt6nypyatHQEDCI1MR04CPQl9SGnbvLTfmekwe2mZGVfsrw8EmIoAGzsPSs6E69aMU1vYtFuw17+AG+Xd76lPAh0nETi/11xmEuAOinSPQnz3gPntiIshoB/4YEv+I2ClGopw8u/6avHJkkwVEQRezxXMFAfGvISAJP4gsQjYG+coWcUVC0+B237+BLsxCah3RaEmlKZkJ1xU+p9b+DbaSQ==&quot;,\n\
+        \  &quot;SigningCertURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/SimpleNotificationService-a86cb10b4e1f29c941702d737128f7b6.pem&quot;,\n\
+        \  &quot;UnsubscribeURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:424566909325:sqs-mega-test:5c60ae46-2afa-4d16-b246-b027a0c81753&quot;\n\
+        }</Body></Message><Message><MessageId>e8112c16-64dd-40b5-8ca3-8ff457b7c282</MessageId><ReceiptHandle>AQEBQ2+Vgx4s+bx4o/DX3VJT3Z1Zt6qaHnu9FwcLzuw62ag1spyoDumGq3W3bF/AmYS/D2msP/KxuNB7HnyCnJGbC4eust9tA3P4F7s+jwxH7UbBoaiVUyy2/2I8tBtDQKqr3xVPhcaEcf03wDeAm50iU+ymFyYwOOmYlQA2HE8OwkQXY22LvmQGWbLLqOdO7M7wPoLs87129iSoBn4xxCUzpMNL+OkNF+esh7D3BSy7H8yD3gQEPLnZYAqLQJ8TCxHT85Ia8hZTAmuPVzckU8eVk3Hq7zS0cvEh6eFd2sDb3KLMztVwz3mAgyJ6SgMi1qzySCuoUt87qpWk3eWn96I6rxqxz+JBYJFjUTkVhcgvMlS8QF8HyUUVWm/gjdJi9X9PWxBHkQkUkfj650i5R0WgdA==</ReceiptHandle><MD5OfBody>8c1af1354be232c13f67ae0480b29a76</MD5OfBody><Body>{\n\
+        \  &quot;Type&quot; : &quot;Notification&quot;,\n  &quot;MessageId&quot; :\
+        \ &quot;d10f298e-2ce7-59eb-b5bc-7ecc0767c61a&quot;,\n  &quot;TopicArn&quot;\
+        \ : &quot;arn:aws:sns:us-east-2:424566909325:sqs-mega-test&quot;,\n  &quot;Message&quot;\
+        \ : &quot;{\\&quot;event\\&quot;: {\\&quot;attributes\\&quot;: {\\&quot;item_id\\\
+        &quot;: \\&quot;0794bac2-e860-4e0d-b9cc-42ab21e2a851\\&quot;, \\&quot;quantity\\\
+        &quot;: 5}, \\&quot;domain\\&quot;: \\&quot;shopping_cart\\&quot;, \\&quot;name\\\
+        &quot;: \\&quot;shopping_cart.item.added\\&quot;, \\&quot;publisher\\&quot;:\
+        \ \\&quot;shopping-cart-service\\&quot;, \\&quot;subject\\&quot;: \\&quot;987650\\\
+        &quot;, \\&quot;timestamp\\&quot;: \\&quot;2020-05-22T19:34:24.506765\\&quot;,\
+        \ \\&quot;version\\&quot;: 2}, \\&quot;extra\\&quot;: {\\&quot;channel\\&quot;:\
+        \ \\&quot;web/desktop\\&quot;, \\&quot;user_agent\\&quot;: \\&quot;Mozilla/5.0\
+        \ (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko)\
+        \ Version/13.1 Safari/605.1.15\\&quot;, \\&quot;user_ip_address\\&quot;: \\\
+        &quot;177.182.205.103\\&quot;}, \\&quot;object\\&quot;: {\\&quot;current\\\
+        &quot;: {\\&quot;created_at\\&quot;: \\&quot;2020-05-03T12:20:23.000\\&quot;,\
+        \ \\&quot;currency\\&quot;: \\&quot;USD\\&quot;, \\&quot;discount\\&quot;:\
+        \ \\&quot;20.19\\&quot;, \\&quot;estimated_shipping\\&quot;: \\&quot;10.00\\\
+        &quot;, \\&quot;estimated_tax\\&quot;: \\&quot;33.05\\&quot;, \\&quot;estimated_total\\\
+        &quot;: \\&quot;400.23\\&quot;, \\&quot;id\\&quot;: \\&quot;18a3f92e-1fbf-45eb-8769-d836d0a1be55\\\
+        &quot;, \\&quot;items\\&quot;: [{\\&quot;id\\&quot;: \\&quot;61fcc874-624e-40f8-8fd7-0e663c7837e8\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;19.99\\&quot;, \\&quot;quantity\\&quot;:\
+        \ 10}, {\\&quot;id\\&quot;: \\&quot;3c7f8798-1d3d-47de-82dd-c6c5e0de74ee\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;102.50\\&quot;, \\&quot;quantity\\\
+        &quot;: 1}, {\\&quot;id\\&quot;: \\&quot;bba76edc-8afc-4fde-b4c4-ea58a230c5d6\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;24.99\\&quot;, \\&quot;quantity\\&quot;:\
+        \ 3}], \\&quot;subtotal\\&quot;: \\&quot;357.18\\&quot;, \\&quot;updated_at\\\
+        &quot;: \\&quot;2020-05-04T15:52:01.000\\&quot;, \\&quot;user_id\\&quot;:\
+        \ 987650, \\&quot;value\\&quot;: \\&quot;377.37\\&quot;}, \\&quot;id\\&quot;:\
+        \ \\&quot;18a3f92e-1fbf-45eb-8769-d836d0a1be55\\&quot;, \\&quot;previous\\\
+        &quot;: {\\&quot;created_at\\&quot;: \\&quot;2020-05-03T12:20:23.000\\&quot;,\
+        \ \\&quot;currency\\&quot;: \\&quot;USD\\&quot;, \\&quot;discount\\&quot;:\
+        \ \\&quot;10.09\\&quot;, \\&quot;estimated_shipping\\&quot;: \\&quot;10.00\\\
+        &quot;, \\&quot;estimated_tax\\&quot;: \\&quot;24.96\\&quot;, \\&quot;estimated_total\\\
+        &quot;: \\&quot;302.29\\&quot;, \\&quot;id\\&quot;: \\&quot;18a3f92e-1fbf-45eb-8769-d836d0a1be55\\\
+        &quot;, \\&quot;items\\&quot;: [{\\&quot;id\\&quot;: \\&quot;61fcc874-624e-40f8-8fd7-0e663c7837e8\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;19.99\\&quot;, \\&quot;quantity\\&quot;:\
+        \ 5}, {\\&quot;id\\&quot;: \\&quot;3c7f8798-1d3d-47de-82dd-c6c5e0de74ee\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;102.50\\&quot;, \\&quot;quantity\\\
+        &quot;: 1}, {\\&quot;id\\&quot;: \\&quot;bba76edc-8afc-4fde-b4c4-ea58a230c5d6\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;24.99\\&quot;, \\&quot;quantity\\&quot;:\
+        \ 3}], \\&quot;subtotal\\&quot;: \\&quot;267.33\\&quot;, \\&quot;updated_at\\\
+        &quot;: \\&quot;2020-05-04T13:47:08.000\\&quot;, \\&quot;user_id\\&quot;:\
+        \ 987650, \\&quot;value\\&quot;: \\&quot;277.42\\&quot;}, \\&quot;type\\&quot;:\
+        \ \\&quot;shopping_cart\\&quot;, \\&quot;version\\&quot;: 3}, \\&quot;protocol\\\
+        &quot;: \\&quot;mega\\&quot;, \\&quot;version\\&quot;: 1}&quot;,\n  &quot;Timestamp&quot;\
+        \ : &quot;2020-05-22T19:34:24.760Z&quot;,\n  &quot;SignatureVersion&quot;\
+        \ : &quot;1&quot;,\n  &quot;Signature&quot; : &quot;Hls7oxaRGYgaZo1UtgPzPTdrC6Fcs7KL0SBEVUZgZC/iX0wiVKsYeVlyurlFATi+Gm9qVcRoJAMRAWTJJlalUfo9Gy2dMid9k5r7rFNm171XKiTLJn1I6IjlsqjixV2niANT6D9qT8B6WiHEFzs4OPeHJlZelwiZXFzSiCC7+KxHeoGUkGgjaafrypLwWebQNEbI/kh1+yCt97JUkTyL0V/R2MsQWQaSB9HBuxIN5iaTd2DJcenFXmlkhcSlkvGydbiWlUnTdbyLL1+J2smHdl08KyJJFuzzsmczVdqDWXhXxfer645+WATOEiJV0Y5B/iQqlZbullkQfNnFXVBwPA==&quot;,\n\
+        \  &quot;SigningCertURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/SimpleNotificationService-a86cb10b4e1f29c941702d737128f7b6.pem&quot;,\n\
+        \  &quot;UnsubscribeURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:424566909325:sqs-mega-test:5c60ae46-2afa-4d16-b246-b027a0c81753&quot;\n\
+        }</Body></Message><Message><MessageId>fa372436-2d64-4869-9f05-c06efff0a3de</MessageId><ReceiptHandle>AQEBp7vIWd9nGznnR/0Jv8SxMetXskjHfI53Kfl8I4CpxJXqY/Nx8yyBYa/xdVA3F04p0lNPPFXKtiXlvT9zXdamF66cKv1whOy2S//r6kCg7/5vbB92CP9AipQh/lGVM/NzhBNzL6D7qB9aMz6Rr0Fsl3t4RVNLWk++h9nHXcon4v5c9cr1mRPm7mQS2KXDGpYJBcTC2PQMn0Grh88PH0xxGwMuLZiZ4fUv+6TMhZxvZYA4GpFxqu+bSQuxyFYZOntUb19XTaPTl1piNHDaNjopGsA2DspT6c+1XNzra1Gdq5sTCuNF0t2mopgBPY8bJovC9v3cYnTqK19+sSU1i2e3sk1SaZFmWZHO8/rUDUec7fJ0faIv9Um+v4y47dM1LyAmeyNA2X+PZ/IZa8VFHNWtRA==</ReceiptHandle><MD5OfBody>bb1abc4a3a399a115e67a535eefc0ab6</MD5OfBody><Body>{\n\
+        \  &quot;Type&quot; : &quot;Notification&quot;,\n  &quot;MessageId&quot; :\
+        \ &quot;5b05cb03-37f4-52ab-9cfd-9c411c0e48fb&quot;,\n  &quot;TopicArn&quot;\
+        \ : &quot;arn:aws:sns:us-east-2:424566909325:sqs-mega-test&quot;,\n  &quot;Message&quot;\
+        \ : &quot;{\\&quot;strange\\&quot;: \\&quot;&lt;\\\\u00e1\\\\u00e9\\\\u00ed\\\
+        \\u00f3\\\\u00fa\\\\u00e3\\\\u00f5\\\\u00e2\\\\u00ea\\\\u00ee\\\\u00f4\\\\\
+        u00fb\\\\u00e0\\\\u00e8\\\\u00ec\\\\u00f2\\\\u00f9\\\\u00e7\\\\u00c1\\\\u00c9\\\
+        \\u00cd\\\\u00d3\\\\u00da\\\\u00c3\\\\u00d5\\\\u00c2\\\\u00ca\\\\u00ce\\\\\
+        u00d4\\\\u00db\\\\u00c0\\\\u00c8\\\\u00cc\\\\u00d2\\\\u00d9\\\\u00c7!@#$%^&amp;*()-_=+`~'\\\
+        \\\\&quot;;:.,/&gt;\\&quot;}&quot;,\n  &quot;Timestamp&quot; : &quot;2020-05-22T19:36:26.018Z&quot;,\n\
+        \  &quot;SignatureVersion&quot; : &quot;1&quot;,\n  &quot;Signature&quot;\
+        \ : &quot;HHjyMMtiex6sla13d3v0uZCk9ux1MTbgBCQIaJTabH9yyQL7KhAr54c/DZ13zUNcLwuiECfM/0HgRnulVVQiWQluFX83NEVWz+85X7EueLD2L4n04bymbVUZhqiHh7OkGae7sq5nkwqLCm8HfBZ8pGbEVOAm3gao+YXRjwb/JyUa/JCQULSgE4iZpz3L50vq1CtjZUJ1cAtbtBFqH3vGLRFbpjPY4nZRJO0HyVhNK6WjA88tqJG6x0+UR3HCSFx7bktEiZDhvmjAbIjBy6z77N6qec3JUgYtGmAR9frNufrZ9wxKzxz5TEfY3VZngImcm44exaREfirLEfxYqxNPLA==&quot;,\n\
+        \  &quot;SigningCertURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/SimpleNotificationService-a86cb10b4e1f29c941702d737128f7b6.pem&quot;,\n\
+        \  &quot;UnsubscribeURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:424566909325:sqs-mega-test:5c60ae46-2afa-4d16-b246-b027a0c81753&quot;\n\
+        }</Body></Message><Message><MessageId>36ee5369-6d9c-4eab-9a65-7f36a367c41f</MessageId><ReceiptHandle>AQEB6tiQYgyN6+9l4GR3CTmrz4C+m99ywesUbLNwePJLokKfSx+tAYFnEBxr5mFU1sNGiLDjXg/RGnmvSwUfOtsB5ENt8w3UkgDF0H0VpbYjRcps8MYnTHIEwvdUEQd6VYxsaDcTsZJ3yB4ggBcjDJ4mHbo+k9bZ9tKZDfaRaQEHwK0RT6k3dAw4sN2OVBaJ3RJ+JnYykX1u4NcxuLFo1nNTyc+M67PLFUePLalnocYpFBuXPIJIJXjieNiCE4ujckmtW6WHpv5g90rc0ssI3gtlMsAvtwB1u0LObrF7ezu1rjgfd2R2HbPd4d4L3PB48jLvQxqLFUniebX4Bvqu2JAT7ORNv7xoV5741p+kdd0M9ycNsnYhCXiI3ZIVH7vZ+etdg2nckOXvqBQviaWtw2p+Vw==</ReceiptHandle><MD5OfBody>5655c8ddfaedb919fac5462597f6070c</MD5OfBody><Body>{\n\
+        \  &quot;Type&quot; : &quot;Notification&quot;,\n  &quot;MessageId&quot; :\
+        \ &quot;62c3473f-d119-5fae-bf40-107dfae345fe&quot;,\n  &quot;TopicArn&quot;\
+        \ : &quot;arn:aws:sns:us-east-2:424566909325:sqs-mega-test&quot;,\n  &quot;Message&quot;\
+        \ : &quot;{\\&quot;event\\&quot;: {\\&quot;attributes\\&quot;: {\\&quot;item_id\\\
+        &quot;: \\&quot;0794bac2-e860-4e0d-b9cc-42ab21e2a851\\&quot;, \\&quot;quantity\\\
+        &quot;: 5}, \\&quot;domain\\&quot;: \\&quot;shopping_cart\\&quot;, \\&quot;name\\\
+        &quot;: \\&quot;shopping_cart.item.added\\&quot;, \\&quot;publisher\\&quot;:\
+        \ \\&quot;shopping-cart-service\\&quot;, \\&quot;subject\\&quot;: \\&quot;987650\\\
+        &quot;, \\&quot;timestamp\\&quot;: \\&quot;2020-05-22T19:36:26.271656\\&quot;,\
+        \ \\&quot;version\\&quot;: 2}, \\&quot;extra\\&quot;: {\\&quot;channel\\&quot;:\
+        \ \\&quot;web/desktop\\&quot;, \\&quot;user_agent\\&quot;: \\&quot;Mozilla/5.0\
+        \ (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko)\
+        \ Version/13.1 Safari/605.1.15\\&quot;, \\&quot;user_ip_address\\&quot;: \\\
+        &quot;177.182.205.103\\&quot;}, \\&quot;object\\&quot;: {\\&quot;current\\\
+        &quot;: {\\&quot;created_at\\&quot;: \\&quot;2020-05-03T12:20:23.000\\&quot;,\
+        \ \\&quot;currency\\&quot;: \\&quot;USD\\&quot;, \\&quot;discount\\&quot;:\
+        \ \\&quot;20.19\\&quot;, \\&quot;estimated_shipping\\&quot;: \\&quot;10.00\\\
+        &quot;, \\&quot;estimated_tax\\&quot;: \\&quot;33.05\\&quot;, \\&quot;estimated_total\\\
+        &quot;: \\&quot;400.23\\&quot;, \\&quot;id\\&quot;: \\&quot;18a3f92e-1fbf-45eb-8769-d836d0a1be55\\\
+        &quot;, \\&quot;items\\&quot;: [{\\&quot;id\\&quot;: \\&quot;61fcc874-624e-40f8-8fd7-0e663c7837e8\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;19.99\\&quot;, \\&quot;quantity\\&quot;:\
+        \ 10}, {\\&quot;id\\&quot;: \\&quot;3c7f8798-1d3d-47de-82dd-c6c5e0de74ee\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;102.50\\&quot;, \\&quot;quantity\\\
+        &quot;: 1}, {\\&quot;id\\&quot;: \\&quot;bba76edc-8afc-4fde-b4c4-ea58a230c5d6\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;24.99\\&quot;, \\&quot;quantity\\&quot;:\
+        \ 3}], \\&quot;subtotal\\&quot;: \\&quot;357.18\\&quot;, \\&quot;updated_at\\\
+        &quot;: \\&quot;2020-05-04T15:52:01.000\\&quot;, \\&quot;user_id\\&quot;:\
+        \ 987650, \\&quot;value\\&quot;: \\&quot;377.37\\&quot;}, \\&quot;id\\&quot;:\
+        \ \\&quot;18a3f92e-1fbf-45eb-8769-d836d0a1be55\\&quot;, \\&quot;previous\\\
+        &quot;: {\\&quot;created_at\\&quot;: \\&quot;2020-05-03T12:20:23.000\\&quot;,\
+        \ \\&quot;currency\\&quot;: \\&quot;USD\\&quot;, \\&quot;discount\\&quot;:\
+        \ \\&quot;10.09\\&quot;, \\&quot;estimated_shipping\\&quot;: \\&quot;10.00\\\
+        &quot;, \\&quot;estimated_tax\\&quot;: \\&quot;24.96\\&quot;, \\&quot;estimated_total\\\
+        &quot;: \\&quot;302.29\\&quot;, \\&quot;id\\&quot;: \\&quot;18a3f92e-1fbf-45eb-8769-d836d0a1be55\\\
+        &quot;, \\&quot;items\\&quot;: [{\\&quot;id\\&quot;: \\&quot;61fcc874-624e-40f8-8fd7-0e663c7837e8\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;19.99\\&quot;, \\&quot;quantity\\&quot;:\
+        \ 5}, {\\&quot;id\\&quot;: \\&quot;3c7f8798-1d3d-47de-82dd-c6c5e0de74ee\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;102.50\\&quot;, \\&quot;quantity\\\
+        &quot;: 1}, {\\&quot;id\\&quot;: \\&quot;bba76edc-8afc-4fde-b4c4-ea58a230c5d6\\\
+        &quot;, \\&quot;price\\&quot;: \\&quot;24.99\\&quot;, \\&quot;quantity\\&quot;:\
+        \ 3}], \\&quot;subtotal\\&quot;: \\&quot;267.33\\&quot;, \\&quot;updated_at\\\
+        &quot;: \\&quot;2020-05-04T13:47:08.000\\&quot;, \\&quot;user_id\\&quot;:\
+        \ 987650, \\&quot;value\\&quot;: \\&quot;277.42\\&quot;}, \\&quot;type\\&quot;:\
+        \ \\&quot;shopping_cart\\&quot;, \\&quot;version\\&quot;: 3}, \\&quot;protocol\\\
+        &quot;: \\&quot;mega\\&quot;, \\&quot;version\\&quot;: 1}&quot;,\n  &quot;Timestamp&quot;\
+        \ : &quot;2020-05-22T19:36:26.529Z&quot;,\n  &quot;SignatureVersion&quot;\
+        \ : &quot;1&quot;,\n  &quot;Signature&quot; : &quot;llWEmVbdn3SbuXfoWPjrNEMrTnmNe/9/scijjAm/RjkFUCwnejMOW4lM/8Gk0iD5pow1bVo2NZxbtr0ksWTxFNlKmXQCLdJP+M0T+Ol9Dxo/EZ79G2FCsrdwb7e3RegJynIOMh1V7VvvnkiDxh0j4zbCSPnfYc6YhQQnP4E3i7M8Y3s7+g+NUsHcmgumtewWz30HbmQPT+OkMZ+varyJ0y3ZrzCAGPxS8UJvIWSSEt5PtUuSRZ/hM4n8BJEVj11BK2AU18c3bBTCKUHyk5aQldEmsq9oGnyAQfAE8RD16SDbyG80haYzR34AmteJUvM2QF633yVOAyOdEFx5LbnYNQ==&quot;,\n\
+        \  &quot;SigningCertURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/SimpleNotificationService-a86cb10b4e1f29c941702d737128f7b6.pem&quot;,\n\
+        \  &quot;UnsubscribeURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:424566909325:sqs-mega-test:5c60ae46-2afa-4d16-b246-b027a0c81753&quot;\n\
+        }</Body></Message><Message><MessageId>4b95f7db-ab12-4d50-8c92-3ba7b2180758</MessageId><ReceiptHandle>AQEBKRdZHhamRdGDRGEmLOri6AF/vmVfn8TOI44C9RR4tNUq+Hp3woUUeUF/yFN9VZVUoa/GwEtdayECzQYpIcUdAo4BlsG4x010yNWWOcZZKBxqpApYZxNedOYz1NHDPfY0ijUPWdLhX7ypWQSginBjxXABxwXHozA7NE32QcA3llFD2o15kUlyt6VhMwaO+EBWvwLyBa/kmkz0nGXc+peqtdl5vrij3ZERnlv9JSwYHMWnVJn7YMZQ3JMgNCXpEE8HbmTPWg6oJQ6jhZMfmNr+uJIPc1FDc/Llzf0yu/ZmUc3lbmoGGgVAOu/SwSFpwhHejE1aqMzgOjB2/NX29v0uQceLbuUYPBaKkZqRiao+hnkpNHE54Yeys81iS517Xd6m/uMTAwU2fPOrP0l2Oy7Xsg==</ReceiptHandle><MD5OfBody>27fc3f74d18cdedb15567828662f405d</MD5OfBody><Body>{\n\
+        \  &quot;Type&quot; : &quot;Notification&quot;,\n  &quot;MessageId&quot; :\
+        \ &quot;2d55cfe4-a9f4-5266-af17-98a685e83df5&quot;,\n  &quot;TopicArn&quot;\
+        \ : &quot;arn:aws:sns:us-east-2:424566909325:sqs-mega-test&quot;,\n  &quot;Message&quot;\
+        \ : &quot;{\\&quot;foo\\&quot;: \\&quot;bar\\&quot;, \\&quot;hello\\&quot;:\
+        \ \\&quot;world!\\&quot;, \\&quot;test\\&quot;: \\&quot;&lt;foobar&gt;\\&quot;}&quot;,\n\
+        \  &quot;Timestamp&quot; : &quot;2020-05-22T19:37:00.298Z&quot;,\n  &quot;SignatureVersion&quot;\
+        \ : &quot;1&quot;,\n  &quot;Signature&quot; : &quot;lf3mgl8FKSBEiXr1o/zqTLiihGQyxPjhMHrVUPA14vg9aKoTuG2O7WueQO905Oe1p8Je/T9fB7aZiVoFf4XDdurRNYBxVQBIBOi+sBUmPvEGc6qkwQQ4UdVHBP7T0fokwJD4pTgBj1/g2V67UGtv+qhsExXs/XJU0B603G46h/1ZSydCbGYvUnj3mIFqLlKAnkDkSC8mr4rkDuNUFg/10hOfsu3sXmx6ZXVC4REbJehzgkOxAk9fiTuBCrPEwPi2WyRdfONxvSX+uQE6FTYK4F1ln3VRmOTT5y/TxODQL8WHu4W2Z5FTcQFKTBb7e4I321yaCVyeRqMsoPfpsDjeRQ==&quot;,\n\
+        \  &quot;SigningCertURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/SimpleNotificationService-a86cb10b4e1f29c941702d737128f7b6.pem&quot;,\n\
+        \  &quot;UnsubscribeURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:424566909325:sqs-mega-test:5c60ae46-2afa-4d16-b246-b027a0c81753&quot;\n\
+        }</Body></Message></ReceiveMessageResult><ResponseMetadata><RequestId>d33c1f62-4a30-5bcd-9e03-4820662e1bac</RequestId></ResponseMetadata></ReceiveMessageResponse>"
+    headers:
+      Content-Length:
+      - '17101'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 22 May 2020 19:37:02 GMT
+      x-amzn-RequestId:
+      - d33c1f62-4a30-5bcd-9e03-4820662e1bac
+    status:
+      code: 200
+      message: OK
+version: 1

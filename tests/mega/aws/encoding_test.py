@@ -41,6 +41,15 @@ def test_do_not_decode_invalid_base64_made_of_plaintext():
     assert str(error) == 'Non-base64 digit found'
 
 
+def test_do_not_decode_invalid_base64_made_of_plaintext_with_non_ascii_characters():
+    plaintext = '<áéíóúãõâêîôûàèìòùçÁÉÍÓÚÃÕÂÊÎÔÛÀÈÌÒÙÇ!@#$%^&*()-_=+`~\'";:.,/>'
+
+    decoded, error = try_decode_base64(plaintext)
+    assert decoded is None
+    assert type(error) == ValueError
+    assert str(error) == 'string argument should contain only ASCII characters'
+
+
 def test_decode_data_from_valid_bson():
     data = {
         'foo': 'bar',

@@ -19,12 +19,35 @@ def test_deserialize_plaintext_payload():
     assert payload == plaintext
 
 
+def test_deserialize_plaintext_payload_with_non_ascii_characters():
+    plaintext = '<áéíóúãõâêîôûàèìòùçÁÉÍÓÚÃÕÂÊÎÔÛÀÈÌÒÙÇ!@#$%^&*()-_=+`~\'";:.,/>'
+    payload, payload_type = deserialize_payload(plaintext)
+
+    assert payload_type == PayloadType.PLAINTEXT
+    assert type(payload) == str
+    assert payload == plaintext
+
+
 def test_deserialize_plaintext_json_payload():
     data = {
         'foo': 'bar',
         'one': 123,
         'two': {'aha': True},
         'three': [1, 2, 3, 'four']
+    }
+    plaintext = json.dumps(data)
+
+    payload, payload_type = deserialize_payload(plaintext)
+
+    assert payload_type == PayloadType.DATA
+    assert type(payload) == dict
+    assert payload == data
+
+
+def test_deserialize_plaintext_json_payload_with_non_ascii_characters():
+    data = {
+        'foo': '<áéíóúãõâêîôûàèìòùçÁÉÍÓÚÃÕÂÊÎÔÛÀÈÌÒÙÇ!@#$%^&*()-_=+`~\'";:.,/>',
+        'bar': True
     }
     plaintext = json.dumps(data)
 

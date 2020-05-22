@@ -8,6 +8,7 @@ from mega.aws.message import MessageType
 from mega.aws.payload import PayloadType
 from mega.aws.sns.message import SnsNotification, SnsMessageType
 from mega.aws.sqs.message import SqsMessage
+from mega.aws.sqs.schema import deserialize_sqs_message
 from mega.aws.sqs.subscribe.api import SqsReceiver
 from mega.event import deserialize_mega_payload
 from tests.mega.aws.sqs import get_sqs_request_data, get_queue_url_from_request, get_request_attribute, \
@@ -263,6 +264,35 @@ def test_receive_message_with_base64_encoded_binary_mega_payload_over_sns(queue_
     )
 
     assert_is_sns_notification(message.embedded_message)
+    assert_request_match_sqs_receiver_attributes(cassette, sqs)
+
+
+def test_receive_many_messages_with_mixed_payloads(queue_url):
+    sqs = SqsReceiver(
+        queue_url=queue_url,
+        max_number_of_messages=10
+    )
+
+    with vcr.use_cassette('receive_many_messages_with_mixed_payloads') as cassette:
+        messages = sqs.receive_messages()
+
+    assert cassette.all_played
+    response = get_sqs_receive_message_response_data(cassette)
+
+    assert len(messages) == len(response['Message']) == 7
+
+    for i, message in enumerate(messages):
+        assert_is_sqs_message(message)
+
+        message_from_response = response['Message'][i]
+
+        assert message.message_id == message_from_response['MessageId']
+        assert message.receipt_handle == message_from_response['ReceiptHandle']
+
+        deserialized_response = deserialize_sqs_message(message_from_response)
+        assert message.payload == deserialized_response.payload
+        assert message.payload_type == deserialized_response.payload_type
+
     assert_request_match_sqs_receiver_attributes(cassette, sqs)
 
 

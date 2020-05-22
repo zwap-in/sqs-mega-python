@@ -14,7 +14,7 @@ logger = getLogger(LOGGER_NAME)
 def try_decode_base64(plaintext: str) -> Tuple[Optional[bytes], Optional[Exception]]:
     try:
         return b64decode(plaintext, validate=True), None
-    except binascii.Error as e:
+    except (binascii.Error, ValueError) as e:
         return None, e
 
 
