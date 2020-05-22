@@ -64,7 +64,7 @@ class MegaPayloadSchema(BaseSchema):
         return MegaPayload(**data)
 
     def handle_error(self, exc, data, **kwargs):
-        raise MegaSchemaError("Invalid MEGA payload: {0}".format(exc))
+        raise MegaSchemaError('Invalid MEGA payload: {0}'.format(exc))
 
 
 def matches_mega_payload(data: dict) -> bool:

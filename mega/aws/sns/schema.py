@@ -79,7 +79,7 @@ class SnsMessageSchema(Schema):
         )
 
     def handle_error(self, exc, data, **kwargs):
-        raise SnsSchemaError("Could not deserialize SNS message: {0}".format(exc))
+        raise SnsSchemaError('Could not deserialize SNS message: {0}'.format(exc))
 
 
 def deserialize_sns_message(data: dict) -> SnsMessage:

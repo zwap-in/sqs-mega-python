@@ -46,7 +46,7 @@ class SqsMessageSchema(Schema):
         )
 
     def handle_error(self, exc, data, **kwargs):
-        raise SqsSchemaError("Could not deserialize SQS message: {0}".format(exc))
+        raise SqsSchemaError('Could not deserialize SQS message: {0}'.format(exc))
 
 
 def deserialize_sqs_message(data: dict) -> SqsMessage:
