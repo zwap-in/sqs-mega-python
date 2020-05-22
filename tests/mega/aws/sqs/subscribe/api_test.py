@@ -6,6 +6,7 @@ import pytest
 
 from mega.aws.message import MessageType
 from mega.aws.payload import PayloadType
+from mega.aws.sns.message import SnsNotification, SnsMessageType
 from mega.aws.sqs.message import SqsMessage
 from mega.aws.sqs.subscribe.api import SqsReceiver
 from mega.event import deserialize_mega_payload
@@ -46,6 +47,13 @@ def assert_is_sqs_message(message):
     assert message is not None
     assert isinstance(message, SqsMessage)
     assert message.message_type == MessageType.SQS
+
+
+def assert_is_sns_notification(message):
+    assert message is not None
+    assert isinstance(message, SnsNotification)
+    assert message.message_type == MessageType.SNS
+    assert message.sns_message_type == SnsMessageType.NOTIFICATION
 
 
 def test_receive_message_with_plaintext_payload(queue_url):
@@ -197,6 +205,64 @@ def test_receive_message_with_base64_encoded_binary_mega_payload(queue_url):
     )
 
     assert message.embedded_message is None
+    assert_request_match_sqs_receiver_attributes(cassette, sqs)
+
+
+def test_receive_message_with_plaintext_mega_payload_over_sns(queue_url):
+    sqs = SqsReceiver(
+        queue_url=queue_url,
+        max_number_of_messages=1
+    )
+
+    with vcr.use_cassette('receive_message_with_plaintext_mega_payload_over_sns') as cassette:
+        messages = sqs.receive_messages()
+
+    assert cassette.all_played
+    response = get_sqs_receive_message_response_data(cassette)
+
+    assert len(messages) == 1
+    message = messages[0]
+    assert_is_sqs_message(message)
+    assert_message_attributes_match_response(message, response)
+
+    assert message.payload_type == PayloadType.MEGA
+    assert message.payload == deserialize_mega_payload(
+        json.loads(
+            json.loads(response['Message']['Body'])['Message']
+        )
+    )
+
+    assert_is_sns_notification(message.embedded_message)
+    assert_request_match_sqs_receiver_attributes(cassette, sqs)
+
+
+def test_receive_message_with_base64_encoded_binary_mega_payload_over_sns(queue_url):
+    sqs = SqsReceiver(
+        queue_url=queue_url,
+        max_number_of_messages=1
+    )
+
+    with vcr.use_cassette('receive_message_with_base64_encoded_binary_mega_payload_over_sns') as cassette:
+        messages = sqs.receive_messages()
+
+    assert cassette.all_played
+    response = get_sqs_receive_message_response_data(cassette)
+
+    assert len(messages) == 1
+    message = messages[0]
+    assert_is_sqs_message(message)
+    assert_message_attributes_match_response(message, response)
+
+    assert message.payload_type == PayloadType.MEGA
+    assert message.payload == deserialize_mega_payload(
+        bson.loads(
+            b64decode(
+                json.loads(response['Message']['Body'])['Message']
+            )
+        )
+    )
+
+    assert_is_sns_notification(message.embedded_message)
     assert_request_match_sqs_receiver_attributes(cassette, sqs)
 
 

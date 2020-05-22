@@ -1,0 +1,45 @@
+interactions:
+- request:
+    body: Action=ReceiveMessage&Version=2012-11-05&QueueUrl=https%3A%2F%2Fsqs.us-east-2.amazonaws.com%2F424566909325%2Fsqs-mega-test&MaxNumberOfMessages=1&WaitTimeSeconds=20&VisibilityTimeout=30
+    headers:
+      Content-Length:
+      - '184'
+      Content-Type:
+      - !!binary |
+        YXBwbGljYXRpb24veC13d3ctZm9ybS11cmxlbmNvZGVkOyBjaGFyc2V0PXV0Zi04
+      User-Agent:
+      - !!binary |
+        Qm90bzMvMS4xMy4xNSBQeXRob24vMy43LjcgRGFyd2luLzE5LjQuMCBCb3RvY29yZS8xLjE2LjE1
+      X-Amz-Date:
+      - !!binary |
+        MjAyMDA1MjJUMDMwMzE4Wg==
+      authorization:
+      - <AUTHORIZATION-HEADER>
+    method: POST
+    uri: https://us-east-2.queue.amazonaws.com/
+  response:
+    body:
+      string: "<?xml version=\"1.0\"?><ReceiveMessageResponse xmlns=\"http://queue.amazonaws.com/doc/2012-11-05/\"\
+        ><ReceiveMessageResult><Message><MessageId>3cc764a2-cf83-453a-ba04-7fdfa585cf34</MessageId><ReceiptHandle>AQEBFzOOdUQnAsnCmMIlLby19sJ7gcdaZPwiWssL/CK0PHHPVTt7dgu08PUdxJl7irb/dgmpfEGug3kW/pQlAbXFyd1Q+hlSAESToyiRRjCBHtpzNwa3/cUN4W7qHNYczQMiOa+i7AhbVhTtz1yZnep7c0zCk657bv+JHfckEUF4smwbGyDryiQx6tOp8EA3VL+GdHtetpr6tVPcEpY2yj4H771foMXxrXdNqWacu8oeQ4st3jVToRvY+LHnk1hfSr5fKP5a9wyTqVZVv4OThV7+q1JlwY6ygk4cnBXXD4FkqTwWQ7cLj1uBbUuti4VlA3VcfIRRL3akJK2vYRVz35Lhgvpn4gPhUF55QiJBjHuowJHwqz5olZcX9N8iTDRY0ub1N+y2Pm2gp0+SZPnvvawBqQ==</ReceiptHandle><MD5OfBody>e517e917062c9ac8a3be46f11b8b2199</MD5OfBody><Body>{\n\
+        \  &quot;Type&quot; : &quot;Notification&quot;,\n  &quot;MessageId&quot; :\
+        \ &quot;656e78d3-0863-5790-b8ba-2f924b486ae7&quot;,\n  &quot;TopicArn&quot;\
+        \ : &quot;arn:aws:sns:us-east-2:424566909325:sqs-mega-test&quot;,\n  &quot;Message&quot;\
+        \ : &quot;4QYAABB2ZXJzaW9uAAEAAAACcHJvdG9jb2wABQAAAG1lZ2EAA29iamVjdADaBAAAEHZlcnNpb24AAwAAAANwcmV2aW91cwA4AgAAAmlkACUAAAAxOGEzZjkyZS0xZmJmLTQ1ZWItODc2OS1kODM2ZDBhMWJlNTUAEHVzZXJfaWQAAhIPAARpdGVtcwACAQAAAzAAUQAAAAJpZAAlAAAANjFmY2M4NzQtNjI0ZS00MGY4LThmZDctMGU2NjNjNzgzN2U4AAJwcmljZQAGAAAAMTkuOTkAEHF1YW50aXR5AAUAAAAAAzEAUgAAAAJpZAAlAAAAM2M3Zjg3OTgtMWQzZC00N2RlLTgyZGQtYzZjNWUwZGU3NGVlAAJwcmljZQAHAAAAMTAyLjUwABBxdWFudGl0eQABAAAAAAMyAFEAAAACaWQAJQAAAGJiYTc2ZWRjLThhZmMtNGZkZS1iNGM0LWVhNThhMjMwYzVkNgACcHJpY2UABgAAADI0Ljk5ABBxdWFudGl0eQADAAAAAAACY3VycmVuY3kABAAAAFVTRAACdmFsdWUABwAAADI3Ny40MgACZGlzY291bnQABgAAADEwLjA5AAJzdWJ0b3RhbAAHAAAAMjY3LjMzAAJlc3RpbWF0ZWRfc2hpcHBpbmcABgAAADEwLjAwAAJlc3RpbWF0ZWRfdGF4AAYAAAAyNC45NgACZXN0aW1hdGVkX3RvdGFsAAcAAAAzMDIuMjkAAmNyZWF0ZWRfYXQAGAAAADIwMjAtMDUtMDNUMTI6MjA6MjMuMDAwAAJ1cGRhdGVkX2F0ABgAAAAyMDIwLTA1LTA0VDEzOjQ3OjA4LjAwMAAAAmlkACUAAAAxOGEzZjkyZS0xZmJmLTQ1ZWItODc2OS1kODM2ZDBhMWJlNTUAA2N1cnJlbnQAOAIAAAJpZAAlAAAAMThhM2Y5MmUtMWZiZi00NWViLTg3NjktZDgzNmQwYTFiZTU1ABB1c2VyX2lkAAISDwAEaXRlbXMAAgEAAAMwAFEAAAACaWQAJQAAADYxZmNjODc0LTYyNGUtNDBmOC04ZmQ3LTBlNjYzYzc4MzdlOAACcHJpY2UABgAAADE5Ljk5ABBxdWFudGl0eQAKAAAAAAMxAFIAAAACaWQAJQAAADNjN2Y4Nzk4LTFkM2QtNDdkZS04MmRkLWM2YzVlMGRlNzRlZQACcHJpY2UABwAAADEwMi41MAAQcXVhbnRpdHkAAQAAAAADMgBRAAAAAmlkACUAAABiYmE3NmVkYy04YWZjLTRmZGUtYjRjNC1lYTU4YTIzMGM1ZDYAAnByaWNlAAYAAAAyNC45OQAQcXVhbnRpdHkAAwAAAAAAAmN1cnJlbmN5AAQAAABVU0QAAnZhbHVlAAcAAAAzNzcuMzcAAmRpc2NvdW50AAYAAAAyMC4xOQACc3VidG90YWwABwAAADM1Ny4xOAACZXN0aW1hdGVkX3NoaXBwaW5nAAYAAAAxMC4wMAACZXN0aW1hdGVkX3RheAAGAAAAMzMuMDUAAmVzdGltYXRlZF90b3RhbAAHAAAANDAwLjIzAAJjcmVhdGVkX2F0ABgAAAAyMDIwLTA1LTAzVDEyOjIwOjIzLjAwMAACdXBkYXRlZF9hdAAYAAAAMjAyMC0wNS0wNFQxNTo1MjowMS4wMDAAAAJ0eXBlAA4AAABzaG9wcGluZ19jYXJ0AAADZXZlbnQAAwEAABB2ZXJzaW9uAAIAAAADYXR0cmlidXRlcwBFAAAAEHF1YW50aXR5AAUAAAACaXRlbV9pZAAlAAAAMDc5NGJhYzItZTg2MC00ZTBkLWI5Y2MtNDJhYjIxZTJhODUxAAACc3ViamVjdAAHAAAAOTg3NjUwAAJuYW1lABkAAABzaG9wcGluZ19jYXJ0Lml0ZW0uYWRkZWQAAmRvbWFpbgAOAAAAc2hvcHBpbmdfY2FydAACdGltZXN0YW1wABsAAAAyMDIwLTA1LTIyVDAzOjAzOjA3LjIwOTgwOQACcHVibGlzaGVyABYAAABzaG9wcGluZy1jYXJ0LXNlcnZpY2UAAANleHRyYQDJAAAAAmNoYW5uZWwADAAAAHdlYi9kZXNrdG9wAAJ1c2VyX2FnZW50AHYAAABNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xNV80KSBBcHBsZVdlYktpdC82MDUuMS4xNSAoS0hUTUwsIGxpa2UgR2Vja28pIFZlcnNpb24vMTMuMSBTYWZhcmkvNjA1LjEuMTUAAnVzZXJfaXBfYWRkcmVzcwAQAAAAMTc3LjE4Mi4yMDUuMTAzAAAA&quot;,\n\
+        \  &quot;Timestamp&quot; : &quot;2020-05-22T03:03:07.982Z&quot;,\n  &quot;SignatureVersion&quot;\
+        \ : &quot;1&quot;,\n  &quot;Signature&quot; : &quot;I/YoboEy+awBOUBykA75IuuQ37nIQ1K+4tZSFWbEcyHCJCD8kfIY0/tPNQZ8rRSfe7UTNDAmF3U13RdsUh+RoV94e8jHBUgC2Nie0P8NLr+RB9YLC+JHCZPbfoVwBAYRZuqscBtj2tqoByihTrXvcEPvBT75+n/9C5/yVH+HEN24fYadacGINKFQ3G8oIPtVbutre/LFk+abbp7baVHYvTRnifvmUtZ090pKr0Xy1uFjk0rgfQhfBIfQma4finRYQGEwhH4TXjfSiycO4zQynrfbCobXNgr53yvU4hDV1+JeAFdGpiLzSY+pxi+cq1jlG5V6ZTc2sXtbEqnjmu/r5Q==&quot;,\n\
+        \  &quot;SigningCertURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/SimpleNotificationService-a86cb10b4e1f29c941702d737128f7b6.pem&quot;,\n\
+        \  &quot;UnsubscribeURL&quot; : &quot;https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&amp;SubscriptionArn=arn:aws:sns:us-east-2:424566909325:sqs-mega-test:5c60ae46-2afa-4d16-b246-b027a0c81753&quot;\n\
+        }</Body></Message></ReceiveMessageResult><ResponseMetadata><RequestId>6e21a4a1-b62d-5014-8023-f3e0f51b35d6</RequestId></ResponseMetadata></ReceiveMessageResponse>"
+    headers:
+      Content-Length:
+      - '4294'
+      Content-Type:
+      - text/xml
+      Date:
+      - Fri, 22 May 2020 03:03:18 GMT
+      x-amzn-RequestId:
+      - 6e21a4a1-b62d-5014-8023-f3e0f51b35d6
+    status:
+      code: 200
+      message: OK
+version: 1
