@@ -124,7 +124,7 @@ class ComparableValue(RightHandSideValue, ABC):
 
 
 class RightHandSideTypeError(Exception):
-    def __init__(self, rhs_value_type: Type['RightHandSideValue'], rhs: Value, context=None):
+    def __init__(self, rhs_value_type: Type[RightHandSideValue], rhs: Value, context=None):
         message = '[{0}] Invalid right-hand side with type <{1}> ({2}).'.format(
             rhs_value_type.__name__,
             type(rhs).__name__,
@@ -136,7 +136,7 @@ class RightHandSideTypeError(Exception):
 
 
 class LeftHandSideTypeError(Exception):
-    def __init__(self, value: 'RightHandSideValue', function_type: str, lhs: Value, context=None):
+    def __init__(self, value: RightHandSideValue, function_type: str, lhs: Value, context=None):
         rhs = value.rhs
         message = (
             '[{0}.{1}] Could not apply left-hand side <{2}> ({3}) to right-hand side <{4}> ({5}).'.format(
