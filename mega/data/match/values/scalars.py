@@ -14,6 +14,10 @@ class Null(RightHandSideValue):
     def accepts_rhs(cls, rhs) -> bool:
         return rhs is None
 
+    @classmethod
+    def _accepts_lhs(cls, lhs, function_type) -> bool:
+        return True
+
     def _needs_casting(self, value, function_type=None):
         return False
 
@@ -160,5 +164,3 @@ class Boolean(RightHandSideValue):
             return not self.rhs
 
         return bool(lhs) is self.rhs
-
-

@@ -34,31 +34,31 @@ FALSEY_VALUES = [
 ]
 
 
-def test_boolean_true_rhs_should_equal_and_match_with_true_lhs():
+def test_boolean_true_rhs_should_equal_and_match_true_lhs():
     value = Boolean(True)
     assert value.equal(True) is True
     assert value.match(True) is True
 
 
-def test_boolean_true_rhs_should_not_equal_neither_match_with_false_lhs():
+def test_boolean_true_rhs_should_not_equal_neither_match_false_lhs():
     value = Boolean(True)
     assert value.equal(False) is False
     assert value.match(False) is False
 
 
-def test_boolean_true_rhs_should_not_equal_neither_match_with_none_lhs():
+def test_boolean_true_rhs_should_not_equal_neither_match_none_lhs():
     value = Boolean(True)
     assert value.equal(None) is False
     assert value.match(None) is False
 
 
-def test_boolean_false_rhs_should_equal_and_match_with_false_lhs():
+def test_boolean_false_rhs_should_equal_and_match_false_lhs():
     value = Boolean(False)
     assert value.equal(False) is True
     assert value.match(False) is True
 
 
-def test_boolean_false_rhs_should_not_equal_nor_match_with_true_lhs():
+def test_boolean_false_rhs_should_not_equal_nor_match_true_lhs():
     value = Boolean(False)
     assert value.equal(True) is False
     assert value.match(True) is False
@@ -90,22 +90,22 @@ def test_boolean_equal_should_not_accept_invalid_lhs(lhs):
 
 
 @parameterized.expand(TRUTHY_VALUES)
-def test_boolean_true_rhs_should_match_with_truthy_lhs_values(lhs):
+def test_boolean_true_rhs_should_match_truthy_lhs_values(lhs):
     assert Boolean(True).match(lhs) is True
 
 
 @parameterized.expand(FALSEY_VALUES)
-def test_boolean_true_rhs_should_not_match_with_falsey_lhs_values(lhs):
+def test_boolean_true_rhs_should_not_match_falsey_lhs_values(lhs):
     assert Boolean(True).match(lhs) is False
 
 
 @parameterized.expand(FALSEY_VALUES)
-def test_boolean_false_rhs_should_match_with_falsey_lhs_values(lhs):
+def test_boolean_false_rhs_should_match_falsey_lhs_values(lhs):
     assert Boolean(False).match(lhs) is True
 
 
 @parameterized.expand(TRUTHY_VALUES)
-def test_boolean_false_rhs_should_not_match_with_truthy_lhs_values(lhs):
+def test_boolean_false_rhs_should_not_match_truthy_lhs_values(lhs):
     assert Boolean(False).match(lhs) is False
 
 
