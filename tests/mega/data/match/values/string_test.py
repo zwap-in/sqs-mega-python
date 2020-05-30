@@ -1,7 +1,7 @@
 import pytest
 from parameterized import parameterized
 
-from mega.data.match.values.scalars import String
+from mega.data.match.values.string import String
 from mega.data.match.values.value import RightHandSideTypeError, LeftHandSideTypeError
 
 

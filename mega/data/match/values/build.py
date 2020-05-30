@@ -2,7 +2,11 @@ from typing import Union
 
 from mega.data.match.values.collection import Collection
 from mega.data.match.values.mapping import Mapping
-from mega.data.match.values.scalars import Null, String, Number, DateTime, Boolean
+from mega.data.match.values.boolean import Boolean
+from mega.data.match.values.datetime import DateTime
+from mega.data.match.values.number import Number
+from mega.data.match.values.string import String
+from mega.data.match.values.null import Null
 from mega.data.match.values.types import Value
 from mega.data.match.values.value import RightHandSideValue, ComparableValue
 
