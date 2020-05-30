@@ -5,11 +5,14 @@ from datetime import datetime, date, tzinfo
 import dateutil.parser
 
 from mega.data.match.values.types import DateTimeType, is_number, is_string, is_datetime, \
-    is_boolean, NumberType
+    is_boolean, NumberType, StringType
 from mega.data.match.values.value import RightHandSideValue, ComparableValue
 
 
 class Null(RightHandSideValue):
+    def __init__(self):
+        super().__init__(None)
+
     @classmethod
     def accepts_rhs(cls, rhs) -> bool:
         return rhs is None
@@ -33,20 +36,21 @@ class Null(RightHandSideValue):
 
 class String(RightHandSideValue):
 
+    def __init__(self, rhs: StringType):
+        super().__init__(rhs)
+
     @classmethod
     def accepts_rhs(cls, rhs):
         return is_string(rhs)
 
     def _accepts_lhs(self, lhs, function_type):
-        return lhs is None or \
-               is_string(lhs) or \
-               is_number(lhs)
+        return lhs is None or is_string(lhs)
 
     def _needs_casting(self, value, function_type=None):
-        return is_number(value)
+        return False
 
     def _cast(self, value, reference_type=None):
-        return str(value)
+        pass
 
     def _equal(self, lhs: str):
         if lhs is None:

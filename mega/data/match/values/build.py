@@ -2,8 +2,8 @@ from typing import Union
 
 from mega.data.match.values.collection import Collection
 from mega.data.match.values.mapping import Mapping
-from mega.data.match.values.types import Value
 from mega.data.match.values.scalars import Null, String, Number, DateTime, Boolean
+from mega.data.match.values.types import Value
 from mega.data.match.values.value import RightHandSideValue, ComparableValue
 
 
@@ -12,7 +12,7 @@ def value(rhs: Union[Value, RightHandSideValue]) -> RightHandSideValue:
         return rhs
 
     if Null.accepts_rhs(rhs):
-        return Null(rhs)
+        return Null()
     if String.accepts_rhs(rhs):
         return String(rhs)
     if Number.accepts_rhs(rhs):

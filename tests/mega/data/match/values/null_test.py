@@ -19,6 +19,8 @@ TRUTHY_VALUES = [
     [42],
     ['true'],
     ['True'],
+    ['false'],
+    ['False'],
     ['abcdefgh12345'],
     ['0'],
     [[False]],
@@ -30,28 +32,28 @@ TRUTHY_VALUES = [
 
 
 def test_null_rhs_should_equal_to_none_lhs():
-    assert Null(None).equal(None) is True
+    assert Null().equal(None) is True
 
 
 def test_null_rhs_should_match_none_lhs():
-    assert Null(None).match(None) is True
+    assert Null().match(None) is True
 
 
 @parameterized.expand(FALSEY_VALUES)
 def test_null_should_not_equal_to_falsey_lhs(lhs):
-    assert Null(None).equal(lhs) is False
+    assert Null().equal(lhs) is False
 
 
 @parameterized.expand(TRUTHY_VALUES)
 def test_null_should_not_equal_to_truthy_lhs(lhs):
-    assert Null(None).equal(lhs) is False
+    assert Null().equal(lhs) is False
 
 
 @parameterized.expand(FALSEY_VALUES)
 def test_null_should_match_falsey_lhs(lhs):
-    assert Null(None).match(lhs) is True
+    assert Null().match(lhs) is True
 
 
 @parameterized.expand(TRUTHY_VALUES)
 def test_null_should_not_match_truthy_lhs(lhs):
-    assert Null(None).match(lhs) is False
+    assert Null().match(lhs) is False
