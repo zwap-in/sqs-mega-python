@@ -18,18 +18,15 @@ def is_string(value: Value) -> bool:
 
 
 def is_number(value: Value) -> bool:
-    return isinstance(value, int) or \
-           isinstance(value, float) or \
-           isinstance(value, Decimal)
+    return type(value) in (int, float, Decimal)
 
 
 def is_boolean(value: Value) -> bool:
-    return isinstance(value, bool)
+    return type(value) is bool
 
 
 def is_datetime(value: Value) -> bool:
-    return isinstance(value, date) or \
-           isinstance(value, datetime)
+    return type(value) in (date, datetime)
 
 
 def is_scalar(value: Value) -> bool:

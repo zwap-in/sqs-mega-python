@@ -117,22 +117,20 @@ class ComparableValue(RightHandSideValue, ABC):
         lhs = self._filter_lhs(lhs, self.FunctionType.GREATER_THAN_OR_EQUAL)
         return not self._less_than(lhs)
 
-    def _filter_lhs(self, lhs, function_type):
-        if lhs is None:
-            raise LeftHandSideTypeError(self, function_type, lhs, context='Cannot compare with None.')
-        return super()._filter_lhs(lhs, function_type)
-
 
 class RightHandSideTypeError(Exception):
-    def __init__(self, rhs_value_type: Type[RightHandSideValue], rhs: Value, context=None):
+    def __init__(self, value_type: Type[RightHandSideValue], rhs: Value, context=None):
         message = '[{0}] Invalid right-hand side with type <{1}> ({2}).'.format(
-            rhs_value_type.__name__,
+            value_type.__name__,
             type(rhs).__name__,
             rhs if is_scalar(rhs) else '[…]'
         )
         if context:
             message = '{0} {1}'.format(message, context)
         super().__init__(message)
+
+        self.value_type = value_type
+        self.rhs = rhs
 
 
 class LeftHandSideTypeError(Exception):
@@ -150,4 +148,9 @@ class LeftHandSideTypeError(Exception):
         )
         if context:
             message = '{0} {1}'.format(message, context)
+
         super().__init__(message)
+
+        self.value = value
+        self.function_type = function_type
+        self.lhs = lhs
