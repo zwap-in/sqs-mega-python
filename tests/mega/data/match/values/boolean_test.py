@@ -40,13 +40,13 @@ def test_boolean_true_rhs_should_equal_and_match_true_lhs():
     assert value.match(True) is True
 
 
-def test_boolean_true_rhs_should_not_equal_neither_match_false_lhs():
+def test_boolean_true_rhs_should_not_equal_nor_match_false_lhs():
     value = Boolean(True)
     assert value.equal(False) is False
     assert value.match(False) is False
 
 
-def test_boolean_true_rhs_should_not_equal_neither_match_none_lhs():
+def test_boolean_true_rhs_should_not_equal_nor_match_none_lhs():
     value = Boolean(True)
     assert value.equal(None) is False
     assert value.match(None) is False
@@ -124,4 +124,4 @@ def test_boolean_should_not_accept_invalid_rhs(rhs):
     with pytest.raises(RightHandSideTypeError) as e:
         Boolean(rhs)
 
-    assert '[Boolean] Invalid right-hand side with type <{}>'.format(type(rhs).__name__) in str(e.value)
+    assert '[Boolean] Invalid right-hand side <{}>'.format(type(rhs).__name__) in str(e.value)

@@ -13,8 +13,8 @@ class Number(ComparableValue):
     def _needs_casting(self, value, function_type=None):
         return is_string(value)
 
-    def _cast(self, value, reference_type=None) -> NumberType:
-        number_type = reference_type if reference_type else decimal.Decimal
+    def _cast(self, value, function_type=None, reference_value=None) -> NumberType:
+        number_type = type(reference_value) if reference_value else decimal.Decimal
         return number_type(value)
 
     def _equal(self, lhs: NumberType):

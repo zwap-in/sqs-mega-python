@@ -80,7 +80,7 @@ def test_string_should_not_accept_invalid_rhs(rhs):
     with pytest.raises(RightHandSideTypeError) as e:
         String(rhs)
 
-    assert '[String] Invalid right-hand side with type <{}>'.format(type(rhs).__name__) in str(e.value)
+    assert '[String] Invalid right-hand side <{}>'.format(type(rhs).__name__) in str(e.value)
 
 
 @parameterized.expand([

@@ -67,7 +67,7 @@ def test_number_rhs_should_equal_to_equivalent_string_lhs_representing_number(lh
     ['1', sys.maxsize],
     [str(sys.maxsize), 1]
 ])
-def test_number_rhs_should_not_equal_neither_match_inequivalent_string_lhs_representing_number(lhs, rhs):
+def test_number_rhs_should_not_equal_nor_match_inequivalent_string_lhs_representing_number(lhs, rhs):
     assert Number(rhs).equal(lhs) is False
     assert Number(rhs).match(lhs) is False
 
@@ -122,7 +122,7 @@ def test_number_should_not_accept_invalid_rhs(rhs):
     with pytest.raises(RightHandSideTypeError) as e:
         Number(rhs)
 
-    assert '[Number] Invalid right-hand side with type <{}>'.format(type(rhs).__name__) in str(e.value)
+    assert '[Number] Invalid right-hand side <{}>'.format(type(rhs).__name__) in str(e.value)
 
 
 @parameterized.expand([

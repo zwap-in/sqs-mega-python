@@ -41,8 +41,12 @@ class RightHandSideValue(ABC):
         pass
 
     @abstractmethod
-    def _cast(self, value: Value, reference_type: Optional[Type] = None) -> Value:
-        return value
+    def _cast(
+            self, value: Value,
+            reference_value: Optional[Value] = None,
+            function_type: Optional[str] = None
+    ) -> Value:
+        pass
 
     def _filter_rhs(self, rhs: Value) -> Value:
         if not self.accepts_rhs(rhs):
@@ -50,7 +54,7 @@ class RightHandSideValue(ABC):
 
         if self._needs_casting(rhs):
             try:
-                return self._cast(rhs, reference_type=None)
+                return self._cast(rhs, function_type=None, reference_value=None)
             except Exception as e:
                 raise RightHandSideTypeError(type(self), rhs, context=e)
 
@@ -62,7 +66,7 @@ class RightHandSideValue(ABC):
 
         if self._needs_casting(lhs):
             try:
-                return self._cast(lhs, reference_type=type(self.rhs))
+                return self._cast(lhs, function_type=function_type, reference_value=self.rhs)
             except Exception as e:
                 raise LeftHandSideTypeError(self, function_type, lhs, context=e)
 
@@ -120,7 +124,7 @@ class ComparableValue(RightHandSideValue, ABC):
 
 class RightHandSideTypeError(Exception):
     def __init__(self, value_type: Type[RightHandSideValue], rhs: Value, context=None):
-        message = '[{0}] Invalid right-hand side with type <{1}> ({2}).'.format(
+        message = '[{0}] Invalid right-hand side <{1}> ({2}).'.format(
             value_type.__name__,
             type(rhs).__name__,
             rhs if is_scalar(rhs) else '[…]'

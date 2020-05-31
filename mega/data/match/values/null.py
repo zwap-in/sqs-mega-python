@@ -16,7 +16,7 @@ class Null(RightHandSideValue):
     def _needs_casting(self, value, function_type=None):
         return False
 
-    def _cast(self, value, reference_type=None):
+    def _cast(self, value, function_type=None, reference_value=None):
         pass
 
     def _equal(self, lhs):
