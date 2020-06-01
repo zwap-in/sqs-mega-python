@@ -17,6 +17,28 @@
 - Data payloads can be automatically encoded and decoded using [Binary JSON (BSON)](http://bsonspec.org) to save network bandwidth.
 - Messages that fail to be processed can be automatically retried.
 
+## LISTENING TO MESSAGES
+
+A `SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers. Each listener is a blocking thread and must be run in its own process or container.
+
+```python
+from mega.aws.sqs.subscribe import SqsListener
+from my.app.subscribers import ShoppingCartItemAdded, ShoppingCartItemRemoved, ShoppingCartCheckout
+
+listener = SqsListener()
+
+listener.register(ShoppingCartItemAdded)
+listener.register(ShoppingCartItemRemoved)
+listener.register(ShoppingCartCheckout)
+
+listener.listen()
+```
+
+Through pattern-matching, subscribers may or may not match a message. If a message is matched, the listener will forward the message to it. A message will be forwarded to all subscribers that match it.
+
+After a message is consumed by all matching subscribers, it is deleted from the queue. However, a message may be redelivered to those subscribers that failed with a retriable error or chose to retry it.
+
+
 ## MESSAGE PAYLOADS
 
 A payload can have one of the following types:
