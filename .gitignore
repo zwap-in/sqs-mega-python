@@ -45,3 +45,5 @@ coverage.xml
 .venv
 env/
 venv/
+
+README.html
