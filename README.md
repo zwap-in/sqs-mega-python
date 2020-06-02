@@ -19,7 +19,7 @@
 
 ## LISTENING TO MESSAGES
 
-A `SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers. Each listener is a blocking thread and must be run in its own process or container.
+A `SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers. For example:
 
 ```python
 from mega.aws.sqs.subscribe import SqsListener
@@ -34,10 +34,21 @@ listener.register(ShoppingCartCheckout)
 listener.listen()
 ```
 
-Through pattern-matching, subscribers may or may not match a message. If a message is matched, the listener will forward the message to it. A message will be forwarded to all subscribers that match it.
+Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
 
-After a message is consumed by all matching subscribers, it is deleted from the queue. However, a message may be redelivered to those subscribers that failed with a retriable error or chose to retry it.
+After a message is consumed by all interested subscribers, it is deleted from the queue. However, a message may remain in the queue and redelivered later under the following circunstances:
 
+- A subscriber failed to process it with a transient or retriable error, such as network timeout.
+- A subscriber processes the message but determines that it must be retried later for any reason. To signal this intent, it should return `SubscriberResult.RETRY_LATER`.
+- The listener process dies before the message can be deleted from the queue.
+
+Also, due to the nature of Amazon SQS, messages may be delivered more than once. For these reasons, you should design your subscribers to be idempotent. Read the [best practices for processing asynchronous messages](https://github.com/mega-distributed/sqs-mega#best-practices-for-processing-asynchronous-messages).
+
+Each listener is a blocking thread and must be run in its own process or container. To maximize throughput, you can have many copies of the same process listening to the same queue, as long as the set of subscribers is identical.
+
+Amazon SQS uses the [Visibility Timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html) to minimize race conditions and allow only one process to receive and processe a message at a given time. It also uses a shuffling algorithm to distribute messages better between different processes.
+
+> **WARNING**: do **not** allow listener processes with different subscribers to listen to the same queue, otherwise messages might not be delivered to all subscribers, or could be processed incorrectly. You must ensure that all processes that listen to the same queue are identical. If you have multiple copies of a container listening to a queue, you should also keep them up-to-date. Do not allow older containers to share a queue with newer containers.
 
 ## MESSAGE PAYLOADS
 
