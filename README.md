@@ -6,9 +6,9 @@
 
 **_work in progress ..._**
 
-[SQS MEGA](https://github.com/mega-distributed/sqs-mega) is a minimal framework for async processing, event-streaming and pattern-matching that uses Amazon Simple Queue Service (SQS). It also implements the [MEGA event protocol](https://github.com/mega-distributed/event-mega). This is the Python library for both publisher and subscriber processes.
+[SQS MEGA](https://github.com/mega-distributed/sqs-mega) is a minimal framework for async processing, event-streaming and pattern-matching that uses [Amazon Simple Queue Service (SQS)](https://aws.amazon.com/sqs/). It also implements the [MEGA event protocol](https://github.com/mega-distributed/event-mega). This is the Python library for both publisher and subscriber processes.
 
-## KEY FEATURES
+## Key features
 
 - Publish and consume [MEGA events](https://github.com/mega-distributed/event-mega) and data payloads over [Amazon SQS](https://aws.amazon.com/sqs/) or [Amazon SNS](https://aws.amazon.com/sns/).
 - Subscribe to specific events and messages using an expressive **pattern-matching** DSL.
@@ -17,15 +17,17 @@
 - Data payloads can be automatically encoded and decoded using [Binary JSON (BSON)](http://bsonspec.org) to save network bandwidth.
 - Messages that fail to be processed can be automatically retried.
 
-## LISTENING TO MESSAGES
+## Listening to messages
 
-A `SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers. For example:
+A `SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop. Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
+
+Here is an example:
 
 ```python
 from mega.aws.sqs.subscribe import SqsListener
 from my.app.subscribers import ShoppingCartItemAdded, ShoppingCartItemRemoved, ShoppingCartCheckout
 
-listener = SqsListener()
+listener = SqsListener(**aws_settings)
 
 listener.register(ShoppingCartItemAdded)
 listener.register(ShoppingCartItemRemoved)
@@ -34,7 +36,147 @@ listener.register(ShoppingCartCheckout)
 listener.listen()
 ```
 
-Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
+In this example, here is how the `ShoppingCartItemAdded` subscriber could look like:
+
+```python
+from mega.aws.sqs.subscribe import MegaSubscriber, MegaPayload, Result
+
+
+class ShoppingCartItemAdded(MegaSubscriber):
+    match_event = dict(
+        domain='shopping_cart',
+        name='item.added',
+        version=one_of(1, 2),
+        subject=match(r'\d+'),
+        item_id=not_(empty()),
+        quantity=gt(0)
+    )
+
+    validate_object = dict(
+        type='shopping_cart',
+        id=not_(empty())
+    )
+
+    def process(payload: MegaPayload) -> Result:
+        cart = ShoppingCart.get(payload.object.id)
+
+        # do something...
+
+        return Result.OK
+```
+
+This subscriber will match the following MEGA event payload:
+
+```json
+{
+    "protocol": "mega",
+    "version": 1,
+    "event": {
+        "domain": "shopping_cart",
+        "name": "item.added",
+        "version": 2,
+        "timestamp": "2020-05-04T15:53:23.123",
+        "subject": "987650",
+        "publisher": "shopping-cart-service",
+        "item_id": "61fcc874-624e-40f8-8fd7-0e663c7837e8",
+        "quantity": 5
+    },
+    "object": {
+        "type": "shopping_cart",
+        "id": "18a3f92e-1fbf-45eb-8769-d836d0a1be55",
+        "current": {
+            "id": "18a3f92e-1fbf-45eb-8769-d836d0a1be55",
+            "user_id": 987650,
+            "items": [
+                {
+                    "id": "61fcc874-624e-40f8-8fd7-0e663c7837e8",
+                    "price": "19.99",
+                    "quantity": 10
+                },
+                {
+                    "id": "3c7f8798-1d3d-47de-82dd-c6c5e0de74ee",
+                    "price": "102.50",
+                    "quantity": 1
+                },
+                {
+                    "id": "bba76edc-8afc-4fde-b4c4-ea58a230c5d6",
+                    "price": "24.99",
+                    "quantity": 3
+                }
+            ],
+            "currency": "USD",
+            "value": "377.37",
+            "discount": "20.19",
+            "subtotal": "357.18",
+            "estimated_shipping": "10.00",
+            "estimated_tax": "33.05",
+            "estimated_total": "400.23",
+            "created_at": "2020-05-03T12:20:23.000",
+            "updated_at": "2020-05-04T15:52:01.000"
+        },
+        "previous": {
+            "id": "18a3f92e-1fbf-45eb-8769-d836d0a1be55",
+            "user_id": 987650,
+            "items": [
+                {
+                    "id": "61fcc874-624e-40f8-8fd7-0e663c7837e8",
+                    "price": "19.99",
+                    "quantity": 5
+                },
+                {
+                    "id": "3c7f8798-1d3d-47de-82dd-c6c5e0de74ee",
+                    "price": "102.50",
+                    "quantity": 1
+                },
+                {
+                    "id": "bba76edc-8afc-4fde-b4c4-ea58a230c5d6",
+                    "price": "24.99",
+                    "quantity": 3
+                }
+            ],
+            "currency": "USD",
+            "value": "277.42",
+            "discount": "10.09",
+            "subtotal": "267.33",
+            "estimated_shipping": "10.00",
+            "estimated_tax": "24.96",
+            "estimated_total": "302.29",
+            "created_at": "2020-05-03T12:20:23.000",
+            "updated_at": "2020-05-04T13:47:08.000"
+        }
+    },
+    "extra": {
+        "channel": "web/desktop",
+        "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15",
+        "user_ip_address": "177.182.205.103"
+    }
+}
+```
+
+Following the same example, the `ShoppingCartItemRemoved` and `ShoppingCartCheckout` subscribers are not interested in this event, so they would not match it.
+
+```python
+class ShoppingCartItemRemoved(MegaSubscriber):
+    match_event = dict(
+        domain='shopping_cart',
+        name='item.removed',
+        # ...
+    )
+
+    def process(payload: MegaPayload) -> Result:
+        # ...
+
+
+class ShoppingCartCheckout(MegaSubscriber):
+    match_event = dict(
+        domain='shopping_cart',
+        name='checkout',
+        # ...
+    )
+
+    def process(payload: MegaPayload) -> Result:
+        # ...
+```
 
 After a message is consumed by all interested subscribers, it is deleted from the queue. However, a message may remain in the queue and redelivered later under the following circunstances:
 
@@ -46,11 +188,11 @@ Also, due to the nature of Amazon SQS, messages may be delivered more than once.
 
 Each listener is a blocking thread and must be run in its own process or container. To maximize throughput, you can have many copies of the same process listening to the same queue, as long as the set of subscribers is identical.
 
-Amazon SQS uses the [Visibility Timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html) to minimize race conditions and allow only one process to receive and processe a message at a given time. It also uses a shuffling algorithm to distribute messages better between different processes.
+Amazon SQS uses the [Visibility Timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html) to minimize race conditions and allow only one process to receive and process a message at a given time. It also uses a shuffling algorithm to distribute messages better between different processes.
 
 > **WARNING**: do **not** allow listener processes with different subscribers to listen to the same queue, otherwise messages might not be delivered to all subscribers, or could be processed incorrectly. You must ensure that all processes that listen to the same queue are identical. If you have multiple copies of a container listening to a queue, you should also keep them up-to-date. Do not allow older containers to share a queue with newer containers.
 
-## MESSAGE PAYLOADS
+## Message payloads
 
 A payload can have one of the following types:
 
