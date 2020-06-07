@@ -2,20 +2,11 @@
     <img alt="SQS MEGA" src="https://github.com/sqs-mega/sqs-mega/raw/master/resources/logo/sqs-mega_logo_large.png">
 </p>
 
-# PYTHON LIBRARY
-
 **_work in progress ..._**
 
 [SQS MEGA](https://github.com/mega-distributed/sqs-mega) is a minimal framework for async processing, event-streaming and pattern-matching that uses [Amazon Simple Queue Service (SQS)](https://aws.amazon.com/sqs/). It also implements the [MEGA event protocol](https://github.com/mega-distributed/event-mega). This is the Python library for both publisher and subscriber processes.
 
-## Key features
-
-- Publish and consume [MEGA events](https://github.com/mega-distributed/event-mega) and data payloads over [Amazon SQS](https://aws.amazon.com/sqs/) or [Amazon SNS](https://aws.amazon.com/sns/).
-- Subscribe to specific events and messages using an expressive **pattern-matching** DSL.
-- Scale publisher and subscriber processes independently and at your heart's desire.
-- SNS notifications delivered over SQS are decoded transparently.
-- Data payloads can be automatically encoded and decoded using [Binary JSON (BSON)](http://bsonspec.org) to save network bandwidth.
-- Messages that fail to be processed can be automatically retried.
+Please read the → [SQS MEGA](https://github.com/mega-distributed/sqs-mega) documentation to get started. Here we describe how to use the framework in the **Python** ecosystem.
 
 ## Listening to messages
 
