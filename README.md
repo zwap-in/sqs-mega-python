@@ -1,8 +1,10 @@
 <p align="center">
-    <img alt="SQS MEGA" src="https://github.com/sqs-mega/sqs-mega/raw/master/resources/logo/sqs-mega_logo_large.png">
+    <img alt="Python" src="./resources/logo/sqs-mega-python_logo.png">
 </p>
 
 **_work in progress ..._**
+
+---
 
 [SQS MEGA](https://github.com/mega-distributed/sqs-mega) is a minimal framework for async processing, event-streaming and pattern-matching that uses [Amazon Simple Queue Service (SQS)](https://aws.amazon.com/sqs/). It also implements the [MEGA event protocol](https://github.com/mega-distributed/event-mega). This is the Python library for both publisher and subscriber processes.
 
