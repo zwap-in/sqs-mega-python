@@ -7,11 +7,11 @@ from mega.aws.sqs.api import BaseSqsApi
 
 class SqsPublisher(BaseSqsApi):
 
-    def send_payload(self, payload: Payload, queue_url: Optional[str] = None, binary_encoding=False) -> str:
+    def publish_payload(self, payload: Payload, queue_url: Optional[str] = None, binary_encoding=False) -> str:
         serialized = serialize_payload(payload, binary_encoding=binary_encoding)
-        return self.send_raw_message(serialized, queue_url=queue_url)
+        return self.publish_raw_message(serialized, queue_url=queue_url)
 
-    def send_raw_message(self, body: str, queue_url: Optional[str] = None) -> str:
+    def publish_raw_message(self, body: str, queue_url: Optional[str] = None) -> str:
         queue_url = self._get_queue_url(queue_url)
 
         response = self._client.send_message(
