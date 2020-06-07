@@ -183,27 +183,6 @@ Amazon SQS uses the [Visibility Timeout](https://docs.aws.amazon.com/AWSSimpleQu
 
 > **WARNING**: do **not** allow listener processes with different subscribers to listen to the same queue, otherwise messages might not be delivered to all subscribers, or could be processed incorrectly. You must ensure that all processes that listen to the same queue are identical. If you have multiple copies of a container listening to a queue, you should also keep them up-to-date. Do not allow older containers to share a queue with newer containers.
 
-## Message payloads
-
-A payload can have one of the following types:
-
-- [MEGA event](https://github.com/mega-distributed/event-mega)
-- Data object (dictionary)
-- Plaintext
-- Binary blob
-
-Currently, only JSON is supported as an underlying format for both data objects and MEGA events. Optionally, [Binary JSON (BSON)](http://bsonspec.org) can also be used to compress messages over the network.
-
-Because SQS messages can only be transmitted over plaintext media, binary content such as BSON or bytes will be automatically encoded by SQS MEGA using [Base64](https://en.wikipedia.org/wiki/Base64).
-
-Any string that cannot be decoded as Base64 or JSON is considered plaintext with Unicode encoding. Similarly, any set of bytes encoded as Base64 that cannot be decoded as BSON will be considered a generic binary blob.
-
-SQS MEGA gives message subscribers the ability to perform pattern-matching, but that only applies to MEGA events and data objects. If a message contains a plaintext payload that cannot be decoded as JSON or a binary payload that cannot be decoded as BSON, SQS MEGA allows you to either:
-
-- Provide custom code to consume the plaintext or binary payload
-- Provide custom code to transform the plaintext or binary payload to a data object (dictionary), which then can have pattern-matching rules applied.
-- Ignore the unrecognized plaintext or binary payload and delete the message from the queue (default).
-
 ## PATTERN-MATCHING DSL
 
 Suppose the following MEGA event is published:
