@@ -10,6 +10,28 @@ SQS MEGA is a minimal framework for async processing, event-streaming and patter
 
 Please read the → [SQS MEGA](https://github.com/mega-distributed/sqs-mega) documentation to get started. Here we describe how to use the framework in the **Python** ecosystem.
 
+## AWS settings
+
+In order for the application to connect to AWS, settings can be automatically read from the IAM environment, or explicitly passed to Python object constructors.
+
+The following authentication settings are needed:
+
+- AWS Access Key ID
+- AWS Secret Access Key
+- Region name
+
+In order to setup the AWS environment locally for development purposes, you can use the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html). Example:
+
+```
+$ aws configure
+AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: us-west-2
+Default output format [None]: ENTER
+```
+
+Other settings are needed for reading or writing to SQS queues (such as queue URL) or publishing to SNS topics (such as topic ARN). More on that below.
+
 ## Listening to messages
 
 A `SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop. Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
