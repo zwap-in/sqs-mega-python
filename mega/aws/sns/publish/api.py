@@ -4,12 +4,13 @@ from typing import Optional
 import boto3
 
 from mega.aws.payload import Payload, serialize_payload
+from mega.aws.publish import Publisher
 from mega.aws.sns import LOGGER_NAME
 
 logger = logging.getLogger(LOGGER_NAME)
 
 
-class SnsPublisher:
+class SnsPublisher(Publisher):
 
     def __init__(
             self,
@@ -30,11 +31,11 @@ class SnsPublisher:
     def topic_arn(self):
         return self._topic_arn
 
-    def publish_payload(self, payload: Payload, topic_arn: Optional[str] = None, binary_encoding=False) -> str:
+    def publish_payload(self, payload: Payload, binary_encoding=False, topic_arn: Optional[str] = None, **_) -> str:
         serialized = serialize_payload(payload, binary_encoding=binary_encoding)
         return self.publish_raw_message(serialized, topic_arn=topic_arn)
 
-    def publish_raw_message(self, message: str, topic_arn: Optional[str] = None) -> str:
+    def publish_raw_message(self, message: str, topic_arn: Optional[str] = None, **_) -> str:
         topic_arn = self._get_topic_arn(topic_arn)
 
         response = self._client.publish(
