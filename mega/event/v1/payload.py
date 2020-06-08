@@ -61,11 +61,11 @@ class MegaObject:
         if not current:
             raise AttributeError('Mega object attribute "current" has not been set, or set to an empty value')
 
-        self.current = current
+        self.current = dict(current)
         self.type = type
         self.id = id
         self.version = version if version else self.DEFAULT_VERSION
-        self.previous = previous
+        self.previous = dict(previous) if previous else None
 
     def __eq__(self, other):
         if not isinstance(other, MegaObject):
