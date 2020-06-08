@@ -143,6 +143,23 @@ payload = PayloadBuilder().with_event(
 publisher.publish_payload(payload, binary_encoding=True)
 ```
 
+#### Publishing a data object
+
+Any instance of Python's `dict` type is considered a data object.
+
+```python
+payload = {
+    'type': 'user_notification',
+    'notification_type': 'email',
+    'user': {
+        'id': 987650,
+        'email': 'johndoe_86@example.com'
+    }
+}
+
+publisher.publish_payload(payload)
+```
+
 ## Listening to messages
 
 A `SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop. Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
