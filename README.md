@@ -34,9 +34,9 @@ Other settings are needed for reading or writing to SQS queues (such as _queue U
 
 ## Publishing messages
 
-### The `SqsPublisher` class
+### Sending messages to a SQS queue
 
-This class allows you to write messages to a SQS queue.
+The `SqsPublisher` class allows you to send messages to a SQS queue directly.
 
 ```python
 from mega.aws.sqs.publish import SqsPublisher
@@ -53,11 +53,13 @@ publisher = SqsPublisher(
 - If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
 - The `queue_url` must point to a valid SQS queue URL. Please ensure the IAM user has _write_ permissions to that queue.
 
-### The `SnsPublisher` class
+### Publishing notifications to a SNS topic
 
-This class allows you to publish notifications to a SNS topic, which might be useful in some situations. For example, you want the same message to be sent to multiple destinations or services.
+[Amazon SNS](https://aws.amazon.com/sns) is a fully managed pub/sub messaging service that allows you to decouple microservices, distributed systems and serveless applications.
 
-Please keep in mind that, in order to leverage most of the functionality of this framework, the SNS topic should be configured to also deliver the message to a SQS queue. You can configure SNS to forward the message to a SQS queue in raw format, or the SNS notification can also be embedded inside a SQS message payload, as it is. SQS MEGA is able to automatically detect both types of messages, and payloads are decoded transparently.
+The `SnsPublisher` class allows you to publish notifications to a SNS topic. This is useful if you want to decouple event publishers from subscribers, while delivering the same notification to all parties that are subscribed to a given topic. You can subscribe your SQS queue to the SNS topics that interest your service, and Amazon SNS will forward messages to that queue.
+
+You can configure SNS to forward messages to a SQS queue in raw format. The SNS notification can also be embedded inside a SQS message body. SQS MEGA is able to automatically detect both types of configurations, and message payloads are deserialized in a transparent manner.
 
 ```python
 from mega.aws.sns.publish import SnsPublisher
