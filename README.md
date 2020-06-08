@@ -87,7 +87,7 @@ Please read the SQS MEGA documentation about → [message payloads](https://gith
 
 Both `SqsPublisher` and `SnsPublisher` implement the `publish_payload` method, that will encode and publish any payload type to Amazon SQS and SNS, respectively.
 
-By default, MEGA events and data payloads will be encoded using JSON and transmitted over plaintext. You can save network bandwidth and encode them using [BSON](http://bsonspec.org) (Binary JSON) by setting the `binary_encoding` attribute to true.
+By default, MEGA events and data objects will be encoded using JSON and transmitted over plaintext. You can save network bandwidth and encode them using [BSON](http://bsonspec.org) (Binary JSON) by setting the `binary_encoding` attribute to true.
 
 #### Publishing a MEGA event
 
@@ -148,7 +148,7 @@ publisher.publish_payload(payload, binary_encoding=True)
 
 #### Publishing a data object
 
-Any instance of Python's `dict` type is considered a data object.
+Any instance of Python's `dict` type is considered a data object. By default, they're encoded to JSON:
 
 ```python
 payload = {
@@ -162,6 +162,62 @@ payload = {
 
 publisher.publish_payload(payload)
 ```
+
+It's also possible to use BSON to compress the payload in binary encoding:
+
+```python
+publisher.publish_payload(payload, binary_encoding=True)
+```
+
+#### Should I use binary encoding?
+
+Let's see this example:
+
+```python
+payload = {
+    'type': 'user_notification',
+    'notification_type': 'email',
+    'user': {
+        'id': 987650,
+        'email': 'johndoe_86@example.com'
+    }
+}
+```
+
+When encoded as JSON, it has 118 characters:
+
+```json
+{"type": "user_notification", "notification_type": "email", "user": {"id": 987650, "email": "johndoe_86@example.com"}}
+```
+
+However, JSON content must be URL-escaped in order to be written to a SQS queue:
+```
+%7B%22type%22%3A%20%22user_notification%22%2C%20%22notification_type%22%3A%20%22email%22%2C%20%22user%22%3A%20%7B%22id%22%3A%20987650%2C%20%22email%22%3A%20%22johndoe_86%40example.com%22%7D%7D
+```
+And is delivered XML-escaped when read from a SQS queue:
+```
+{&quot;type&quot;: &quot;user_notification&quot;, &quot;notification_type&quot;: &quot;email&quot;, &quot;user&quot;: {&quot;id&quot;: 987650, &quot;email&quot;: &quot;johndoe_86@example.com&quot;}}
+```
+Which consume 192 and 198 characters, respectively.
+
+We can save some bytes by encoding the payload to BSON. However, because SQS only supports plaintext media, binary content must be transmitted using Base64. This example takes 156 characters, a ~20% reduction in size:
+
+```
+cwAAAAJ0eXBlABIAAAB1c2VyX25vdGlmaWNhdGlvbgACbm90aWZpY2F0aW9uX3R5cGUABgAAAGVtYWlsAAN1c2VyAC8AAAAQaWQAAhIPAAJlbWFpbAAXAAAAam9obmRvZV84NkBleGFtcGxlLmNvbQAAAA==
+```
+
+As you can notice, the difference in size for small payloads is negligible. However, BSON over Base64 can offer significant compression benefits when encoding large data objects.
+
+The only downside of using binary encoding is that it makes less clear to inspect queues and see their message contents using the Amazon SQS browser client or the AWS CLI tool. However, you can copy the Base64 string to a Python terminal and decode it using the following command:
+
+```python
+>>> import bson
+>>> from base64 import b64decode
+>>> bson.loads(b64decode('cwAAAAJ0eXBlABIAAAB1c2VyX25vdGlmaWNhdGlvbgACbm90aWZpY2F0aW9uX3R5cGUABgAAAGVtYWlsAAN1c2VyAC8AAAAQaWQAAhIPAAJlbWFpbAAXAAAAam9obmRvZV84NkBleGFtcGxlLmNvbQAAAA=='))
+{'type': 'user_notification', 'notification_type': 'email', 'user': {'id': 987650, 'email': 'johndoe_86@example.com'}}
+```
+
+Even if transmitted using plaintext, JSON content is very difficult for the naked-eye to read in SQS queues because it must be XML or URL escaped in order to fit in the SQS message format. So in order to inspect messages, you must use a tool anyways.
 
 ## Listening to messages
 
