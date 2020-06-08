@@ -204,7 +204,7 @@ And is delivered XML-escaped when read from a SQS queue:
 ```
 {&quot;type&quot;: &quot;user_notification&quot;, &quot;notification_type&quot;: &quot;email&quot;, &quot;user&quot;: {&quot;id&quot;: 987650, &quot;email&quot;: &quot;johndoe_86@example.com&quot;}}
 ```
-Which consume 192 and 198 characters, respectively.
+Which consumes 192 and 198 characters, respectively.
 
 We can save some bytes by serializing the payload to BSON. However, because SQS only supports plaintext media, binary content must be encoded to Base64. This example takes 156 characters, a ~20% reduction in size:
 
