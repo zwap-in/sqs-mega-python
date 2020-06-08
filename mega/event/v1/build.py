@@ -1,3 +1,6 @@
+from datetime import datetime
+from typing import Optional
+
 from mega.event import MegaPayload, MegaObject, MegaEvent
 
 
@@ -7,19 +10,48 @@ class PayloadBuilder:
         self._object_kwargs = {}
         self._extra = {}
 
-    def with_event(self, **kwargs):
-        self._event_kwargs.update(kwargs)
+    def with_event(
+            self,
+            name: str = None,
+            version: Optional[int] = None,
+            timestamp: Optional[datetime] = None,
+            domain: Optional[str] = None,
+            subject: Optional[str] = None,
+            publisher: Optional[str] = None,
+            attributes: Optional[dict] = None,
+            **kwargs
+    ):
+        self._event_kwargs.update(
+            name=name,
+            version=version,
+            timestamp=timestamp,
+            domain=domain,
+            subject=subject,
+            publisher=publisher,
+            attributes=(attributes or {})
+        )
+        self._event_kwargs['attributes'].update(kwargs)
         return self
 
-    def with_object(self, **kwargs):
-        for key in kwargs.keys():
-            if key not in ('id', 'type', 'version', 'current', 'previous'):
-                raise AttributeError('Unrecognized Mega object attribute: "{}"'.format(key))
-        self._object_kwargs.update(kwargs)
+    def with_object(
+            self,
+            current: dict = None,
+            type: Optional[str] = None,
+            id: Optional[str] = None,
+            version: Optional[int] = None,
+            previous: Optional[dict] = None
+    ):
+        self._object_kwargs.update(
+            current=current,
+            type=type,
+            id=id,
+            version=version,
+            previous=previous
+        )
         return self
 
     def with_extra(self, **kwargs):
-        self._extra = kwargs
+        self._extra.update(kwargs)
         return self
 
     def build(self) -> MegaPayload:

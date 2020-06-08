@@ -10,20 +10,20 @@ class MegaEvent:
     def __init__(
             self,
             name: str = None,
+            version: int = None,
             timestamp: Optional[datetime] = None,
-            version: int = DEFAULT_VERSION,
-            domain: str = None,
-            subject: str = None,
-            publisher: str = None,
-            attributes: dict = None,
+            domain: Optional[str] = None,
+            subject: Optional[str] = None,
+            publisher: Optional[str] = None,
+            attributes: Optional[dict] = None,
             **kwargs
     ):
         if not name:
             raise AttributeError('Mega event attribute "name" has not been set, or set to an empty value')
 
         self.name = name
-        self.timestamp = timestamp if timestamp else datetime.utcnow()
         self.version = version if version else self.DEFAULT_VERSION
+        self.timestamp = timestamp if timestamp else datetime.utcnow()
         self.domain = domain
         self.subject = subject
         self.publisher = publisher
@@ -53,10 +53,10 @@ class MegaObject:
     def __init__(
             self,
             current: dict = None,
-            type: str = None,
-            id: str = None,
+            type: Optional[str] = None,
+            id: Optional[str] = None,
             version: int = DEFAULT_VERSION,
-            previous: dict = None
+            previous: Optional[dict] = None
     ):
         if not current:
             raise AttributeError('Mega object attribute "current" has not been set, or set to an empty value')
@@ -88,7 +88,7 @@ class MegaPayload:
             self,
             event: MegaEvent = None,
             object: Optional[MegaObject] = None,
-            extra: dict = None,
+            extra: Optional[dict] = None,
             **kwargs
     ):
         if not event:

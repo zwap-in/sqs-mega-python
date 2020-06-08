@@ -251,11 +251,11 @@ def test_fail_to_build_payload_with_invalid_object():
 
 
 def test_fail_to_build_payload_with_invalid_object_attributes():
-    with pytest.raises(AttributeError) as e:
+    with pytest.raises(TypeError) as e:
         PayloadBuilder().with_event(
             name='test.event'
         ).with_object(
             current={'foo': 'bar'},
             invalid=True
         ).build()
-    assert str(e.value) == 'Unrecognized Mega object attribute: "invalid"'
+    assert "got an unexpected keyword argument 'invalid'" in str(e.value)
