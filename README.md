@@ -30,7 +30,94 @@ Default region name [None]: us-west-2
 Default output format [None]: ENTER
 ```
 
-Other settings are needed for reading or writing to SQS queues (such as queue URL) or publishing to SNS topics (such as topic ARN). More on that below.
+Other settings are needed for reading or writing to SQS queues (such as _queue URL_) or sending SNS notifications (such as _topic ARN_). More on that below.
+
+## Publishing messages and notifications
+
+### `SqsPublisher`
+
+This class allows you to write messages to a SQS queue.
+
+```python
+from mega.aws.sqs.publish import SqsPublisher
+
+publisher = SqsPublisher(
+    aws_access_key_id='AKIAIOSFODNN7EXAMPLE',
+    aws_secret_access_key='wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+    region_name='us-west-2',
+    queue_url='https://sqs.us-east-2.amazonaws.com/424566909325/sqs-mega-test'
+)
+```
+> **WARNING**: the passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
+
+- If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
+- The `queue_url` must point to a valid SQS queue. Please also ensure the IAM user has _write_ permissions to that queue.
+
+### `SnsPublisher`
+
+It is also possible to publish notifications to a SNS topic. This may be useful in some situations. For example, you want the same message to be sent to multiple destinations or services.
+
+Please keep in mind that, in order to leverage most of the functionality of this framework, the SNS topic should be configured to also deliver the message to a SQS queue. You can configure SNS to forward the message to a SQS queue in raw format, or the SNS notification can also be embedded inside a SQS message payload, as it is. SQS MEGA is able to automatically detect both types of messages, and payloads are decoded transparently.
+
+```python
+from mega.aws.sns.publish import SnsPublisher
+
+publisher = SnsPublisher(
+    aws_access_key_id='AKIAIOSFODNN7EXAMPLE',
+    aws_secret_access_key='wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+    region_name='us-west-2',
+    topic_arn='arn:aws:sns:us-east-2:424566909325:sqs-mega-test'
+)
+```
+> **WARNING**: the passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
+
+- If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
+- The `topic_arn` must point to a valid topic. Please ensure the IAM user has _publish_ permissions to topic.
+
+### Publishing payloads
+
+A message payload can be one of the following:
+
+- MEGA event
+- Data object
+- Plaintext
+- Binary blob
+
+Please read the SQS MEGA documentation about → [message payloads](https://github.com/mega-distributed/sqs-mega#message-payloads).
+
+The method `publish_payload` from both `SqsPublisher` and `SnsPublisher` will encode and publish any payload type to Amazon SQS and SNS respectively.
+
+By default, data payloads will be sent using plaintext. To encode them to binary over Base64, set the `binary_encoding` attribute to true.
+
+#### Publishing a MEGA event
+
+```python
+from mega.event import MegaPayload, MegaObject, MegaEvent
+from my.app import ShoppingCart
+
+
+shopping_cart = ShoppingCart(**kwargs)
+
+payload = MegaPayload(
+    event=MegaEvent(
+        domain='shopping_cart',
+        name='item.added',
+        subject=shopping_cart.user_id,
+        quantity=5,
+        item_id='0794bac2-e860-4e0d-b9cc-42ab21e2a851'
+    ),
+    object=MegaObject(
+        id=shopping_cart.id,
+        current=shopping_cart.to_dict()
+    ),
+    extra=dict(
+        channel='web/desktop',
+        user_ip_address='177.182.205.103'
+    )
+)
+
+publisher.publish_payload(payload, binary_encoding=True)
+```
 
 ## Listening to messages
 
