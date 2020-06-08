@@ -1,10 +1,11 @@
 from datetime import datetime
 
 import dateutil.parser
+import pytest
 from freezegun import freeze_time
 
-from mega.event.v1.payload import MegaPayload, MegaEvent, MegaObject
 from mega.event.v1.build import PayloadBuilder
+from mega.event.v1.payload import MegaPayload, MegaEvent, MegaObject
 
 
 def test_build_minimal_mega_payload():
@@ -229,3 +230,32 @@ def test_build_full_mega_payload():
     assert payload.object.previous == previous_object
 
     assert payload.extra == extra
+
+
+def test_fail_to_build_payload_with_invalid_event():
+    with pytest.raises(AttributeError) as e:
+        PayloadBuilder().with_event(foo='bar').build()
+    assert str(e.value) == 'Mega event attribute "name" has not been set, or set to an empty value'
+
+
+def test_fail_to_build_payload_without_event():
+    with pytest.raises(AttributeError) as e:
+        PayloadBuilder().with_extra(foo='bar').build()
+    assert str(e.value) == 'Mega payload event has not been set'
+
+
+def test_fail_to_build_payload_with_invalid_object():
+    with pytest.raises(AttributeError) as e:
+        PayloadBuilder().with_event(name='test.event').with_object(type='test.object').build()
+    assert str(e.value) == 'Mega object attribute "current" has not been set, or set to an empty value'
+
+
+def test_fail_to_build_payload_with_invalid_object_attributes():
+    with pytest.raises(AttributeError) as e:
+        PayloadBuilder().with_event(
+            name='test.event'
+        ).with_object(
+            current={'foo': 'bar'},
+            invalid=True
+        ).build()
+    assert str(e.value) == 'Unrecognized Mega object attribute: "invalid"'

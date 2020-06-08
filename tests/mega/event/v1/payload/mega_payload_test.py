@@ -1,3 +1,4 @@
+import pytest
 from parameterized import parameterized
 
 from mega.event.v1.payload import MegaPayload, MegaEvent, MegaObject
@@ -53,6 +54,12 @@ def test_create_mega_payload_with_additional_kwargs_should_be_added_to_the_extra
         'foo': 'bar',
         'test': 123,
     }
+
+
+def test_fail_to_create_mega_payload_without_event():
+    with pytest.raises(AttributeError) as e:
+        MegaPayload(event=None)
+    assert str(e.value) == 'Mega payload event has not been set'
 
 
 def test_mega_payloads_are_equal_when_all_attributes_are_equal():

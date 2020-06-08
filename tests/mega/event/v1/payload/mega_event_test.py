@@ -2,6 +2,7 @@ from datetime import datetime
 
 import dateutil.parser
 import freezegun
+import pytest
 from parameterized import parameterized
 
 from mega.event.v1.payload import MegaEvent
@@ -69,6 +70,16 @@ def test_create_event_with_additional_kwargs_should_be_added_to_the_event_attrib
         'foo': 'bar',
         'test': 123
     }
+
+
+@parameterized.expand([
+    [''],
+    [None]
+])
+def test_fail_to_create_event_with_empty_name(bogus):
+    with pytest.raises(AttributeError) as e:
+        MegaEvent(name=bogus)
+    assert str(e.value) == 'Mega event attribute "name" has not been set, or set to an empty value'
 
 
 def test_events_are_equal_when_all_attributes_are_equal():

@@ -1,3 +1,4 @@
+import pytest
 from parameterized import parameterized
 
 from mega.event.v1.payload import MegaObject
@@ -94,6 +95,16 @@ def test_create_mega_object_without_optional_attribute_should_use_default(attrib
 
     mega_object = MegaObject(**kwargs)
     assert getattr(mega_object, attribute_name) == expected_default
+
+
+@parameterized.expand([
+    [None],
+    [{}]
+])
+def test_fail_to_create_mega_object_with_empty_current_attribute(bogus):
+    with pytest.raises(AttributeError) as e:
+        MegaObject(current=bogus)
+    assert str(e.value) == 'Mega object attribute "current" has not been set, or set to an empty value'
 
 
 def test_objects_are_equal_when_all_attributes_are_equal():
