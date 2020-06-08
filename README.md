@@ -55,7 +55,7 @@ publisher = SqsPublisher(
 
 ### The `SnsPublisher` class
 
-It is also possible to publish notifications to a SNS topic. This may be useful in some situations. For example, you want the same message to be sent to multiple destinations or services.
+This class allows you to publish notifications to a SNS topic, which might be useful in some situations. For example, you want the same message to be sent to multiple destinations or services.
 
 Please keep in mind that, in order to leverage most of the functionality of this framework, the SNS topic should be configured to also deliver the message to a SQS queue. You can configure SNS to forward the message to a SQS queue in raw format, or the SNS notification can also be embedded inside a SQS message payload, as it is. SQS MEGA is able to automatically detect both types of messages, and payloads are decoded transparently.
 
@@ -78,10 +78,10 @@ publisher = SnsPublisher(
 
 A message payload can be one of the following:
 
-- → [MEGA event](https://github.com/mega-distributed/event-mega)
-- _Data object_: JSON objects and Python's `dict`
-- _Plaintext_: Python's `str`
-- _Binary blob_: Python's `bytes`
+- → [MEGA event](https://github.com/mega-distributed/event-mega): `mega.event.MegaPayload`
+- Data object: `dict` and JSON objects
+- Plaintext: `str`
+- Binary blob: `bytes`
 
 Please read the SQS MEGA documentation about → [message payloads](https://github.com/mega-distributed/sqs-mega#message-payloads).
 
