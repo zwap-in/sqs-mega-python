@@ -32,9 +32,9 @@ Default output format [None]: ENTER
 
 Other settings are needed for reading or writing to SQS queues (such as _queue URL_) or sending SNS notifications (such as _topic ARN_). More on that below.
 
-## Publishing messages and notifications
+## Publishing messages
 
-### `SqsPublisher`
+### The `SqsPublisher` class
 
 This class allows you to write messages to a SQS queue.
 
@@ -51,9 +51,9 @@ publisher = SqsPublisher(
 > **WARNING**: the passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
 
 - If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
-- The `queue_url` must point to a valid SQS queue. Please also ensure the IAM user has _write_ permissions to that queue.
+- The `queue_url` must point to a valid SQS queue URL. Please ensure the IAM user has _write_ permissions to that queue.
 
-### `SnsPublisher`
+### The `SnsPublisher` class
 
 It is also possible to publish notifications to a SNS topic. This may be useful in some situations. For example, you want the same message to be sent to multiple destinations or services.
 
@@ -72,77 +72,75 @@ publisher = SnsPublisher(
 > **WARNING**: the passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
 
 - If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
-- The `topic_arn` must point to a valid topic. Please ensure the IAM user has _publish_ permissions to topic.
+- The `topic_arn` must point to a valid SNS topic ARN. Please ensure the IAM user has _publish_ permissions to the topic.
 
 ### Publishing payloads
 
 A message payload can be one of the following:
 
-- MEGA event
-- Data object
-- Plaintext
-- Binary blob
+- → [MEGA event](https://github.com/mega-distributed/event-mega)
+- _Data object_: JSON objects and Python's `dict`
+- _Plaintext_: Python's `str`
+- _Binary blob_: Python's `bytes`
 
 Please read the SQS MEGA documentation about → [message payloads](https://github.com/mega-distributed/sqs-mega#message-payloads).
 
-The method `publish_payload` from both `SqsPublisher` and `SnsPublisher` will encode and publish any payload type to Amazon SQS and SNS respectively.
+Both `SqsPublisher` and `SnsPublisher` implement the `publish_payload` method, that will encode and publish any payload type to Amazon SQS and SNS, respectively.
 
-By default, data payloads will be sent using plaintext. To encode them to binary over Base64, set the `binary_encoding` attribute to true.
+By default, MEGA events and data payloads will be encoded using JSON and transmitted over plaintext. You can save network bandwidth and encode them using [BSON](http://bsonspec.org) (Binary JSON) by setting the `binary_encoding` attribute to true.
 
 #### Publishing a MEGA event
 
 ```python
 from mega.event import PayloadBuilder
 
-mega_payload = PayloadBuilder().with_event(
-        domain='shopping_cart',
-        name='item.added',
-        subject='987650',
-        quantity=5,
-        item_id='0794bac2-e860-4e0d-b9cc-42ab21e2a851'
-    ).with_object(
-        type='shopping_cart',
-        id='18a3f92e-1fbf-45eb-8769-d836d0a1be55',
-        current={
-            'id': '18a3f92e-1fbf-45eb-8769-d836d0a1be55',
-            'user_id': 987650,
-            'items': [
-                {
-                    'id': '61fcc874-624e-40f8-8fd7-0e663c7837e8',
-                    'price': '19.99',
-                    'quantity': 5
-                },
-                {
-                    'id': '3c7f8798-1d3d-47de-82dd-c6c5e0de74ee',
-                    'price': '102.50',
-                    'quantity': 1
-                },
-                {
-                    'id': 'bba76edc-8afc-4fde-b4c4-ea58a230c5d6',
-                    'price': '24.99',
-                    'quantity': 3
-                }
-            ],
-            'currency': 'USD',
-            'value': '277.42',
-            'discount': '10.09',
-            'subtotal': '267.33',
-            'estimated_shipping': '10.00',
-            'estimated_tax': '24.96',
-            'estimated_total': '302.29',
-            'created_at': '2020-05-03T12:20:23.000',
-            'updated_at': '2020-05-04T13:47:08.000'
-        }
-    ).with_extra(
-        channel='web/desktop',
-        user_ip_address='177.182.205.103'
-    ).build()
+
+payload = PayloadBuilder().with_event(
+    domain='shopping_cart',
+    name='item.added',
+    subject='987650',
+    quantity=5,
+    item_id='0794bac2-e860-4e0d-b9cc-42ab21e2a851'
+).with_object(
+    type='shopping_cart',
+    id='18a3f92e-1fbf-45eb-8769-d836d0a1be55',
+    current={
+        'id': '18a3f92e-1fbf-45eb-8769-d836d0a1be55',
+        'user_id': 987650,
+        'items': [
+            {
+                'id': '61fcc874-624e-40f8-8fd7-0e663c7837e8',
+                'price': '19.99',
+                'quantity': 5
+            },
+            {
+                'id': '3c7f8798-1d3d-47de-82dd-c6c5e0de74ee',
+                'price': '102.50',
+                'quantity': 1
+            },
+            {
+                'id': 'bba76edc-8afc-4fde-b4c4-ea58a230c5d6',
+                'price': '24.99',
+                'quantity': 3
+            }
+        ],
+        'currency': 'USD',
+        'value': '277.42',
+        'discount': '10.09',
+        'subtotal': '267.33',
+        'estimated_shipping': '10.00',
+        'estimated_tax': '24.96',
+        'estimated_total': '302.29',
+        'created_at': '2020-05-03T12:20:23.000',
+        'updated_at': '2020-05-04T13:47:08.000'
+    }
+).with_extra(
+    channel='web/desktop',
+    user_ip_address='177.182.205.103'
+).build()
 
 
-publisher.publish_payload(
-    mega_payload,
-    binary_encoding=True
-)
+publisher.publish_payload(payload, binary_encoding=True)
 ```
 
 ## Listening to messages
