@@ -92,31 +92,57 @@ By default, data payloads will be sent using plaintext. To encode them to binary
 #### Publishing a MEGA event
 
 ```python
-from mega.event import MegaPayload, MegaObject, MegaEvent
-from my.app import ShoppingCart
+from mega.event import PayloadBuilder
 
-
-shopping_cart = ShoppingCart(**kwargs)
-
-payload = MegaPayload(
-    event=MegaEvent(
+mega_payload = PayloadBuilder().with_event(
         domain='shopping_cart',
         name='item.added',
-        subject=shopping_cart.user_id,
+        subject='987650',
         quantity=5,
         item_id='0794bac2-e860-4e0d-b9cc-42ab21e2a851'
-    ),
-    object=MegaObject(
-        id=shopping_cart.id,
-        current=shopping_cart.to_dict()
-    ),
-    extra=dict(
+    ).with_object(
+        type='shopping_cart',
+        id='18a3f92e-1fbf-45eb-8769-d836d0a1be55',
+        current={
+            'id': '18a3f92e-1fbf-45eb-8769-d836d0a1be55',
+            'user_id': 987650,
+            'items': [
+                {
+                    'id': '61fcc874-624e-40f8-8fd7-0e663c7837e8',
+                    'price': '19.99',
+                    'quantity': 5
+                },
+                {
+                    'id': '3c7f8798-1d3d-47de-82dd-c6c5e0de74ee',
+                    'price': '102.50',
+                    'quantity': 1
+                },
+                {
+                    'id': 'bba76edc-8afc-4fde-b4c4-ea58a230c5d6',
+                    'price': '24.99',
+                    'quantity': 3
+                }
+            ],
+            'currency': 'USD',
+            'value': '277.42',
+            'discount': '10.09',
+            'subtotal': '267.33',
+            'estimated_shipping': '10.00',
+            'estimated_tax': '24.96',
+            'estimated_total': '302.29',
+            'created_at': '2020-05-03T12:20:23.000',
+            'updated_at': '2020-05-04T13:47:08.000'
+        }
+    ).with_extra(
         channel='web/desktop',
         user_ip_address='177.182.205.103'
-    )
-)
+    ).build()
 
-publisher.publish_payload(payload, binary_encoding=True)
+
+publisher.publish_payload(
+    mega_payload,
+    binary_encoding=True
+)
 ```
 
 ## Listening to messages
