@@ -48,7 +48,7 @@ publisher = SqsPublisher(
     queue_url='https://sqs.us-east-2.amazonaws.com/424566909325/sqs-mega-test'
 )
 ```
-> **WARNING**: the passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
+> ⚠️ The passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
 
 - If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
 - The `queue_url` must point to a valid SQS queue URL. Please ensure the IAM user has _write_ permissions to that queue.
@@ -69,7 +69,7 @@ publisher = SnsPublisher(
     topic_arn='arn:aws:sns:us-east-2:424566909325:sqs-mega-test'
 )
 ```
-> **WARNING**: the passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
+> ⚠️ The passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
 
 - If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
 - The `topic_arn` must point to a valid SNS topic ARN. Please ensure the IAM user has _publish_ permissions to the topic.
@@ -216,6 +216,7 @@ The only downside of using binary encoding is that it makes less clear to inspec
 >>> bson.loads(b64decode('cwAAAAJ0eXBlABIAAAB1c2VyX25vdGlmaWNhdGlvbgACbm90aWZpY2F0aW9uX3R5cGUABgAAAGVtYWlsAAN1c2VyAC8AAAAQaWQAAhIPAAJlbWFpbAAXAAAAam9obmRvZV84NkBleGFtcGxlLmNvbQAAAA=='))
 {'type': 'user_notification', 'notification_type': 'email', 'user': {'id': 987650, 'email': 'johndoe_86@example.com'}}
 ```
+> ⚠️ You must install the [`bson`](https://pypi.org/project/bson/) package first.
 
 Even if transmitted using plaintext, JSON content is very difficult for the naked-eye to read in SQS queues because it must be XML or URL escaped in order to fit in the SQS message format. So in order to inspect messages, you must use a tool anyways.
 
