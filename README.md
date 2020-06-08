@@ -10,7 +10,7 @@ SQS MEGA is a minimal and fault-tolerant framework for async processing, event-s
 
 Please read the → [SQS MEGA](https://github.com/mega-distributed/sqs-mega) documentation to get started. Here we describe how to use the framework in the **Python** ecosystem.
 
-## AWS settings
+## AWS configuration
 
 In order for the application to connect to AWS, settings can be automatically read from the IAM environment, or explicitly passed to Python object constructors.
 
@@ -74,22 +74,51 @@ publisher = SnsPublisher(
 - If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
 - The `topic_arn` must point to a valid SNS topic ARN. Please ensure the IAM user has _publish_ permissions to the topic.
 
-### Publishing payloads
+### Message payloads
 
 A message payload can be one of the following:
 
-- → [MEGA event](https://github.com/mega-distributed/event-mega): `mega.event.MegaPayload`
-- Data object: `dict` and JSON objects
-- Plaintext: `str`
-- Binary blob: `bytes`
+- → [_MEGA event_](https://github.com/mega-distributed/event-mega)
+- _Data object_: `dict` and JSON objects
+- _Plaintext_: `str`
+- _Binary blob_: `bytes`
 
 Please read the SQS MEGA documentation about → [message payloads](https://github.com/mega-distributed/sqs-mega#message-payloads).
 
 Both `SqsPublisher` and `SnsPublisher` implement the `publish_payload` method, that will encode and publish any payload type to Amazon SQS and SNS, respectively.
 
-By default, MEGA events and data objects will be encoded using JSON and transmitted over plaintext. You can save network bandwidth and encode them using [BSON](http://bsonspec.org) (Binary JSON) by setting the `binary_encoding` attribute to true.
+By default, MEGA events and data objects will be serialized to JSON objects and transmitted over plaintext. You can save network bandwidth and server resources by serializing the payloads to [BSON](http://bsonspec.org) (Binary JSON). Since SQS only supports plaintext media, BSON bytes will be transmitted encoded as Base64.
 
-#### Publishing a MEGA event
+In order to use BSON serialization, set the `binary_encoding` attribute to true when publishing a message.
+
+#### Publishing a data object payload
+
+Any instance of Python's `dict` type is considered a data object. By default, they're serialized to plaintext JSON objects:
+
+```python
+payload = {
+    'type': 'user_notification',
+    'notification_type': 'email',
+    'user': {
+        'id': 987650,
+        'email': 'johndoe_86@example.com'
+    }
+}
+
+publisher.publish_payload(payload)
+```
+
+It's also possible to use BSON to compress the payload, which will be transmitted using more byte-efficient binary encoding:
+
+```python
+publisher.publish_payload(payload, binary_encoding=True)
+```
+
+#### Publishing a MEGA event payload
+
+The → [MEGA event protocol](https://github.com/mega-distributed/event-mega) aims to be a common protocol for all your event-streaming needs, regardless of platform. Please check the protocol specification for more details.
+
+The `mega.event.PayloadBuilder` class can help you build a MEGA event payload.
 
 ```python
 from mega.event import PayloadBuilder
@@ -146,32 +175,9 @@ payload = (
 publisher.publish_payload(payload, binary_encoding=True)
 ```
 
-#### Publishing a data object
+#### Plaintext vs. binary encoding
 
-Any instance of Python's `dict` type is considered a data object. By default, they're encoded to JSON:
-
-```python
-payload = {
-    'type': 'user_notification',
-    'notification_type': 'email',
-    'user': {
-        'id': 987650,
-        'email': 'johndoe_86@example.com'
-    }
-}
-
-publisher.publish_payload(payload)
-```
-
-It's also possible to use BSON to compress the payload in binary encoding:
-
-```python
-publisher.publish_payload(payload, binary_encoding=True)
-```
-
-#### Should I use binary encoding?
-
-Let's see this example:
+You may be asking: _"should I use binary encoding"_? To understand more, let's see this example:
 
 ```python
 payload = {
@@ -184,7 +190,7 @@ payload = {
 }
 ```
 
-When encoded as JSON, it has 118 characters:
+When encoded as plaintext JSON, it has 118 characters:
 
 ```json
 {"type": "user_notification", "notification_type": "email", "user": {"id": 987650, "email": "johndoe_86@example.com"}}
@@ -200,7 +206,7 @@ And is delivered XML-escaped when read from a SQS queue:
 ```
 Which consume 192 and 198 characters, respectively.
 
-We can save some bytes by encoding the payload to BSON. However, because SQS only supports plaintext media, binary content must be transmitted using Base64. This example takes 156 characters, a ~20% reduction in size:
+We can save some bytes by serializing the payload to BSON. However, because SQS only supports plaintext media, binary content must be encoded to Base64. This example takes 156 characters, a ~20% reduction in size:
 
 ```
 cwAAAAJ0eXBlABIAAAB1c2VyX25vdGlmaWNhdGlvbgACbm90aWZpY2F0aW9uX3R5cGUABgAAAGVtYWlsAAN1c2VyAC8AAAAQaWQAAhIPAAJlbWFpbAAXAAAAam9obmRvZV84NkBleGFtcGxlLmNvbQAAAA==
