@@ -228,16 +228,41 @@ The only downside of using binary encoding is that it makes less clear to inspec
 
 Even if transmitted using plaintext, JSON content is very difficult for the naked-eye to read in SQS queues because it must be XML or URL escaped in order to fit in the SQS message format. So in order to inspect messages, you must use a tool anyways.
 
-## Listening to messages
+## Subscribing to messages
 
-A `SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop. Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
+### Listening to messages from a SQS queue
 
-Here is an example:
+A `mega.aws.sqs.SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop. Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
 
 ```python
-from mega.aws.sqs.subscribe import SqsListener
-from my.app.subscribers import ShoppingCartItemAdded, ShoppingCartItemRemoved, ShoppingCartCheckout
+from mega.aws.sqs import SqsListener
 
+listener = SqsListener(
+    aws_access_key_id='AKIAIOSFODNN7EXAMPLE',
+    aws_secret_access_key='wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
+    region_name='us-west-2',
+    queue_url='https://sqs.us-east-2.amazonaws.com/424566909325/sqs-mega-test',
+    max_number_of_messages=1,
+    wait_time_seconds=20,
+    visibility_timeout=30
+)
+```
+> ⚠️ The passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
+
+- If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
+
+The following attributes correspond to the attributes passed to the Amazon SQS [`ReceiveMessage`](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html) API:
+
+|  Attribute               | SQS Name              | Type     | Required | Default     | Description |
+| ------------------------ | --------------------- |:--------:| -------- | ----------- | ----------- |
+| `queue_url`              | `QueueUrl`            | String   | Yes      | -           | The URL of the Amazon SQS queue from which messages are received. Please ensure the IAM user has both _read_ and _delete_ permissions to that queue. |
+| `max_number_of_messages` | `MaxNumberOfMessages` | Integer  | No       | 1           | The maximum number of messages to return. Amazon SQS never returns more messages than this value (however, fewer messages might be returned). It can range from 1 to 10. |
+| `wait_time_seconds`      | `WaitTimeSeconds`     | Integer  | No       | 20          | The duration (in seconds) for which the call waits for a message to arrive in the queue before returning. If a message is available, the call returns sooner than `WaitTimeSeconds`. If no messages are available and the wait time expires, the call returns successfully with an empty list of messages. Please read the [Short and Long Polling](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html) section from the Amazon SQS Developer Guide in order to configure this attribute correctly. |
+| `visibility_timeout`     | `VisibilityTimeout`   | Integer  | No       | 30          | The duration (in seconds) that the received messages are hidden from subsequent retrieve requests after being retrieved by a `ReceiveMessage` request. Please read the [SQS Visibility Timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html) section from the Amazon SQS Developer Guide in order to configure this attribute correctly. |
+
+After the listener is instantiated, subscribers must be registered. Then, the long-polling loop must be started:
+
+```python
 listener = SqsListener(**aws_settings)
 
 listener.register(ShoppingCartItemAdded)
