@@ -1,1 +1,1 @@
-LOGGER_NAME = 'mega.aws.sqs'
+from mega.aws.sqs.publish.api import SqsPublisher

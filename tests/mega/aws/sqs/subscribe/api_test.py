@@ -8,7 +8,7 @@ import pytest
 from mega.aws.message import MessageType
 from mega.aws.payload import PayloadType
 from mega.aws.sns.message import SnsNotification, SnsMessageType
-from mega.aws.sqs import LOGGER_NAME
+from mega.aws.sqs.api import LOGGER_NAME
 from mega.aws.sqs.message import SqsMessage
 from mega.aws.sqs.schema import deserialize_sqs_message
 from mega.aws.sqs.subscribe.api import SqsReceiver

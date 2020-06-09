@@ -4,8 +4,7 @@ from typing import Optional
 
 import boto3
 
-from mega.aws.sqs import LOGGER_NAME
-
+LOGGER_NAME = 'mega.aws.sqs'
 logger = logging.getLogger(LOGGER_NAME)
 
 

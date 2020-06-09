@@ -7,7 +7,7 @@ import dateutil.parser
 import pytest
 
 import mega.event
-from mega.aws.sqs import LOGGER_NAME
+from mega.aws.sqs.api import LOGGER_NAME
 from mega.aws.sqs.publish.api import SqsPublisher
 from tests.mega.aws.sqs import get_sqs_request_data, get_queue_url_from_request, get_sqs_response_data
 from tests.vcr import build_vcr
