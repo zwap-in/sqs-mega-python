@@ -8,7 +8,7 @@ import pytest
 from mega.aws.message import MessageType
 from mega.aws.payload import PayloadType
 from mega.aws.sns.message import SnsNotification, SnsMessageType
-from mega.aws.sqs.api import LOGGER_NAME
+from mega.aws.sqs.api import logger
 from mega.aws.sqs.message import SqsMessage
 from mega.aws.sqs.schema import deserialize_sqs_message
 from mega.aws.sqs.subscribe.api import SqsReceiver
@@ -304,7 +304,7 @@ def test_log_received_messages(queue_url, caplog):
         max_number_of_messages=1
     )
 
-    with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
+    with caplog.at_level(logging.DEBUG, logger=logger.name):
         with vcr.use_cassette('receive_message_with_plaintext_json_payload') as cassette:
             sqs.receive_messages()
 
@@ -396,7 +396,7 @@ def test_log_deleted_message(queue_url, caplog):
         payload_type=PayloadType.PLAINTEXT
     )
 
-    with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
+    with caplog.at_level(logging.DEBUG, logger=logger.name):
         with vcr.use_cassette('delete_message_that_exists'):
             sqs.delete_message(message)
 

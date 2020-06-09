@@ -7,7 +7,7 @@ import dateutil.parser
 import pytest
 
 import mega.event
-from mega.aws.sqs.api import LOGGER_NAME
+from mega.aws.sqs.api import logger
 from mega.aws.sqs.publish.api import SqsPublisher
 from tests.mega.aws.sqs import get_sqs_request_data, get_queue_url_from_request, get_sqs_response_data
 from tests.vcr import build_vcr
@@ -244,7 +244,7 @@ def test_fail_if_no_queue_url_is_provided():
 
 
 def test_log_sent_messages(sqs, caplog):
-    with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
+    with caplog.at_level(logging.DEBUG, logger=logger.name):
         with vcr.use_cassette('publish_plaintext_payload'):
             message_id = sqs.publish_payload('hello world!')
 

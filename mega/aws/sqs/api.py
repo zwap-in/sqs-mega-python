@@ -4,8 +4,7 @@ from typing import Optional
 
 import boto3
 
-LOGGER_NAME = 'mega.aws.sqs'
-logger = logging.getLogger(LOGGER_NAME)
+logger = logging.getLogger('mega.aws.sqs')
 
 
 class BaseSqsApi(ABC):
