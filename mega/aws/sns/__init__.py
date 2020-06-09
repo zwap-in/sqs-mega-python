@@ -1,1 +1,1 @@
-LOGGER_NAME = 'mega.aws.sns'
+from mega.aws.sns.publish import SnsPublisher

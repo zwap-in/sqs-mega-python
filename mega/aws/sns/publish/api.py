@@ -5,9 +5,8 @@ import boto3
 
 from mega.aws.payload import Payload, serialize_payload
 from mega.aws.publish import Publisher
-from mega.aws.sns import LOGGER_NAME
 
-logger = logging.getLogger(LOGGER_NAME)
+logger = logging.getLogger('mega.aws.sns')
 
 
 class SnsPublisher(Publisher):

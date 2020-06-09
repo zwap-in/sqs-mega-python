@@ -9,8 +9,7 @@ import dateutil.parser
 import pytest
 
 import mega.event
-from mega.aws.sns import LOGGER_NAME
-from mega.aws.sns.publish.api import SnsPublisher
+from mega.aws.sns.publish.api import SnsPublisher, logger
 from tests.vcr import build_vcr
 
 vcr = build_vcr(
@@ -266,7 +265,7 @@ def test_fail_if_no_topic_arn_is_provided():
 
 
 def test_log_published_messages(sns, caplog):
-    with caplog.at_level(logging.DEBUG, logger=LOGGER_NAME):
+    with caplog.at_level(logging.DEBUG, logger=logger.name):
         with vcr.use_cassette('publish_plaintext_payload'):
             message_id = sns.publish_payload('hello world!')
 

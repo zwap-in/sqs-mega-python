@@ -62,7 +62,7 @@ The `SnsPublisher` class allows you to publish notifications to a SNS topic. Thi
 You can configure SNS to forward messages to a SQS queue in raw format. The SNS notification can also be embedded inside a SQS message body. SQS MEGA is able to automatically detect both types of configurations, and message payloads are deserialized in a transparent manner.
 
 ```python
-from mega.aws.sns.publish import SnsPublisher
+from mega.aws.sns import SnsPublisher
 
 publisher = SnsPublisher(
     aws_access_key_id='AKIAIOSFODNN7EXAMPLE',
