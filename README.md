@@ -124,6 +124,8 @@ The → [MEGA event protocol](https://github.com/mega-distributed/event-mega) ai
 
 The `mega.event.PayloadBuilder` class can help you build a MEGA event payload.
 
+You can publish a very simple event, like this one:
+
 ```python
 from mega.event import PayloadBuilder
 
@@ -131,51 +133,116 @@ from mega.event import PayloadBuilder
 builder = PayloadBuilder()
 payload = (
     builder.with_event(
-        domain='shopping_cart',
-        name='item.added',
+        name='user.created',
         subject='987650',
-        quantity=5,
-        item_id='0794bac2-e860-4e0d-b9cc-42ab21e2a851'
+        email='johndoe_86@example.com'
     ).with_object(
-        type='shopping_cart',
-        id='18a3f92e-1fbf-45eb-8769-d836d0a1be55',
         current={
-            'id': '18a3f92e-1fbf-45eb-8769-d836d0a1be55',
-            'user_id': 987650,
-            'items': [
-                {
-                    'id': '61fcc874-624e-40f8-8fd7-0e663c7837e8',
-                    'price': '19.99',
-                    'quantity': 5
-                },
-                {
-                    'id': '3c7f8798-1d3d-47de-82dd-c6c5e0de74ee',
-                    'price': '102.50',
-                    'quantity': 1
-                },
-                {
-                    'id': 'bba76edc-8afc-4fde-b4c4-ea58a230c5d6',
-                    'price': '24.99',
-                    'quantity': 3
-                }
-            ],
-            'currency': 'USD',
-            'value': '277.42',
-            'discount': '10.09',
-            'subtotal': '267.33',
-            'estimated_shipping': '10.00',
-            'estimated_tax': '24.96',
-            'estimated_total': '302.29',
-            'created_at': '2020-05-03T12:20:23.000',
-            'updated_at': '2020-05-04T13:47:08.000'
+            'id': 987650,
+            'full_name': 'John Doe',
+            'username': 'john.doe',
+            'email': 'johndoe_86@example.com',
+            'ssn': '497279436',
+            'birthdate': '1986-02-15'
         }
-    ).with_extra(
-        channel='web/desktop',
-        user_ip_address='177.182.205.103'
     ).build()
 )
 
+publisher.publish_payload(payload)
+```
 
+You can also create events with complex data and rich payloads:
+
+```python
+from mega.event import PayloadBuilder
+
+
+builder = PayloadBuilder()
+
+builder.with_event(
+    domain='shopping_cart',
+    name='item.added',
+    version=1,
+    subject='987650',
+    publisher='shopping-cart-service',
+    item_id='61fcc874-624e-40f8-8fd7-0e663c7837e8',
+    quantity=5,
+    price='19.99'
+)
+
+builder.with_object(
+    type='shopping_cart',
+    id='18a3f92e-1fbf-45eb-8769-d836d0a1be55',
+    version=2,
+    current={
+        'id': '18a3f92e-1fbf-45eb-8769-d836d0a1be55',
+        'user_id': 987650,
+        'items': [
+            {
+                'id': '61fcc874-624e-40f8-8fd7-0e663c7837e8',
+                'price': '19.99',
+                'quantity': 10
+            },
+            {
+                'id': '3c7f8798-1d3d-47de-82dd-c6c5e0de74ee',
+                'price': '102.50',
+                'quantity': 1
+            },
+            {
+                'id': 'bba76edc-8afc-4fde-b4c4-ea58a230c5d6',
+                'price': '24.99',
+                'quantity': 3
+            }
+        ],
+        'currency': 'USD',
+        'value': '377.37',
+        'discount': '20.19',
+        'subtotal': '357.18',
+        'estimated_shipping': '10.00',
+        'estimated_tax': '33.05',
+        'estimated_total': '400.23',
+        'created_at': '2020-05-03T12:20:23.000',
+        'updated_at': '2020-05-04T15:52:01.000'
+    },
+    previous={
+        'id': '18a3f92e-1fbf-45eb-8769-d836d0a1be55',
+        'user_id': 987650,
+        'items': [
+            {
+                'id': '61fcc874-624e-40f8-8fd7-0e663c7837e8',
+                'price': '19.99',
+                'quantity': 5
+            },
+            {
+                'id': '3c7f8798-1d3d-47de-82dd-c6c5e0de74ee',
+                'price': '102.50',
+                'quantity': 1
+            },
+            {
+                'id': 'bba76edc-8afc-4fde-b4c4-ea58a230c5d6',
+                'price': '24.99',
+                'quantity': 3
+            }
+        ],
+        'currency': 'USD',
+        'value': '277.42',
+        'discount': '10.09',
+        'subtotal': '267.33',
+        'estimated_shipping': '10.00',
+        'estimated_tax': '24.96',
+        'estimated_total': '302.29',
+        'created_at': '2020-05-03T12:20:23.000',
+        'updated_at': '2020-05-04T13:47:08.000'
+    }
+)
+
+builder.with_extra(
+    channel='web/desktop',
+    user_agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15',
+    user_ip_address='177.182.205.103'
+)
+
+payload = builder.build()
 publisher.publish_payload(payload, binary_encoding=True)
 ```
 
