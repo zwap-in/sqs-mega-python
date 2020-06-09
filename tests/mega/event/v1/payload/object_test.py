@@ -1,10 +1,10 @@
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import MegaObject
+from mega.event.v1.payload import Object
 
 
-def build_mega_object_kwargs():
+def build_object_kwargs():
     return dict(
         type='shopping_cart',
         id='18a3f92e-1fbf-45eb-8769-d836d0a1be55',
@@ -72,15 +72,15 @@ def build_mega_object_kwargs():
     )
 
 
-def test_create_mega_object():
-    kwargs = build_mega_object_kwargs()
-    mega_object = MegaObject(**kwargs)
+def test_create_object():
+    kwargs = build_object_kwargs()
+    object_data = Object(**kwargs)
 
-    assert mega_object.id == kwargs['id']
-    assert mega_object.type == kwargs['type']
-    assert mega_object.version == kwargs['version']
-    assert mega_object.current == kwargs['current']
-    assert mega_object.previous == kwargs['previous']
+    assert object_data.id == kwargs['id']
+    assert object_data.type == kwargs['type']
+    assert object_data.version == kwargs['version']
+    assert object_data.current == kwargs['current']
+    assert object_data.previous == kwargs['previous']
 
 
 @parameterized.expand([
@@ -89,29 +89,29 @@ def test_create_mega_object():
     ['version', 1],
     ['previous', None]
 ])
-def test_create_mega_object_without_optional_attribute_should_use_default(attribute_name, expected_default):
-    kwargs = build_mega_object_kwargs()
+def test_create_object_without_optional_attribute_should_use_default(attribute_name, expected_default):
+    kwargs = build_object_kwargs()
     del kwargs[attribute_name]
 
-    mega_object = MegaObject(**kwargs)
-    assert getattr(mega_object, attribute_name) == expected_default
+    object_data = Object(**kwargs)
+    assert getattr(object_data, attribute_name) == expected_default
 
 
 @parameterized.expand([
     [None],
     [{}]
 ])
-def test_fail_to_create_mega_object_with_empty_current_attribute(bogus):
+def test_fail_to_create_object_with_empty_current_attribute(bogus):
     with pytest.raises(AttributeError) as e:
-        MegaObject(current=bogus)
+        Object(current=bogus)
     assert str(e.value) == 'Mega object attribute "current" has not been set, or set to an empty value'
 
 
 def test_objects_are_equal_when_all_attributes_are_equal():
-    kwargs = build_mega_object_kwargs()
+    kwargs = build_object_kwargs()
 
-    this = MegaObject(**kwargs)
-    that = MegaObject(**kwargs)
+    this = Object(**kwargs)
+    that = Object(**kwargs)
 
     assert this.__eq__(that) is True
     assert that.__eq__(this) is True
@@ -127,12 +127,12 @@ def test_objects_are_equal_when_all_attributes_are_equal():
     ['previous', {'foo': 'bar'}],
 ])
 def test_objects_are_not_equal_if_one_attribute_is_different(attribute_name, different_value):
-    this_kwargs = build_mega_object_kwargs()
-    this = MegaObject(**this_kwargs)
+    this_kwargs = build_object_kwargs()
+    this = Object(**this_kwargs)
 
-    that_kwargs = build_mega_object_kwargs()
+    that_kwargs = build_object_kwargs()
     that_kwargs[attribute_name] = different_value
-    that = MegaObject(**that_kwargs)
+    that = Object(**that_kwargs)
 
     assert this.__eq__(that) is False
     assert that.__eq__(this) is False
@@ -147,5 +147,5 @@ def test_objects_are_not_equal_if_one_attribute_is_different(attribute_name, dif
     ['foobar']
 ])
 def test_an_object_is_not_equal_to(another_thing):
-    mega_object = MegaObject(**build_mega_object_kwargs())
-    assert mega_object != another_thing
+    object_data = Object(**build_object_kwargs())
+    assert object_data != another_thing

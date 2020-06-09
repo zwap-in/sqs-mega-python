@@ -250,7 +250,7 @@ listener.listen()
 In this example, here is how the `ShoppingCartItemAdded` subscriber could look like:
 
 ```python
-from mega.aws.sqs.subscribe import MegaSubscriber, MegaPayload, Result
+from mega.aws.sqs.subscribe import MegaSubscriber, Payload, Result
 
 
 class ShoppingCartItemAdded(MegaSubscriber):
@@ -268,7 +268,7 @@ class ShoppingCartItemAdded(MegaSubscriber):
         id=not_(empty())
     )
 
-    def process(payload: MegaPayload) -> Result:
+    def process(payload: Payload) -> Result:
         cart = ShoppingCart.get(payload.object.id)
 
         # do something...
@@ -374,7 +374,7 @@ class ShoppingCartItemRemoved(MegaSubscriber):
         # ...
     )
 
-    def process(payload: MegaPayload) -> Result:
+    def process(payload: Payload) -> Result:
         # ...
 
 
@@ -385,7 +385,7 @@ class ShoppingCartCheckout(MegaSubscriber):
         # ...
     )
 
-    def process(payload: MegaPayload) -> Result:
+    def process(payload: Payload) -> Result:
         # ...
 ```
 
@@ -453,11 +453,11 @@ class UserSubscriber(MegaSubscriber):
         'username': not_(one_of('synthetic', 'test')),
     }
 
-    def validates(payload: MegaPayload, **kwargs):
+    def validates(payload: Payload, **kwargs):
         current_object = payload.object.current
         assert current_object['id'] is not None
 
-    def process(payload: MegaPayload, **kwargs):
+    def process(payload: Payload, **kwargs):
         user = User.get(int(payload.subject))
 
         if not user:

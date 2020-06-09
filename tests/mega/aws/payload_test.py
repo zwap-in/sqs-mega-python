@@ -5,9 +5,9 @@ import bson
 import dateutil.parser
 import pytest
 
+import mega.event
 from mega.aws.payload import deserialize_payload, PayloadType, serialize_payload
-from mega.event import MegaPayload, MegaEvent, MegaObject
-from mega.event.v1.schema import MegaSchemaError
+from mega.event.v1.schema import SchemaError
 
 
 def test_deserialize_plaintext_payload():
@@ -153,13 +153,13 @@ def test_serialize_data_payload_as_bson_encoded_as_base64_string():
 
 def test_serialize_mega_payload_as_json_string():
     timestamp = '2020-05-20T20:07:22.589063'
-    payload = MegaPayload(
-        event=MegaEvent(
+    payload = mega.event.Payload(
+        event=mega.event.Event(
             name='foo.bar',
             timestamp=dateutil.parser.parse(timestamp),
             subject='991'
         ),
-        object=MegaObject(
+        object=mega.event.Object(
             current={'foo': 'bar'}
         )
     )
@@ -186,13 +186,13 @@ def test_serialize_mega_payload_as_json_string():
 
 def test_serialize_mega_payload_as_bson_encoded_as_base64_string():
     timestamp = '2020-05-20T20:07:22.589063'
-    payload = MegaPayload(
-        event=MegaEvent(
+    payload = mega.event.Payload(
+        event=mega.event.Event(
             name='foo.bar',
             timestamp=dateutil.parser.parse(timestamp),
             subject='991'
         ),
-        object=MegaObject(
+        object=mega.event.Object(
             current={'foo': 'bar'}
         )
     )
@@ -219,18 +219,18 @@ def test_serialize_mega_payload_as_bson_encoded_as_base64_string():
 
 
 def test_fail_to_serialize_invalid_mega_payload():
-    payload = MegaPayload(
-        event=MegaEvent(
+    payload = mega.event.Payload(
+        event=mega.event.Event(
             name='foo.bar',
             subject='991'
         ),
-        object=MegaObject(
+        object=mega.event.Object(
             current={'foo': 'bar'}
         )
     )
     payload.event = None
 
-    with pytest.raises(MegaSchemaError) as e:
+    with pytest.raises(SchemaError) as e:
         serialize_payload(payload)
 
     assert str(e.value) == "Invalid MEGA payload: {'event': ['Missing data for required field.']}"

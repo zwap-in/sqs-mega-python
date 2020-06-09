@@ -6,9 +6,9 @@ import bson
 import dateutil.parser
 import pytest
 
+import mega.event
 from mega.aws.sqs import LOGGER_NAME
 from mega.aws.sqs.publish.api import SqsPublisher
-from mega.event import MegaPayload, MegaEvent, MegaObject, deserialize_mega_payload
 from tests.mega.aws.sqs import get_sqs_request_data, get_queue_url_from_request, get_sqs_response_data
 from tests.vcr import build_vcr
 
@@ -45,8 +45,8 @@ def build_generic_data():
 
 
 def build_mega_payload():
-    return MegaPayload(
-        event=MegaEvent(
+    return mega.event.Payload(
+        event=mega.event.Event(
             name='user.updated',
             timestamp=dateutil.parser.parse('2020-05-04T15:53:27.823'),
             domain='user',
@@ -57,7 +57,7 @@ def build_mega_payload():
                 'username': 'john.doe'
             }
         ),
-        object=MegaObject(
+        object=mega.event.Object(
             current={
                 'id': 987650,
                 'full_name': 'John Doe',
@@ -172,10 +172,10 @@ def test_publish_data_payload_as_plaintext_json(sqs):
 
 
 def test_publish_mega_payload_as_plaintext_json(sqs):
-    mega = build_mega_payload()
+    mega_payload = build_mega_payload()
 
     with vcr.use_cassette('publish_mega_payload_as_plaintext_json') as cassette:
-        message_id = sqs.publish_payload(mega)
+        message_id = sqs.publish_payload(mega_payload)
 
     assert cassette.all_played
 
@@ -183,7 +183,7 @@ def test_publish_mega_payload_as_plaintext_json(sqs):
     assert get_queue_url_from_request(request_data) == sqs.queue_url
 
     message_body = get_message_body_from_request(request_data)
-    assert deserialize_mega_payload(json.loads(message_body)) == mega
+    assert mega.event.deserialize_payload(json.loads(message_body)) == mega_payload
     assert get_message_id_from_response(cassette) == message_id
 
 
@@ -205,10 +205,10 @@ def test_publish_data_payload_as_binary_bson(sqs):
 
 
 def test_publish_mega_payload_as_binary_bson(sqs):
-    mega = build_mega_payload()
+    mega_payload = build_mega_payload()
 
     with vcr.use_cassette('publish_mega_payload_as_binary_bson') as cassette:
-        message_id = sqs.publish_payload(mega, binary_encoding=True)
+        message_id = sqs.publish_payload(mega_payload, binary_encoding=True)
 
     assert cassette.all_played
 
@@ -217,7 +217,7 @@ def test_publish_mega_payload_as_binary_bson(sqs):
 
     message_body = get_message_body_from_request(request_data)
     blob = b64decode(message_body)
-    assert deserialize_mega_payload(bson.loads(blob)) == mega
+    assert mega.event.deserialize_payload(bson.loads(blob)) == mega_payload
     assert get_message_id_from_response(cassette) == message_id
 
 

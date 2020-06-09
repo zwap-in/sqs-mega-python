@@ -12,7 +12,7 @@ from mega.aws.sqs import LOGGER_NAME
 from mega.aws.sqs.message import SqsMessage
 from mega.aws.sqs.schema import deserialize_sqs_message
 from mega.aws.sqs.subscribe.api import SqsReceiver
-from mega.event import deserialize_mega_payload
+from mega.event import deserialize_payload
 from tests.mega.aws.sqs import get_sqs_request_data, get_queue_url_from_request, get_request_attribute, \
     get_sqs_response_data
 from tests.vcr import build_vcr
@@ -149,7 +149,7 @@ def test_receive_message_with_plaintext_mega_payload(queue_url):
     assert_message_attributes_match_response(message, response)
 
     assert message.payload_type == PayloadType.MEGA
-    assert message.payload == deserialize_mega_payload(
+    assert message.payload == deserialize_payload(
         json.loads(response['Message']['Body'])
     )
 
@@ -201,7 +201,7 @@ def test_receive_message_with_base64_encoded_binary_mega_payload(queue_url):
     assert_message_attributes_match_response(message, response)
 
     assert message.payload_type == PayloadType.MEGA
-    assert message.payload == deserialize_mega_payload(
+    assert message.payload == deserialize_payload(
         bson.loads(
             b64decode(response['Message']['Body'])
         )
@@ -229,7 +229,7 @@ def test_receive_message_with_plaintext_mega_payload_over_sns(queue_url):
     assert_message_attributes_match_response(message, response)
 
     assert message.payload_type == PayloadType.MEGA
-    assert message.payload == deserialize_mega_payload(
+    assert message.payload == deserialize_payload(
         json.loads(
             json.loads(response['Message']['Body'])['Message']
         )
@@ -257,7 +257,7 @@ def test_receive_message_with_base64_encoded_binary_mega_payload_over_sns(queue_
     assert_message_attributes_match_response(message, response)
 
     assert message.payload_type == PayloadType.MEGA
-    assert message.payload == deserialize_mega_payload(
+    assert message.payload == deserialize_payload(
         bson.loads(
             b64decode(
                 json.loads(response['Message']['Body'])['Message']

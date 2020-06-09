@@ -1,6 +1,6 @@
 from mega.data.match.evaluation import evaluate
-from mega.data.match.values.value import RightHandSideValue
 from mega.data.match.values.types import is_mapping, MappingType
+from mega.data.match.values.value import RightHandSideValue
 
 
 class Mapping(RightHandSideValue):

@@ -6,12 +6,12 @@ import dateutil.parser
 import pytest
 from parameterized import parameterized
 
+import mega.event
 from mega.aws.message import MessageType
 from mega.aws.payload import PayloadType
 from mega.aws.sns.message import SnsNotification, SnsMessageType, SnsSubscriptionConfirmation, \
     SnsUnsubscribeConfirmation
 from mega.aws.sns.schema import deserialize_sns_message, SnsSchemaError, matches_sns_message
-from mega.event import MegaPayload
 
 
 def build_sns_notification_data(**kwargs):
@@ -200,7 +200,7 @@ def assert_sns_notification_matches_data_attributes(message, data):
 def assert_has_mega_payload(message):
     assert message.payload_type == PayloadType.MEGA
     assert message.payload is not None
-    assert isinstance(message.payload, MegaPayload)
+    assert isinstance(message.payload, mega.event.Payload)
 
 
 def assert_mega_payload_matches_data(mega_payload, data):

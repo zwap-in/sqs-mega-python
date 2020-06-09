@@ -5,7 +5,7 @@ import pytest
 from freezegun import freeze_time
 
 from mega.event.v1.build import PayloadBuilder
-from mega.event.v1.payload import MegaPayload, MegaEvent, MegaObject
+from mega.event.v1.payload import Payload, Event, Object
 
 
 def test_build_minimal_mega_payload():
@@ -17,12 +17,12 @@ def test_build_minimal_mega_payload():
             subject='123456'
         ).build()
 
-    assert isinstance(payload, MegaPayload)
+    assert isinstance(payload, Payload)
     assert payload.event is not None
-    assert isinstance(payload.event, MegaEvent)
+    assert isinstance(payload.event, Event)
     assert payload.event.name == 'shopping_cart.item.added'
     assert payload.event.timestamp == timestamp
-    assert payload.event.version == MegaEvent.DEFAULT_VERSION
+    assert payload.event.version == Event.DEFAULT_VERSION
     assert payload.event.domain is None
     assert payload.event.subject == '123456'
     assert payload.event.publisher is None
@@ -81,10 +81,10 @@ def test_build_medium_mega_payload():
             ip_address='172.217.162.174'
         ).build()
 
-    assert isinstance(payload, MegaPayload)
+    assert isinstance(payload, Payload)
 
     assert payload.event is not None
-    assert isinstance(payload.event, MegaEvent)
+    assert isinstance(payload.event, Event)
     assert payload.event.domain == 'shopping_cart'
     assert payload.event.name == 'item.added'
     assert payload.event.timestamp == timestamp
@@ -97,12 +97,12 @@ def test_build_medium_mega_payload():
     assert payload.event.publisher is None
 
     assert payload.object is not None
-    assert isinstance(payload.object, MegaObject)
+    assert isinstance(payload.object, Object)
     assert payload.object.type == 'shopping_cart'
     assert payload.object.current == current_object
     assert payload.object.id is None
     assert payload.object.previous is None
-    assert payload.object.version is MegaObject.DEFAULT_VERSION
+    assert payload.object.version is Object.DEFAULT_VERSION
 
     assert payload.extra == dict(
         ip_address='172.217.162.174'
@@ -205,10 +205,10 @@ def test_build_full_mega_payload():
             **extra
         ).build()
 
-    assert isinstance(payload, MegaPayload)
+    assert isinstance(payload, Payload)
 
     assert payload.event is not None
-    assert isinstance(payload.event, MegaEvent)
+    assert isinstance(payload.event, Event)
     assert payload.event.domain == 'shopping_cart'
     assert payload.event.name == 'shopping_cart.item.added'
     assert payload.event.timestamp == timestamp
@@ -222,7 +222,7 @@ def test_build_full_mega_payload():
     }
 
     assert payload.object is not None
-    assert isinstance(payload.object, MegaObject)
+    assert isinstance(payload.object, Object)
     assert payload.object.type == 'shopping_cart'
     assert payload.object.id == '18a3f92e-1fbf-45eb-8769-d836d0a1be55'
     assert payload.object.version == 3

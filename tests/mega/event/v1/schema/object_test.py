@@ -1,8 +1,8 @@
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import MegaObject
-from mega.event.v1.schema import MegaObjectSchema, MegaSchemaError
+from mega.event.v1.payload import Object
+from mega.event.v1.schema import ObjectSchema, SchemaError
 
 
 def build_current_object_data():
@@ -71,7 +71,7 @@ def build_previous_object_data():
     }
 
 
-def build_mega_object_data(**kwargs):
+def build_object_data(**kwargs):
     data = {
         'type': 'shopping_cart',
         'id': '18a3f92e-1fbf-45eb-8769-d836d0a1be55',
@@ -83,27 +83,27 @@ def build_mega_object_data(**kwargs):
     return data
 
 
-def test_deserialize_full_mega_object_data():
-    data = build_mega_object_data()
+def test_deserialize_full_object_data():
+    data = build_object_data()
 
-    mega_object = MegaObjectSchema().load(data)
+    object_ = ObjectSchema().load(data)
 
-    assert mega_object.type == data['type']
-    assert mega_object.id == data['id']
-    assert mega_object.version == data['version']
-    assert mega_object.current == data['current']
-    assert mega_object.previous == data['previous']
+    assert object_.type == data['type']
+    assert object_.id == data['id']
+    assert object_.version == data['version']
+    assert object_.current == data['current']
+    assert object_.previous == data['previous']
 
 
 def test_deserialize_event_data_ignoring_unknown_attributes():
-    data = build_mega_object_data()
+    data = build_object_data()
     data['foo'] = 'bar'
     data['one'] = 1
 
-    payload = MegaObjectSchema().load(data)
+    payload = ObjectSchema().load(data)
 
     assert payload is not None
-    assert isinstance(payload, MegaObject)
+    assert isinstance(payload, Object)
 
 
 @parameterized.expand([
@@ -113,9 +113,9 @@ def test_deserialize_event_data_ignoring_unknown_attributes():
     ['previous', None]
 ])
 def test_deserialize_event_data_without_optional_attribute(attribute_key, expected_value):
-    data = build_mega_object_data()
+    data = build_object_data()
     del data[attribute_key]
-    event = MegaObjectSchema().load(data)
+    event = ObjectSchema().load(data)
     assert getattr(event, attribute_key) == expected_value
 
 
@@ -126,18 +126,18 @@ def test_deserialize_event_data_without_optional_attribute(attribute_key, expect
     ['previous', None]
 ])
 def test_deserialize_event_data_with_optional_attribute_set_to_null(attribute_key, expected_value):
-    data = build_mega_object_data()
+    data = build_object_data()
     data[attribute_key] = None
-    event = MegaObjectSchema().load(data)
+    event = ObjectSchema().load(data)
     assert getattr(event, attribute_key) == expected_value
 
 
 def test_fail_to_deserialize_event_data_without_current_attribute():
-    data = build_mega_object_data()
+    data = build_object_data()
     del data['current']
 
-    with pytest.raises(MegaSchemaError) as e:
-        MegaObjectSchema().load(data)
+    with pytest.raises(SchemaError) as e:
+        ObjectSchema().load(data)
 
     assert str(e.value) == (
         "Invalid MEGA payload. There is an error in the 'object' section: "
@@ -146,10 +146,10 @@ def test_fail_to_deserialize_event_data_without_current_attribute():
 
 
 def test_fail_to_deserialize_event_data_without_current_attribute_set_to_null():
-    data = build_mega_object_data(current=None)
+    data = build_object_data(current=None)
 
-    with pytest.raises(MegaSchemaError) as e:
-        MegaObjectSchema().load(data)
+    with pytest.raises(SchemaError) as e:
+        ObjectSchema().load(data)
 
     assert str(e.value) == (
         "Invalid MEGA payload. There is an error in the 'object' section: "

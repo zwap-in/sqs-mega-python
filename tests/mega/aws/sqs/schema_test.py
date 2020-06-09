@@ -9,7 +9,7 @@ from mega.aws.message import MessageType
 from mega.aws.payload import PayloadType
 from mega.aws.sns.message import SnsNotification, SnsMessageType
 from mega.aws.sqs.schema import deserialize_sqs_message, SqsSchemaError
-from mega.event import deserialize_mega_payload
+from mega.event import deserialize_payload
 from tests.mega.aws.sns.schema_test import build_sns_notification_data
 
 
@@ -196,7 +196,7 @@ def test_deserialize_sqs_message_with_mega_payload_encoded_as_plaintext_json():
     assert_sqs_message_matches_data_attributes(sqs_message, sqs_data)
 
     assert sqs_message.payload_type == PayloadType.MEGA
-    assert sqs_message.payload == deserialize_mega_payload(mega_payload)
+    assert sqs_message.payload == deserialize_payload(mega_payload)
     assert sqs_message.embedded_message is None
 
 
@@ -224,7 +224,7 @@ def test_deserialize_sqs_message_with_mega_payload_encoded_as_binary_bson():
     assert_sqs_message_matches_data_attributes(sqs_message, sqs_data)
 
     assert sqs_message.payload_type == PayloadType.MEGA
-    assert sqs_message.payload == deserialize_mega_payload(mega_payload)
+    assert sqs_message.payload == deserialize_payload(mega_payload)
     assert sqs_message.embedded_message is None
 
 
@@ -274,7 +274,7 @@ def test_deserialize_sqs_message_with_embedded_sns_message_having_mega_payload_e
 
     assert_sqs_message_matches_data_attributes(sqs_message, sqs_data)
 
-    expected_mega_payload = deserialize_mega_payload(mega_payload_data)
+    expected_mega_payload = deserialize_payload(mega_payload_data)
 
     assert sqs_message.payload_type == PayloadType.MEGA
     assert sqs_message.payload == expected_mega_payload
@@ -316,7 +316,7 @@ def test_deserialize_sqs_message_with_embedded_sns_message_having_mega_payload_e
 
     assert_sqs_message_matches_data_attributes(sqs_message, sqs_data)
 
-    expected_mega_payload = deserialize_mega_payload(mega_payload_data)
+    expected_mega_payload = deserialize_payload(mega_payload_data)
 
     assert sqs_message.payload_type == PayloadType.MEGA
     assert sqs_message.payload == expected_mega_payload
