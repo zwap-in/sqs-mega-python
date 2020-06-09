@@ -50,8 +50,9 @@ publisher = SqsPublisher(
 ```
 > ⚠️ The passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
 
-- If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
-- The `queue_url` must point to a valid SQS queue URL. Please ensure the IAM user has _write_ permissions to that queue.
+> ℹ️ If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
+
+The `queue_url` must point to a valid SQS queue URL. Please ensure the IAM user has _write_ permissions to that queue.
 
 ### Publishing notifications to a SNS topic
 
@@ -73,8 +74,9 @@ publisher = SnsPublisher(
 ```
 > ⚠️ The passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
 
-- If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
-- The `topic_arn` must point to a valid SNS topic ARN. Please ensure the IAM user has _publish_ permissions to the topic.
+> ℹ️ If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
+
+The `topic_arn` must point to a valid SNS topic ARN. Please ensure the IAM user has _publish_ permissions to the topic.
 
 ### Message payloads
 
@@ -249,7 +251,8 @@ listener = SqsListener(
 ```
 > ⚠️ The passwords and keys here are just an example, you should never hard-code any secrets in code. Use environment variables or a secret vault for that.
 
-- If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
+> ℹ️ If `aws_access_key_id`, `aws_secret_access_key` and `region_name` are omitted, they will be read from the IAM environment or AWS CLI configuration.
+
 
 The following attributes correspond to the attributes passed to the Amazon SQS [`ReceiveMessage`](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html) API:
 
