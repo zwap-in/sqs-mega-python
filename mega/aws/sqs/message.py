@@ -1,6 +1,6 @@
 from typing import Optional
 
-from mega.aws.message import Message, PayloadType, Payload, MessageType
+from mega.aws.message import Message, PayloadType, MessagePayload, MessageType
 
 
 class SqsMessage(Message):
@@ -8,7 +8,7 @@ class SqsMessage(Message):
             self,
             message_id: str,
             receipt_handle: str,
-            payload: Optional[Payload],
+            payload: Optional[MessagePayload],
             payload_type: PayloadType,
             embedded_message: Optional[Message] = None
     ):
@@ -31,7 +31,7 @@ class SqsMessage(Message):
         return self._payload_type
 
     @property
-    def payload(self) -> Optional[Payload]:
+    def payload(self) -> Optional[MessagePayload]:
         return self._payload
 
     @property

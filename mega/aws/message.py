@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Optional
 
-from mega.aws.payload import PayloadType, Payload
+from mega.aws.payload import PayloadType, MessagePayload
 
 
 class MessageType(Enum):
@@ -28,7 +28,7 @@ class Message(ABC):
 
     @property
     @abstractmethod
-    def payload(self) -> Optional[Payload]:
+    def payload(self) -> Optional[MessagePayload]:
         pass
 
     @property

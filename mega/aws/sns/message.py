@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Optional
 
 from mega.aws.message import Message, MessageType
-from mega.aws.payload import PayloadType, Payload
+from mega.aws.payload import PayloadType, MessagePayload
 
 
 class SnsMessageType(Enum):
@@ -65,7 +65,7 @@ class SnsNotification(SnsMessage):
             message_id: str,
             topic_arn: str,
             timestamp: datetime,
-            payload: Payload,
+            payload: MessagePayload,
             payload_type: PayloadType,
             subject: Optional[str],
             unsubscribe_url: str
@@ -89,7 +89,7 @@ class SnsNotification(SnsMessage):
         return self._payload_type
 
     @property
-    def payload(self) -> Optional[Payload]:
+    def payload(self) -> Optional[MessagePayload]:
         return self._payload
 
     @property
@@ -126,7 +126,7 @@ class SnsConfirmation(SnsMessage, ABC):
         return PayloadType.NONE
 
     @property
-    def payload(self) -> Optional[Payload]:
+    def payload(self) -> Optional[MessagePayload]:
         return None
 
     @property

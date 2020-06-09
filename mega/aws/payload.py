@@ -4,7 +4,7 @@ from typing import Tuple, Union
 import mega.event
 from mega.aws.encoding import decode_value, encode_blob, encode_data
 
-Payload = Union[bytes, str, dict, mega.event.Payload]
+MessagePayload = Union[bytes, str, dict, mega.event.Payload]
 
 
 class PayloadType(Enum):
@@ -15,7 +15,7 @@ class PayloadType(Enum):
     MEGA = 5
 
 
-def deserialize_payload(plaintext: str) -> Tuple[Payload, PayloadType]:
+def deserialize_payload(plaintext: str) -> Tuple[MessagePayload, PayloadType]:
     value = decode_value(plaintext)
     _type = type(value)
 
@@ -33,7 +33,7 @@ def deserialize_payload(plaintext: str) -> Tuple[Payload, PayloadType]:
     raise ValueError("Don't know how to deserialize payload with type: {}".format(_type))
 
 
-def serialize_payload(payload: Payload, binary_encoding=False) -> str:
+def serialize_payload(payload: MessagePayload, binary_encoding=False) -> str:
     if payload is None:
         raise ValueError("Payload can't be null")
 
