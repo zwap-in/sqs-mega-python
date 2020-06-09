@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from mega.event import Payload, Object, Event
+from mega.event import Payload, ObjectData, Event
 
 
 class PayloadBuilder:
@@ -65,4 +65,4 @@ class PayloadBuilder:
         return Event(**self._event_kwargs) if self._event_kwargs else None
 
     def _build_object(self):
-        return Object(**self._object_kwargs) if self._object_kwargs else None
+        return ObjectData(**self._object_kwargs) if self._object_kwargs else None

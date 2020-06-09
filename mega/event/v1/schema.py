@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE, post_dump
 
 from mega.event.v1 import PROTOCOL_VERSION, PROTOCOL_NAME
-from mega.event.v1.payload import Payload, Object, Event
+from mega.event.v1.payload import Payload, ObjectData, Event
 
 
 class SchemaError(Exception):
@@ -46,7 +46,7 @@ class ObjectSchema(BaseSchema):
 
     @post_load
     def build_object(self, data, **kwargs):
-        return Object(**data)
+        return ObjectData(**data)
 
     def handle_error(self, exc, data, **kwargs):
         raise SchemaError("Invalid MEGA payload. There is an error in the 'object' section: {0}".format(exc))

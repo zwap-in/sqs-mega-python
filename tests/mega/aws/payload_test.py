@@ -159,7 +159,7 @@ def test_serialize_mega_payload_as_json_string():
             timestamp=dateutil.parser.parse(timestamp),
             subject='991'
         ),
-        object=mega.event.Object(
+        object=mega.event.ObjectData(
             current={'foo': 'bar'}
         )
     )
@@ -192,7 +192,7 @@ def test_serialize_mega_payload_as_bson_encoded_as_base64_string():
             timestamp=dateutil.parser.parse(timestamp),
             subject='991'
         ),
-        object=mega.event.Object(
+        object=mega.event.ObjectData(
             current={'foo': 'bar'}
         )
     )
@@ -224,7 +224,7 @@ def test_fail_to_serialize_invalid_mega_payload():
             name='foo.bar',
             subject='991'
         ),
-        object=mega.event.Object(
+        object=mega.event.ObjectData(
             current={'foo': 'bar'}
         )
     )

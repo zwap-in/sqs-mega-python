@@ -57,7 +57,7 @@ def build_mega_payload():
                 'username': 'john.doe'
             }
         ),
-        object=mega.event.Object(
+        object=mega.event.ObjectData(
             current={
                 'id': 987650,
                 'full_name': 'John Doe',

@@ -1,7 +1,7 @@
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import Payload, Event, Object
+from mega.event.v1.payload import Payload, Event, ObjectData
 from tests.mega.event.v1.payload.event_test import build_event_kwargs
 from tests.mega.event.v1.payload.object_test import build_object_kwargs
 
@@ -9,7 +9,7 @@ from tests.mega.event.v1.payload.object_test import build_object_kwargs
 def build_payload_kwargs():
     return dict(
         event=Event(**build_event_kwargs()),
-        object=Object(**build_object_kwargs()),
+        object=ObjectData(**build_object_kwargs()),
         extra={
             'channel': 'web/desktop',
             'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) '
@@ -28,7 +28,7 @@ def test_create_payload():
     assert payload.event == kwargs['event']
 
     assert payload.object is not None
-    assert isinstance(payload.object, Object)
+    assert isinstance(payload.object, ObjectData)
     assert payload.object == kwargs['object']
 
     assert payload.extra is not None
@@ -64,7 +64,7 @@ def test_fail_to_create_payload_without_event():
 
 def test_payloads_are_equal_when_all_attributes_are_equal():
     event = Event(**build_event_kwargs())
-    mega_object = Object(**build_object_kwargs())
+    mega_object = ObjectData(**build_object_kwargs())
     extra = {'foo': 'bar', 'one': 1}
 
     this = Payload(
@@ -87,7 +87,7 @@ def test_payloads_are_equal_when_all_attributes_are_equal():
 
 @parameterized.expand([
     ['event', Event(name='foo.bar')],
-    ['object', Object(current={'foo': 'bar'})],
+    ['object', ObjectData(current={'foo': 'bar'})],
     ['extra', {'one': 1, 'two': [3, 4]}]
 ])
 def test_payloads_are_not_equal_if_one_attribute_is_different(attribute_name, different_value):

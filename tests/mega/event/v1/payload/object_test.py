@@ -1,7 +1,7 @@
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import Object
+from mega.event.v1.payload import ObjectData
 
 
 def build_object_kwargs():
@@ -74,7 +74,7 @@ def build_object_kwargs():
 
 def test_create_object():
     kwargs = build_object_kwargs()
-    object_data = Object(**kwargs)
+    object_data = ObjectData(**kwargs)
 
     assert object_data.id == kwargs['id']
     assert object_data.type == kwargs['type']
@@ -93,7 +93,7 @@ def test_create_object_without_optional_attribute_should_use_default(attribute_n
     kwargs = build_object_kwargs()
     del kwargs[attribute_name]
 
-    object_data = Object(**kwargs)
+    object_data = ObjectData(**kwargs)
     assert getattr(object_data, attribute_name) == expected_default
 
 
@@ -103,15 +103,15 @@ def test_create_object_without_optional_attribute_should_use_default(attribute_n
 ])
 def test_fail_to_create_object_with_empty_current_attribute(bogus):
     with pytest.raises(AttributeError) as e:
-        Object(current=bogus)
+        ObjectData(current=bogus)
     assert str(e.value) == 'Mega object attribute "current" has not been set, or set to an empty value'
 
 
 def test_objects_are_equal_when_all_attributes_are_equal():
     kwargs = build_object_kwargs()
 
-    this = Object(**kwargs)
-    that = Object(**kwargs)
+    this = ObjectData(**kwargs)
+    that = ObjectData(**kwargs)
 
     assert this.__eq__(that) is True
     assert that.__eq__(this) is True
@@ -128,11 +128,11 @@ def test_objects_are_equal_when_all_attributes_are_equal():
 ])
 def test_objects_are_not_equal_if_one_attribute_is_different(attribute_name, different_value):
     this_kwargs = build_object_kwargs()
-    this = Object(**this_kwargs)
+    this = ObjectData(**this_kwargs)
 
     that_kwargs = build_object_kwargs()
     that_kwargs[attribute_name] = different_value
-    that = Object(**that_kwargs)
+    that = ObjectData(**that_kwargs)
 
     assert this.__eq__(that) is False
     assert that.__eq__(this) is False
@@ -147,5 +147,5 @@ def test_objects_are_not_equal_if_one_attribute_is_different(attribute_name, dif
     ['foobar']
 ])
 def test_an_object_is_not_equal_to(another_thing):
-    object_data = Object(**build_object_kwargs())
+    object_data = ObjectData(**build_object_kwargs())
     assert object_data != another_thing

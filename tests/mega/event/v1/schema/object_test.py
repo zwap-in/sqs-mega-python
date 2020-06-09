@@ -1,7 +1,7 @@
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import Object
+from mega.event.v1.payload import ObjectData
 from mega.event.v1.schema import ObjectSchema, SchemaError
 
 
@@ -103,7 +103,7 @@ def test_deserialize_event_data_ignoring_unknown_attributes():
     payload = ObjectSchema().load(data)
 
     assert payload is not None
-    assert isinstance(payload, Object)
+    assert isinstance(payload, ObjectData)
 
 
 @parameterized.expand([

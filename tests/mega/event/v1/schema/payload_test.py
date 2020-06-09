@@ -3,7 +3,7 @@ import freezegun
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import Object, Event, Payload
+from mega.event.v1.payload import ObjectData, Event, Payload
 from mega.event.v1.schema import deserialize_payload, SchemaError, matches_payload, serialize_payload
 from tests.mega.event.v1.schema.event_test import build_event_data, build_event_attributes
 from tests.mega.event.v1.schema.object_test import build_object_data, build_previous_object_data, \
@@ -49,7 +49,7 @@ def test_deserialize_full_payload_data():
 
     object_data = data['object']
     assert payload.object is not None
-    assert isinstance(payload.object, Object)
+    assert isinstance(payload.object, ObjectData)
     assert payload.object.type == object_data['type']
     assert payload.object.id == object_data['id']
     assert payload.object.version == object_data['version']
@@ -204,7 +204,7 @@ def test_serialize_full_valid_payload():
         publisher='shopping-cart-service',
         attributes=build_event_attributes()
     )
-    _object = Object(
+    _object = ObjectData(
         type='shopping_cart',
         id='18a3f92e-1fbf-45eb-8769-d836d0a1be55',
         version=3,
@@ -268,7 +268,7 @@ def test_serialize_medium_valid_payload():
             all=True
         )
 
-    _object = Object(
+    _object = ObjectData(
         type='shopping_cart',
         current=build_current_object_data()
     )

@@ -47,7 +47,7 @@ class Event:
         )
 
 
-class Object:
+class ObjectData:
     DEFAULT_VERSION = 1
 
     def __init__(
@@ -68,7 +68,7 @@ class Object:
         self.previous = dict(previous) if previous else None
 
     def __eq__(self, other):
-        if not isinstance(other, Object):
+        if not isinstance(other, ObjectData):
             return NotImplemented
 
         return (
@@ -87,7 +87,7 @@ class Payload:
     def __init__(
             self,
             event: Event = None,
-            object: Optional[Object] = None,
+            object: Optional[ObjectData] = None,
             extra: Optional[dict] = None,
             **kwargs
     ):
