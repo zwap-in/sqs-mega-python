@@ -389,8 +389,7 @@ Then, we must instantiate the SQS listener process and register our subscribers:
 ```python
 from mega.aws.sqs.subscribe import SqsListener
 
-from my.app.subscribers import ShoppingCartItemAdded, ShoppingCartItemRemoved, ShoppingCartCheckout
-
+...
 
 listener = SqsListener(
     queue_url='https://sqs.us-east-2.amazonaws.com/424566909325/sqs-mega-test',
@@ -456,8 +455,10 @@ After an instance of `SqsListener` has been correctly configured, and all subscr
 listener.listen()
 ```
 
-We recommend that each SQS listener instance is run in its own process. If possible, try to run them in different Docker containers. This will allow you to scale your listener processes with more safety and flexibility.
+We recommend that each SQS listener is run in its own process instance. If possible, try to run them in different Docker containers. This will allow you to scale your listener processes with more safety and flexibility.
 
-> ⚠️ **WARNING**: do not allow listener processes with different subscribers to listen to the same queue, otherwise messages might not be delivered to all subscribers, or could be processed incorrectly. You must ensure that all processes that listen to the same queue are identical. If you have multiple instances of a container listening to a queue, you should also keep them up-to-date. Do not allow older containers to share a queue with newer containers. The easiest way to accomplish this is always deploying one Docker image per SQS queue, and bootstrapping any number of identical containers from it.
+You can have many SQS listener processes or containers listening to messages from the same SQS queue, but please ensure the processes or Docker images are identical.
+
+> ⚠️ **WARNING**: do not allow different listener process images to listen to the same queue, otherwise messages might not be delivered to all subscribers, or could be processed incorrectly. You must ensure that all processes that listen to the same queue are identical. If you have multiple instances of a container listening to a queue, you should also keep them up-to-date. Do not allow older containers to share a queue with newer containers. The easiest way to accomplish this is always deploying one Docker image per SQS queue, and bootstrapping any number of identical containers from it.
 
 > ℹ️ _Hint_: you can use [Supervisor](http://supervisord.org) to ensure that the SQS listener process is automatically restarted in case it dies.
