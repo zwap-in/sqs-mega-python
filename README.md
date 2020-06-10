@@ -301,7 +301,7 @@ Even if transmitted using plaintext, JSON content is very difficult for the nake
 
 ### How it works
 
-A `mega.aws.sqs.SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop. Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
+A `mega.aws.sqs.subscribe.SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop. Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
 
 After a message is consumed by all interested subscribers, it is deleted from the queue. However, a message may remain in the queue and redelivered later in case of transient errors or explicit retries.
 
@@ -334,7 +334,7 @@ In this example, we are interested in matching MEGA events that are like:
 }
 ```
 
-First, we must declare a message subscriber. Since this is a MEGA event, not a generic JSON payload, we will use the `EventSubscriber` class:
+First, we must declare a message subscriber. Since this is a MEGA event, not a generic JSON payload, we will use the `mega.aws.sqs.subscribe.EventSubscriber` class:
 
 ```python
 from mega.aws.sqs.subscribe import EventSubscriber, Result
@@ -410,6 +410,8 @@ The listener loop will read messages from the SQS queue and forward them to matc
 TODO
 
 ### SQS listener
+
+The `mega.aws.sqs.subscribe.SqsListener` listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop.
 
 ```python
 from mega.aws.sqs.subscribe import SqsListener
