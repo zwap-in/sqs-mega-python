@@ -58,7 +58,7 @@ The `queue_url` must point to a valid SQS queue URL. Please ensure the IAM user 
 
 [Amazon SNS](https://aws.amazon.com/sns) is a fully managed pub/sub messaging service that allows you to decouple microservices, distributed systems and serveless applications.
 
-The `mega.aws.sns.SnsPublisher` class allows you to publish notifications to a SNS topic. This is useful if you want to decouple event publishers from subscribers, while delivering the same notification to all parties that are subscribed to a given topic. You can subscribe your SQS queue to the SNS topics that interest your service, and Amazon SNS will forward messages to that queue.
+The `mega.aws.sns.publish.SnsPublisher` class allows you to publish notifications to a SNS topic. This is useful if you want to decouple event publishers from subscribers, while delivering the same notification to all parties that are subscribed to a given topic. You can subscribe your SQS queue to the SNS topics that interest your service, and Amazon SNS will forward messages to that queue.
 
 You can configure SNS to forward messages to a SQS queue in raw format. The SNS notification can also be embedded inside a SQS message body. SQS MEGA is able to automatically detect both types of configurations, and message payloads are deserialized in a transparent manner.
 
