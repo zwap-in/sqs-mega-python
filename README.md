@@ -299,13 +299,42 @@ Even if transmitted using plaintext, JSON content is very difficult for the nake
 
 ## Subscribing to messages
 
-### Architecture
+### How it works
 
-TODO...
+A `mega.aws.sqs.SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop. Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
 
-### Declaring message subscribers
+After a message is consumed by all interested subscribers, it is deleted from the queue. However, a message may remain in the queue and redelivered later in case of transient errors or explicit retries.
 
-In this example, here is how the `ShoppingCartItemAdded` subscriber could look like:
+Also, due to the nature of Amazon SQS, messages may be delivered more than once. For these reasons, you should design your subscribers to be idempotent. Read the [best practices for processing asynchronous messages](https://github.com/mega-distributed/sqs-mega#best-practices-for-processing-asynchronous-messages).
+
+Each listener is a blocking thread and must be run in its own process or container. To maximize throughput, you can have many copies of the same process listening to the same queue, as long as those processes are identical.
+
+Amazon SQS uses the [Visibility Timeout](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html) to minimize race conditions and allow only one process to receive and process a message at a given time. It also uses a shuffling algorithm to distribute messages between different processes.
+
+### Example
+
+In this example, we are interested in matching MEGA events that are like:
+
+```json
+{
+    "protocol": "mega",
+    "version": 1,
+    "event": {
+        "domain": "shopping_cart",
+        "name": "item.added",
+        "version": 2,
+        "timestamp": "2020-05-04T15:53:23.123",
+        "subject": "987650",
+        "publisher": "shopping-cart-service",
+        "item_id": "61fcc874-624e-40f8-8fd7-0e663c7837e8",
+        "quantity": 5
+    },
+    "object": { ... },
+    "extra": { ... }
+}
+```
+
+First, we must declare a message subscriber. Since this is a MEGA event, not a generic JSON payload, we will use the `EventSubscriber` class:
 
 ```python
 from mega.aws.sqs.subscribe import EventSubscriber, Result
@@ -322,19 +351,69 @@ class ShoppingCartItemAdded(EventSubscriber):
     )
 
     def process_payload(payload: Payload) -> Result:
-        item = Inventory.get_item(payload.event.item_id)
+        item_id = payload.event.item_id
+        item = Inventory.get_item(item_id)
 
-        # ...
+        ...
 
         return Result.OK
 ```
 
-### Listening to messages from a SQS queue
-
-A `mega.aws.sqs.SqsListener` object listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop. Subscribers declare pattern-matching rules to determine which messages they are interested about. If a message is matched by a subscriber, the listener will forward the message to it. A message will be forwarded to all subscribers that match it, and the same message may be consumed by many subscribers.
+We also have other subscribers that match other types of events, namely:
 
 ```python
-from mega.aws.sqs import SqsListener
+class ShoppingCartItemRemoved(EventSubscriber):
+    match_event = dict(
+        domain='shopping_cart',
+        name='item.removed',
+        ...
+    )
+
+    def process_payload(payload: Payload) -> Result:
+        ...
+
+
+class ShoppingCartCheckout(EventSubscriber):
+    match_event = dict(
+        domain='shopping_cart',
+        name='checkout',
+        ...
+    )
+
+    def process_payload(payload: Payload) -> Result:
+        ...
+```
+
+Then, we must instantiate the SQS listener process and register our subscribers:
+
+```python
+from mega.aws.sqs.subscribe import SqsListener
+
+from my.app.subscribers import ShoppingCartItemAdded, ShoppingCartItemRemoved, ShoppingCartCheckout
+
+
+listener = SqsListener(
+    queue_url='https://sqs.us-east-2.amazonaws.com/424566909325/sqs-mega-test',
+    ...
+)
+
+listener.register(ShoppingCartItemAdded)
+listener.register(ShoppingCartItemRemoved)
+listener.register(ShoppingCartCheckout)
+
+listener.listen()
+```
+
+The listener loop will read messages from the SQS queue and forward them to matching subscribers.
+
+### Message subscribers
+
+TODO
+
+### SQS listener
+
+```python
+from mega.aws.sqs.subscribe import SqsListener
 
 listener = SqsListener(
     aws_access_key_id='AKIAIOSFODNN7EXAMPLE',
@@ -379,4 +458,6 @@ listener.listen()
 
 We recommend that each SQS listener instance is run in its own process. If possible, try to run them in different Docker containers. This will allow you to scale your listener processes with more safety and flexibility.
 
-> ℹ️ Hint: you can use [Supervisor](http://supervisord.org) to ensure that the SQS listener process is automatically restarted in case it dies.
+> ⚠️ **WARNING**: do not allow listener processes with different subscribers to listen to the same queue, otherwise messages might not be delivered to all subscribers, or could be processed incorrectly. You must ensure that all processes that listen to the same queue are identical. If you have multiple instances of a container listening to a queue, you should also keep them up-to-date. Do not allow older containers to share a queue with newer containers. The easiest way to accomplish this is always deploying one Docker image per SQS queue, and bootstrapping any number of identical containers from it.
+
+> ℹ️ _Hint_: you can use [Supervisor](http://supervisord.org) to ensure that the SQS listener process is automatically restarted in case it dies.
