@@ -36,10 +36,10 @@ Other settings are needed for reading or writing to SQS queues (such as _queue U
 
 ### Sending messages to a SQS queue
 
-The `mega.aws.sqs.SqsPublisher` class allows you to send messages to a SQS queue directly.
+The `mega.aws.sqs.publish.SqsPublisher` class allows you to send messages to a SQS queue directly.
 
 ```python
-from mega.aws.sqs import SqsPublisher
+from mega.aws.sqs.publish import SqsPublisher
 
 publisher = SqsPublisher(
     aws_access_key_id='AKIAIOSFODNN7EXAMPLE',
