@@ -449,6 +449,8 @@ listener.register(ShoppingCartItemRemoved)
 listener.register(ShoppingCartCheckout)
 ```
 
+A listener must be a subclass of `mega.aws.sqs.subscribe.MessageSubscriber`. You can either register a listener class, or an instance of that class. However, please keep in mind that a listener class can only be registered once. The reason is obvious: it does not make any sense to register the same subscriber, like the `ShoppingCarItemAdded` above, twice.
+
 #### Running the message loop
 
 After an instance of `SqsListener` has been correctly configured, and all subscribers registered to it, then the `listen` method will start to listen and process messages from a SQS queue in an endless long-polling loop. This will block the current thread indefinitely.
