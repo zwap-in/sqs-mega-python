@@ -339,6 +339,7 @@ First, we must declare a message subscriber. Since this is a MEGA event, not a g
 ```python
 from mega.aws.sqs.subscribe import EventSubscriber, Result
 from mega.event import Payload
+from mega.data.match.functions import one_of, gt, not_, empty
 
 
 class ShoppingCartItemAdded(EventSubscriber):
