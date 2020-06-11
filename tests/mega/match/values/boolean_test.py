@@ -3,8 +3,8 @@ from datetime import date
 import pytest
 from parameterized import parameterized
 
-from mega.data.match.values.boolean import Boolean
-from mega.data.match.values.value import RightHandSideTypeError, LeftHandSideTypeError
+from mega.match.values.boolean import Boolean
+from mega.match.values.value import RightHandSideTypeError, LeftHandSideTypeError
 
 TRUTHY_VALUES = [
     [True],

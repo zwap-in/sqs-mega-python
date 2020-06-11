@@ -2,7 +2,7 @@ from datetime import date
 
 from parameterized import parameterized
 
-from mega.data.match.values.null import Null
+from mega.match.values.null import Null
 
 FALSEY_VALUES = [
     [[]],

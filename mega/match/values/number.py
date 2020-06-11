@@ -1,7 +1,7 @@
 import decimal
 
-from mega.data.match.values.types import is_number, is_string, NumberType
-from mega.data.match.values.value import ComparableValue
+from mega.match.values.types import is_number, is_string, NumberType
+from mega.match.values.value import ComparableValue
 
 
 class Number(ComparableValue):

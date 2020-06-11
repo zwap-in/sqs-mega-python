@@ -5,8 +5,8 @@ import pytest
 from dateutil.tz import tzutc, tzoffset
 from parameterized import parameterized
 
-from mega.data.match.values.datetime import DateTime
-from mega.data.match.values.value import LeftHandSideTypeError, RightHandSideTypeError
+from mega.match.values.datetime import DateTime
+from mega.match.values.value import LeftHandSideTypeError, RightHandSideTypeError
 
 UTC = tzutc()
 GMT_MINUS_3 = tzoffset('FOO_BAR', -3 * 60 * 60)

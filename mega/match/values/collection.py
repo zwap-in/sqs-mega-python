@@ -1,6 +1,6 @@
-from mega.data.match.evaluation import evaluate
-from mega.data.match.values.types import is_collection, is_scalar, Value
-from mega.data.match.values.value import RightHandSideValue, LeftHandSideTypeError
+from mega.match.evaluation import evaluate
+from mega.match.values.types import is_collection, is_scalar, Value
+from mega.match.values.value import RightHandSideValue, LeftHandSideTypeError
 
 
 class Collection(RightHandSideValue):

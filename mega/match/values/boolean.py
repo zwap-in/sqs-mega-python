@@ -1,5 +1,5 @@
-from mega.data.match.values.types import is_boolean, is_string
-from mega.data.match.values.value import RightHandSideValue
+from mega.match.values.types import is_boolean, is_string
+from mega.match.values.value import RightHandSideValue
 
 
 class Boolean(RightHandSideValue):

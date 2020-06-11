@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Set, Type, Any, Optional
 
-from mega.data.match.values.types import Value, is_scalar
+from mega.match.values.types import Value, is_scalar
 
 
 class RightHandSideValue(ABC):

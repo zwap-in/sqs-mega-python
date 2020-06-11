@@ -1,14 +1,14 @@
 from typing import Union
 
-from mega.data.match.values.collection import Collection
-from mega.data.match.values.mapping import Mapping
-from mega.data.match.values.boolean import Boolean
-from mega.data.match.values.datetime import DateTime
-from mega.data.match.values.number import Number
-from mega.data.match.values.string import String
-from mega.data.match.values.null import Null
-from mega.data.match.values.types import Value
-from mega.data.match.values.value import RightHandSideValue, ComparableValue
+from mega.match.values.collection import Collection
+from mega.match.values.mapping import Mapping
+from mega.match.values.boolean import Boolean
+from mega.match.values.datetime import DateTime
+from mega.match.values.number import Number
+from mega.match.values.string import String
+from mega.match.values.null import Null
+from mega.match.values.types import Value
+from mega.match.values.value import RightHandSideValue, ComparableValue
 
 
 def value(rhs: Union[Value, RightHandSideValue]) -> RightHandSideValue:
