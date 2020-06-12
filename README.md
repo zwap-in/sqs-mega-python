@@ -462,8 +462,8 @@ listener.listen()
 
 We recommend that each SQS listener is run in its own process instance. If possible, try to run them in different Docker containers. This will allow you to scale your listener processes with more safety and flexibility.
 
-You can have many SQS listener processes or containers listening to messages from the same SQS queue, but please ensure the processes or Docker images are identical.
+You can have many SQS listener process or container instances listening to the same SQS queue, but please ensure the process or Docker images are **identical**.
 
-> ⚠️ **WARNING**: do not allow different listener process images to listen to the same queue, otherwise messages might not be delivered to all subscribers, or could be processed incorrectly. You must ensure that all processes that listen to the same queue are identical. If you have multiple instances of a container listening to a queue, you should also keep them up-to-date. Do not allow older containers to share a queue with newer containers. The easiest way to accomplish this is always deploying one Docker image per SQS queue, and bootstrapping any number of identical containers from it.
+> ⚠️ **WARNING**: do not allow different listener process images to listen to the same queue, otherwise messages will be lost or processed incorrectly. You must ensure that all processes that listen to the same queue are identical. If you have multiple instances of a container listening to a queue, you should also keep them up-to-date. Do not allow older containers to share a queue with newer containers. The easiest way to accomplish this is always deploying one Docker image per SQS queue, and bootstrapping any number of identical containers from it.
 
 > ℹ️ _Hint_: you can use [Supervisor](http://supervisord.org) to ensure that the SQS listener process is automatically restarted in case it dies.
