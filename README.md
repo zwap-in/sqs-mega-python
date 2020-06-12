@@ -450,7 +450,7 @@ listener.register(ShoppingCartItemRemoved)
 listener.register(ShoppingCartCheckout)
 ```
 
-A subscriber must be a subclass of `mega.aws.sqs.subscribe.MessageSubscriber`, `DataSubscriber` or `EventSubscriber`. You can either register a subscriber class type, or an object instance of that class. However, please keep in mind that a subscriber class type can only be registered once. The reason is obvious: it does not make any sense to register the same subscriber type, like the `ShoppingCartItemAdded` above, twice. A subscriber is just a set of rules that match and process messages.
+A subscriber must be a subclass of `mega.aws.sqs.subscribe.MessageSubscriber`, `DataSubscriber` or `EventSubscriber`. You can either register a subscriber class type (if the class constructor requires no parameters), or an object instance of that class (if you need to pass something to the constructor). However, please keep in mind that a subscriber class type can only be registered once. The reason is obvious: it does not make any sense to register the same subscriber type, like the `ShoppingCartItemAdded` above, twice. A subscriber is just a set of rules that match and process messages.
 
 #### Running the message loop
 
