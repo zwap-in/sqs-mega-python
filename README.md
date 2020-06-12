@@ -343,10 +343,10 @@ from mega.match.functions import one_of, gt, not_, empty
 
 
 class ShoppingCartItemAdded(EventSubscriber):
-    match_event = dict(
-        domain='shopping_cart',
-        name='item.added',
-        version=one_of(1, 2),
+    domain = 'shopping_cart'
+    name = 'item.added'
+    version = one_of(1, 2)
+    attributes = dict(
         item_id=not_(empty()),
         quantity=gt(0)
     )
@@ -354,9 +354,7 @@ class ShoppingCartItemAdded(EventSubscriber):
     def process_payload(payload: Payload) -> Result:
         item_id = payload.event.item_id
         item = Inventory.get_item(item_id)
-
         ...
-
         return Result.OK
 ```
 
@@ -364,22 +362,16 @@ We also have other subscribers that match other types of events, namely:
 
 ```python
 class ShoppingCartItemRemoved(EventSubscriber):
-    match_event = dict(
-        domain='shopping_cart',
-        name='item.removed',
-        ...
-    )
+    domain = 'shopping_cart'
+    name = 'item.removed'
 
     def process_payload(payload: Payload) -> Result:
         ...
 
 
 class ShoppingCartCheckout(EventSubscriber):
-    match_event = dict(
-        domain='shopping_cart',
-        name='checkout',
-        ...
-    )
+    domain = 'shopping_cart'
+    name = 'checkout'
 
     def process_payload(payload: Payload) -> Result:
         ...
@@ -389,8 +381,8 @@ Then, we must instantiate the SQS listener process and register our subscribers:
 
 ```python
 from mega.aws.sqs.subscribe import SqsListener
-
 ...
+
 
 listener = SqsListener(
     queue_url='https://sqs.us-east-2.amazonaws.com/424566909325/sqs-mega-test',
@@ -408,7 +400,106 @@ The listener loop will read messages from the SQS queue and forward them to matc
 
 ### Message subscribers
 
-TODO
+A message subscriber is just a set of rules to match and process messages. The base class is `mega.aws.sqs.subscribe.MessageSubscriber`. However, for performing pattern-matching over MEGA events or generic data payloads (i.e., JSON objects), you should use the `mega.aws.sqs.subscribe.EventSubscriber` and `DataSubscriber` classes, respectivelly.
+
+#### Subscribing to MEGA events
+
+Just declare a subclass of `mega.aws.sqs.subscribe.EventSubscriber`, like in the `ShoppingCartItemAdded` example above.
+
+Pattern matching rules are declared through class attributes. Here is another example:
+
+```python
+from mega.aws.sqs.subscribe import EventSubscriber
+from mega.match.functions import match, any_, not_, empty, gt, gte, one_of
+from mega.event import Payload
+from datetime import date
+
+
+class UserLogin(EventSubscriber):
+    domain = 'user'
+    name = match(r'user:login:(.*)')
+    version = any_()
+    subject = match(r'^\d+$')
+    attributes = dict(
+        success=True,
+        attempts=gt(2)
+    )
+
+    object_type = 'user'
+    object_version = one_of(1, 2, 3)
+    object_current = dict(
+        email=not_(empty()),
+        username=not_(['test', 'synthetic']),
+        created_at=gte(date(2020, 1, 1))
+    )
+
+    def process(payload: Payload) -> Result:
+        user_id = int(payload.event.subject)
+        ...
+        return Result.OK
+```
+
+This will match the following MEGA event payload:
+
+```json
+{
+    "protocol": "mega",
+    "version": "1",
+    "event": {
+        "domain": "user",
+        "name": "user:login:web",
+        "version": 1,
+        "timestamp": "2020-06-12T17:29:58.000",
+        "subject": "987650",
+        "publisher": "login-api",
+        "attributes": {
+            "email": "johndoe_86@example.com",
+            "success": true,
+            "attempts": 4
+        }
+    },
+    "object": {
+        "type": "user",
+        "id": "987650",
+        "version": 2,
+        "current": {
+            "id": 987650,
+            "username": "john-doe",
+            "email": "johndoe_86@example.com",
+            "created_at": "2020-03-28T15:23:01",
+            "updated_at": "2020-05-18T16:12:59",
+            "last_login": "2020-06-02T05:38:43"
+        }
+    },
+    "extra": {
+        "ip_address": "2804:14c:5ba9:b067:70cc:9baa:5287:19b3",
+        "fingerprint": "MmRkMDczMmItMWJlOS00ZjRmLThlYjEtNmJhNjhjMmY1OWMzCg=="
+    }
+}
+```
+
+Here is a list of all supported pattern-matching class attributes that can be declared in `mega.aws.sqs.subscribe.EventSubscriber`.
+
+|  `EventSuscriber` Class Attribute | Alias             | Value Type            | MEGA payload path  |
+| --------------------------------- | ----------------- | --------------------- | ------------------ |
+| `event_name`                      | `name`            | String                | `event.name`       |
+| `event_domain`                    | `domain`          | String                | `event.domain`     |
+| `event_version`                   | `version`         | Number (`int`)        | `event.version`    |
+| `event_timestamp`                 | `timestamp`       | DateTime (`datetime`) | `event.timestamp`  |
+| `event_subject`                   | `subject`         | String                | `event.subject`    |
+| `event_publisher`                 | `publisher`       | String                | `event.publisher`  |
+| `event_attributes`                | `attributes`      | Mapping (`dict`)      | `event.attributes` |
+| `object_type`                     | -                 | String                | `object.type`      |
+| `object_version`                  | -                 | Number (`int`)        | `object.version`   |
+| `object_id`                       | -                 | String                | `object.id`        |
+| `object_current`                  | `current_object`  | Mapping (`dict`)      | `object.current`   |
+| `object_previous`                 | `previous_object` | Mapping (`dict`)      | `object.previous`  |
+
+> ℹ️ Some of these attributes have aliases. So declaring `event_name` or just `name` has the same meaning.
+
+> ⚠️ If both the class attribute and its alias are declared in `EventSubscriber`, the alias will be ignored.
+
+> ⚠️ **WARNING**: these pattern-match attributes are optional, and you should be able to declare any pattern combination you want. However, please be careful because it is also possible to declare a subscriber with no matching rules. In that case, the subscriber will match and process all events that are sent to a SQS queue. This can be useful in some scenarios, for example if you want to implement your custom pattern-match logic or forward messages to another system. But its inadvertent usage can have unintended consequences.
 
 ### SQS listener
 
