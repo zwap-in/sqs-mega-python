@@ -305,7 +305,7 @@ A `mega.aws.sqs.subscribe.SqsListener` object listens to messages from a SQS que
 
 After a message is consumed by all interested subscribers, it is deleted from the queue. However, a message may remain in the queue and redelivered later in case of transient errors or explicit retries.
 
-Also, due to the nature of Amazon SQS, messages may be delivered more than once. For these reasons, you should design your subscribers to be idempotent. Read the [best practices for processing asynchronous messages](https://github.com/mega-distributed/sqs-mega#best-practices-for-processing-asynchronous-messages).
+Also, due to the nature of Amazon SQS, messages may be delivered more than once. For these reasons, you should design your subscribers to be idempotent. Read the → [best practices for processing asynchronous messages](https://github.com/mega-distributed/sqs-mega#best-practices-for-processing-asynchronous-messages).
 
 Each listener is a blocking thread and must be run in its own process or container. To maximize throughput, you can have many copies of the same process listening to the same queue, as long as those processes are identical.
 
@@ -337,7 +337,7 @@ In this example, we are interested in matching MEGA events that are like:
 First, we must declare a message subscriber. Since this is a MEGA event, not a generic JSON payload, we will use the `mega.aws.sqs.subscribe.EventSubscriber` class:
 
 ```python
-from mega.aws.sqs.subscribe import EventSubscriber, Result
+from mega.aws.sqs.subscribe import EventSubscriber, ProcessStatus
 from mega.event import Payload
 from mega.match.functions import one_of, gt, not_, empty
 
@@ -351,11 +351,11 @@ class ShoppingCartItemAdded(EventSubscriber):
         quantity=gt(0)
     )
 
-    def process_payload(payload: Payload) -> Result:
+    def process_payload(payload: Payload) -> ProcessStatus:
         item_id = payload.event.item_id
         item = Inventory.get_item(item_id)
         ...
-        return Result.OK
+        return ProcessStatus.DONE
 ```
 
 We also have other subscribers that match other types of events, namely:
@@ -365,7 +365,7 @@ class ShoppingCartItemRemoved(EventSubscriber):
     domain = 'shopping_cart'
     name = 'item.removed'
 
-    def process_payload(payload: Payload) -> Result:
+    def process_payload(payload: Payload) -> ProcessStatus:
         ...
 
 
@@ -373,7 +373,7 @@ class ShoppingCartCheckout(EventSubscriber):
     domain = 'shopping_cart'
     name = 'checkout'
 
-    def process_payload(payload: Payload) -> Result:
+    def process_payload(payload: Payload) -> ProcessStatus:
         ...
 ```
 
@@ -407,7 +407,7 @@ A message subscriber is just a set of rules to match and process messages. The b
 If you have generic JSON payloads sent to your SQS queues, you can subscribe to them by subclassing the `mega.aws.sqs.subscribe.DataSubscriber`:
 
 ```python
-from mega.aws.sqs.subscribe import DataSubscriber, Result
+from mega.aws.sqs.subscribe import DataSubscriber, ProcessStatus
 from mega.match.functions import match, one_of, gt, not_
 from datetime import date
 
@@ -423,10 +423,10 @@ class UserNotificationSubscriber(DataSubscriber):
         )
     )
 
-    def process(payload: dict) -> Result:
+    def process(payload: dict) -> ProcessStatus:
         user_id = payload['user']['id']
         ...
-        return Result.OK
+        return ProcessStatus.DONE
 ```
 
 The `pattern` class attribute will determine the pattern rules used to match against a generic data payload. For example, the pattern declared above will match this JSON object:
@@ -469,7 +469,7 @@ Just declare a subclass of `mega.aws.sqs.subscribe.EventSubscriber`, like in the
 Pattern matching rules are declared through class attributes. Here is another example:
 
 ```python
-from mega.aws.sqs.subscribe import EventSubscriber, Result
+from mega.aws.sqs.subscribe import EventSubscriber, ProcessStatus
 from mega.match.functions import match, any_, not_, empty, gt, gte, one_of
 from mega.event import Payload
 from datetime import date
@@ -493,10 +493,10 @@ class UserLogin(EventSubscriber):
         created_at=gte(date(2020, 1, 1))
     )
 
-    def process(payload: Payload) -> Result:
+    def process(payload: Payload) -> ProcessStatus:
         user_id = int(payload.event.subject)
         ...
-        return Result.OK
+        return ProcessStatus.DONE
 ```
 
 This will match the following MEGA event payload:
@@ -560,6 +560,21 @@ Here is a list of all supported pattern-matching class attributes that can be de
 > ⚠️ If both the class attribute and its alias are declared in `EventSubscriber`, the alias will be ignored.
 
 > ⚠️ **WARNING**: these pattern-match attributes are optional, and you should be able to declare any pattern combination you want. However, please be careful because it is also possible to declare a subscriber with no matching rules. In that case, the subscriber will match and process all events that are sent to a SQS queue. This can be useful in some scenarios, for example if you want to implement your custom pattern-match logic or forward messages to another system. But its inadvertent usage can have unintended consequences.
+
+#### Processing payloads
+
+A subscriber must declare a `process` method, which is intended for consuming and processing the payload. After the payload is processed, you are expected to return a value from the `mega.aws.sqs.subscribe.ProcessStatus` enumeration:
+
+|  `ProcessStatus` | Description |
+| --------------------- | ----------- |
+|  `DONE` | The payload was successfully processed, without any errors. The message will be deleted from the queue and not processed again, if no more subscribers match it. This is also the **default** status, in case nothing is returned by the `process` method. |
+|  `RETRY_LATER` | The system was not ready to process the payload yet. The message will remain in the queue and reprocessed later. This is not considered an error. |
+|  `FATAL_ERROR` | A fatal error happened when processing the payload. The message will be deleted from the queue and not processed again, if no more subscribers match it. This is also the default status if any generic exception is raised that is not mapped as retriable. |
+|  `RETRIABLE_ERROR` | A transient or retriable error happened when processing the payload. The message will remain in the queue and reprocessed later. This is also the status that is assumed if a retriable exception is raised. See how to map exceptions as retriable below. |
+
+Please be aware that Amazon SQS will ocasionally deliver duplicate messages, even shortly after being processed. Also, if multiple subscribers match the same message, when one subscriber retries processing with `ProcessStatus.RETRY_LATER` or a retriable exception, the message will be redelivered to all matching subscribers again, even those that already processed the message successfully.
+
+**Design your subscribers to be idempotent.** Please read the → [best practices for processing asynchronous messages](https://github.com/mega-distributed/sqs-mega#best-practices-for-processing-asynchronous-messages).
 
 ### SQS listener
 
