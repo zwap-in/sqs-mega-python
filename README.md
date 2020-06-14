@@ -389,9 +389,9 @@ listener = SqsListener(
     ...
 )
 
-listener.register(ShoppingCartItemAdded)
-listener.register(ShoppingCartItemRemoved)
-listener.register(ShoppingCartCheckout)
+listener.register_subscriber(ShoppingCartItemAdded)
+listener.register_subscriber(ShoppingCartItemRemoved)
+listener.register_subscriber(ShoppingCartCheckout)
 
 listener.listen()
 ```
@@ -631,15 +631,17 @@ The following attributes correspond to the attributes passed to the Amazon SQS [
 
 #### Registering message subscribers
 
-The `register` method from `SqsListener` allows message and event subscribers to be registered to the listener:
+The `register_subscriber` method from `SqsListener` allows message and event subscribers to be registered to the listener:
 
 ```python
-listener.register(ShoppingCartItemAdded)
-listener.register(ShoppingCartItemRemoved)
-listener.register(ShoppingCartCheckout)
+listener.register_subscriber(ShoppingCartItemAdded)
+listener.register_subscriber(ShoppingCartItemRemoved)
+listener.register_subscriber(ShoppingCartCheckout)
 ```
 
-A subscriber must be a subclass of `mega.aws.sqs.subscribe.MessageSubscriber`, `DataSubscriber` or `EventSubscriber`. You can either register a subscriber class type (if the class constructor requires no parameters), or an object instance of that class (if you need to pass something to the constructor). However, please keep in mind that a subscriber class type can only be registered once. The reason is obvious: it does not make any sense to register the same subscriber type, like the `ShoppingCartItemAdded` above, twice. A subscriber is just a set of rules that match and process messages.
+A subscriber must be a subclass of `mega.aws.sqs.subscribe.MessageSubscriber`, `DataSubscriber` or `EventSubscriber`. You must register a subscriber class (_type_), and the constructor should require no parameters to be instantiated.
+
+> ℹ️ A subscriber type can only be registered once. The reason is obvious: it does not make any sense to register the same subscriber type, like the `ShoppingCartItemAdded` above, twice. A subscriber is just a set of rules that match and process messages.
 
 #### Running the message loop
 
