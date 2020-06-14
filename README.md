@@ -351,10 +351,11 @@ class ShoppingCartItemAdded(EventSubscriber):
         quantity=gt(0)
     )
 
-    def process_payload(payload: Payload) -> ProcessStatus:
+    def process(self, payload: Payload) -> ProcessStatus:
         item_id = payload.event.item_id
         item = Inventory.get_item(item_id)
         ...
+
         return ProcessStatus.DONE
 ```
 
@@ -365,7 +366,7 @@ class ShoppingCartItemRemoved(EventSubscriber):
     domain = 'shopping_cart'
     name = 'item.removed'
 
-    def process_payload(payload: Payload) -> ProcessStatus:
+    def process(self, payload: Payload) -> ProcessStatus:
         ...
 
 
@@ -373,7 +374,7 @@ class ShoppingCartCheckout(EventSubscriber):
     domain = 'shopping_cart'
     name = 'checkout'
 
-    def process_payload(payload: Payload) -> ProcessStatus:
+    def process(self, payload: Payload) -> ProcessStatus:
         ...
 ```
 
@@ -423,9 +424,10 @@ class UserNotificationSubscriber(DataSubscriber):
         )
     )
 
-    def process(payload: dict) -> ProcessStatus:
+    def process(self, payload: dict) -> ProcessStatus:
         user_id = payload['user']['id']
         ...
+
         return ProcessStatus.DONE
 ```
 
@@ -469,9 +471,9 @@ Just declare a subclass of `mega.aws.sqs.subscribe.EventSubscriber`, like in the
 Pattern matching rules are declared through class attributes. Here is another example:
 
 ```python
+import mega.event
 from mega.aws.sqs.subscribe import EventSubscriber, ProcessStatus
 from mega.match.functions import match, any_, not_, empty, gt, gte, one_of
-from mega.event import Payload
 from datetime import date
 
 
@@ -493,9 +495,10 @@ class UserLogin(EventSubscriber):
         created_at=gte(date(2020, 1, 1))
     )
 
-    def process(payload: Payload) -> ProcessStatus:
-        user_id = int(payload.event.subject)
+    def process(self, payload: mega.event.Payload) -> ProcessStatus:
+        user_id = payload.event.subject
         ...
+
         return ProcessStatus.DONE
 ```
 
