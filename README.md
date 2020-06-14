@@ -400,7 +400,60 @@ The listener loop will read messages from the SQS queue and forward them to matc
 
 ### Message subscribers
 
-A message subscriber is just a set of rules to match and process messages. The base class is `mega.aws.sqs.subscribe.MessageSubscriber`. However, for performing pattern-matching over MEGA events or generic data payloads (i.e., JSON objects), you should use the `mega.aws.sqs.subscribe.EventSubscriber` and `DataSubscriber` classes, respectivelly.
+A message subscriber is just a set of rules to match and process messages. The base class is `mega.aws.sqs.subscribe.MessageSubscriber`. However, for performing pattern-matching over MEGA events or generic data payloads (i.e., JSON objects), you should use the `mega.aws.sqs.subscribe.EventSubscriber` and `DataSubscriber` classes, respectively.
+
+#### Subscribing to data object payloads
+
+If you have generic JSON payloads sent to your SQS queues, you can subscribe to them by subclassing the `mega.aws.sqs.subscribe.DataSubscriber`:
+
+```python
+class UserNotificationSubscriber(DataSubscriber):
+    pattern = dict(
+        type=match(r'user:notification:(.*)'),
+        notification_type=one_of('email', 'sms', 'push'),
+        user=dict(
+            id=gt(0),
+            email=not_(match(r'test@(.*)')),
+            template=lambda lhs: lhs and bool(TemplateRepository.get(lhs))
+        )
+    )
+
+    def process(payload: dict) -> Result:
+        user_id = payload['user']['id']
+        ...
+        return Result.OK
+```
+
+The `pattern` class attribute will determine the pattern rules used to match against a generic data payload. For example, the pattern declared above will match this JSON object:
+
+```json
+{
+    "type": "user:notification:email",
+    "notification_type": "email",
+    "ts": 1592163068,
+    "user": {
+        "id": 987650,
+        "first_name": "John",
+        "email": "johndoe_86@example.com",
+        "template": "password_changed"
+    },
+    "meta": {
+        "generated_by": "user_service",
+        "ip_address": "177.182.215.204"
+    }
+}
+```
+
+The pattern must be a Python's dictionary object (`dict`). It will be used to perform partial matching against the data payload received from the SQS Message, which is called the _left-hand side_ (LHS) of the comparison. If the left-hand side data object has additional attributes than declared in the pattern's `dict` (the comparison's _right-hand side_, or RHS), these extra attributes will be ignored. However, if the _right-hand side_ pattern specifies more attributes than the _left-hand side_ payload has, they will not match.
+
+Thus, the following data payload will **not** match the pattern from the example above:
+
+```json
+{
+    "type": "user:notification:email",
+    "notification_type": "email"
+}
+```
 
 #### Subscribing to MEGA events
 
