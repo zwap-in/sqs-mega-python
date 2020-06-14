@@ -572,9 +572,32 @@ A subscriber must declare a `process` method, which is intended for consuming an
 |  `FATAL_ERROR` | A fatal error happened when processing the payload. The message will be deleted from the queue and not processed again, if no more subscribers match it. This is also the default status if any generic exception is raised that is not mapped as retriable. |
 |  `RETRIABLE_ERROR` | A transient or retriable error happened when processing the payload. The message will remain in the queue and reprocessed later. This is also the status that is assumed if a retriable exception is raised. See how to map exceptions as retriable below. |
 
+Here's an example:
+
+```python
+import mega.event
+from mega.aws.sqs.subscribe import EventSubscriber, ProcessStatus
+
+
+class ShoppingCartCheckoutSubscriber(EventSubscriber):
+    ...
+
+    def process(payload: mega.event.Payload) -> ProcessStatus:
+        lock_name = 'shopping_cart.checkout:' + str(payload.object.id)
+
+        try:
+            with DatabaseLock(lock_name):
+                ...
+
+                return ProcessStatus.DONE
+
+        except DatabaseLockAlreadyAcquired:
+            return ProcessStatus.RETRY_LATER
+```
+
 Please be aware that Amazon SQS will ocasionally deliver duplicate messages, even shortly after being processed. Also, if multiple subscribers match the same message, when one subscriber retries processing with `ProcessStatus.RETRY_LATER` or a retriable exception, the message will be redelivered to all matching subscribers again, even those that already processed the message successfully.
 
-**Design your subscribers to be idempotent.** Please read the → [best practices for processing asynchronous messages](https://github.com/mega-distributed/sqs-mega#best-practices-for-processing-asynchronous-messages).
+> ⚠️ **Design your subscribers to be idempotent**. Please read the → [best practices for processing asynchronous messages](https://github.com/mega-distributed/sqs-mega#best-practices-for-processing-asynchronous-messages).
 
 ### SQS listener
 
