@@ -113,7 +113,7 @@ def test_publish_raw_json_message(sqs):
 def test_publish_plaintext_payload(sqs):
     plaintext = 'hello world!'
     with vcr.use_cassette('publish_plaintext_payload') as cassette:
-        message_id = sqs.publish_payload(plaintext)
+        message_id = sqs.publish(plaintext)
 
     assert cassette.all_played
 
@@ -147,7 +147,7 @@ def test_publish_blob_payload(sqs):
     )
 
     with vcr.use_cassette('publish_blob_payload') as cassette:
-        message_id = sqs.publish_payload(blob)
+        message_id = sqs.publish(blob)
 
     assert cassette.all_played
 
@@ -161,7 +161,7 @@ def test_publish_data_payload_as_plaintext_json(sqs):
     data = build_generic_data()
 
     with vcr.use_cassette('publish_data_payload_as_plaintext_json') as cassette:
-        message_id = sqs.publish_payload(data)
+        message_id = sqs.publish(data)
 
     assert cassette.all_played
 
@@ -175,7 +175,7 @@ def test_publish_mega_payload_as_plaintext_json(sqs):
     mega_payload = build_mega_payload()
 
     with vcr.use_cassette('publish_mega_payload_as_plaintext_json') as cassette:
-        message_id = sqs.publish_payload(mega_payload)
+        message_id = sqs.publish(mega_payload)
 
     assert cassette.all_played
 
@@ -191,7 +191,7 @@ def test_publish_data_payload_as_binary_bson(sqs):
     data = build_generic_data()
 
     with vcr.use_cassette('publish_data_payload_as_binary_bson') as cassette:
-        message_id = sqs.publish_payload(data, binary_encoding=True)
+        message_id = sqs.publish(data, binary_encoding=True)
 
     assert cassette.all_played
 
@@ -208,7 +208,7 @@ def test_publish_mega_payload_as_binary_bson(sqs):
     mega_payload = build_mega_payload()
 
     with vcr.use_cassette('publish_mega_payload_as_binary_bson') as cassette:
-        message_id = sqs.publish_payload(mega_payload, binary_encoding=True)
+        message_id = sqs.publish(mega_payload, binary_encoding=True)
 
     assert cassette.all_played
 
@@ -226,7 +226,7 @@ def test_publish_overriding_default_topic_arn(sqs):
     data = build_generic_data()
 
     with vcr.use_cassette('publish_overriding_default_queue_url') as cassette:
-        message_id = sqs.publish_payload(data, queue_url=another_queue_url)
+        message_id = sqs.publish(data, queue_url=another_queue_url)
 
     assert cassette.all_played
     request_data = get_sqs_request_data(cassette)
@@ -238,7 +238,7 @@ def test_fail_if_no_queue_url_is_provided():
     sqs = SqsPublisher()
 
     with pytest.raises(ValueError) as e:
-        sqs.publish_payload('hello world!')
+        sqs.publish('hello world!')
 
     assert str(e.value) == 'Missing Queue URL'
 
@@ -246,7 +246,7 @@ def test_fail_if_no_queue_url_is_provided():
 def test_log_sent_messages(sqs, caplog):
     with caplog.at_level(logging.DEBUG, logger=logger.name):
         with vcr.use_cassette('publish_plaintext_payload'):
-            message_id = sqs.publish_payload('hello world!')
+            message_id = sqs.publish('hello world!')
 
     records = caplog.records
     assert len(records) == 2

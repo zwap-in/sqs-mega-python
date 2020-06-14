@@ -89,7 +89,7 @@ A message payload can be one of the following:
 
 Please read the SQS MEGA documentation about → [message payloads](https://github.com/mega-distributed/sqs-mega#message-payloads).
 
-Both `SqsPublisher` and `SnsPublisher` implement the `publish_payload` method, that will encode and publish any payload type to Amazon SQS and SNS, respectively.
+Both `SqsPublisher` and `SnsPublisher` implement the `publish` method, that will encode and publish any payload type to Amazon SQS and SNS, respectively.
 
 By default, MEGA events and data objects will be serialized to JSON objects and transmitted over plaintext. You can save network bandwidth and server resources by serializing the payloads to [BSON](http://bsonspec.org) (Binary JSON). Since SQS only supports plaintext media, BSON bytes will be transmitted encoded as Base64.
 
@@ -109,13 +109,13 @@ payload = {
     }
 }
 
-publisher.publish_payload(payload)
+publisher.publish(payload)
 ```
 
 It's also possible to use BSON to compress the payload, which will be transmitted using more byte-efficient binary encoding:
 
 ```python
-publisher.publish_payload(payload, binary_encoding=True)
+publisher.publish(payload, binary_encoding=True)
 ```
 
 #### Publishing a MEGA event payload
@@ -148,7 +148,7 @@ payload = (
     ).build()
 )
 
-publisher.publish_payload(payload)
+publisher.publish(payload)
 ```
 
 You can also create events with complex data and rich payloads:
@@ -243,7 +243,7 @@ builder.with_extra(
 )
 
 payload = builder.build()
-publisher.publish_payload(payload, binary_encoding=True)
+publisher.publish(payload, binary_encoding=True)
 ```
 
 #### Plaintext vs. binary encoding

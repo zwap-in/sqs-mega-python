@@ -30,7 +30,7 @@ class SnsPublisher(Publisher):
     def topic_arn(self):
         return self._topic_arn
 
-    def publish_payload(
+    def publish(
             self, payload: MessagePayload,
             binary_encoding=False, topic_arn: Optional[str] = None, **_kwargs
     ) -> str:

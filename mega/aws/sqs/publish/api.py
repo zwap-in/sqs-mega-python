@@ -8,7 +8,7 @@ from mega.aws.sqs.api import BaseSqsApi
 
 class SqsPublisher(BaseSqsApi, Publisher):
 
-    def publish_payload(
+    def publish(
             self, payload: MessagePayload,
             binary_encoding=False, queue_url: Optional[str] = None, **_kwargs
     ) -> str:

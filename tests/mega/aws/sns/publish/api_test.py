@@ -134,7 +134,7 @@ def test_publish_raw_json_message(sns):
 def test_publish_plaintext_payload(sns):
     plaintext = 'hello world!'
     with vcr.use_cassette('publish_plaintext_payload') as cassette:
-        message_id = sns.publish_payload(plaintext)
+        message_id = sns.publish(plaintext)
 
     assert cassette.all_played
 
@@ -168,7 +168,7 @@ def test_publish_blob_payload(sns):
     )
 
     with vcr.use_cassette('publish_blob_payload') as cassette:
-        message_id = sns.publish_payload(blob)
+        message_id = sns.publish(blob)
 
     assert cassette.all_played
 
@@ -182,7 +182,7 @@ def test_publish_data_payload_as_plaintext_json(sns):
     data = build_generic_data()
 
     with vcr.use_cassette('publish_data_payload_as_plaintext_json') as cassette:
-        message_id = sns.publish_payload(data)
+        message_id = sns.publish(data)
 
     assert cassette.all_played
 
@@ -196,7 +196,7 @@ def test_publish_mega_payload_as_plaintext_json(sns):
     mega_payload = build_mega_payload()
 
     with vcr.use_cassette('publish_mega_payload_as_plaintext_json') as cassette:
-        message_id = sns.publish_payload(mega_payload)
+        message_id = sns.publish(mega_payload)
 
     assert cassette.all_played
 
@@ -212,7 +212,7 @@ def test_publish_data_payload_as_binary_bson(sns):
     data = build_generic_data()
 
     with vcr.use_cassette('publish_data_payload_as_binary_bson') as cassette:
-        message_id = sns.publish_payload(data, binary_encoding=True)
+        message_id = sns.publish(data, binary_encoding=True)
 
     assert cassette.all_played
 
@@ -229,7 +229,7 @@ def test_publish_mega_payload_as_binary_bson(sns):
     mega_payload = build_mega_payload()
 
     with vcr.use_cassette('publish_mega_payload_as_binary_bson') as cassette:
-        message_id = sns.publish_payload(mega_payload, binary_encoding=True)
+        message_id = sns.publish(mega_payload, binary_encoding=True)
 
     assert cassette.all_played
 
@@ -247,7 +247,7 @@ def test_publish_overriding_default_topic_arn(sns):
     data = build_generic_data()
 
     with vcr.use_cassette('publish_overriding_default_topic_arn') as cassette:
-        message_id = sns.publish_payload(data, topic_arn=another_topic_arn)
+        message_id = sns.publish(data, topic_arn=another_topic_arn)
 
     assert cassette.all_played
     request_data = get_sns_request_data(cassette)
@@ -259,7 +259,7 @@ def test_fail_if_no_topic_arn_is_provided():
     sns = SnsPublisher()
 
     with pytest.raises(ValueError) as e:
-        sns.publish_payload('hello world!')
+        sns.publish('hello world!')
 
     assert str(e.value) == 'Missing Topic ARN'
 
@@ -267,7 +267,7 @@ def test_fail_if_no_topic_arn_is_provided():
 def test_log_published_messages(sns, caplog):
     with caplog.at_level(logging.DEBUG, logger=logger.name):
         with vcr.use_cassette('publish_plaintext_payload'):
-            message_id = sns.publish_payload('hello world!')
+            message_id = sns.publish('hello world!')
 
     records = caplog.records
     assert len(records) == 2

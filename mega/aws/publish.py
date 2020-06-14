@@ -6,7 +6,7 @@ from mega.aws.payload import MessagePayload
 class Publisher(ABC):
 
     @abstractmethod
-    def publish_payload(self, payload: MessagePayload, binary_encoding=False, **kwargs) -> str:
+    def publish(self, payload: MessagePayload, binary_encoding=False, **kwargs) -> str:
         pass
 
     @abstractmethod
