@@ -82,10 +82,10 @@ The `topic_arn` must point to a valid SNS topic ARN. Please ensure the IAM user 
 
 A message payload can be one of the following:
 
-- → [_MEGA event_](https://github.com/mega-distributed/event-mega)
-- _Data object_: `dict` and JSON objects
-- _Plaintext_: `str`
-- _Binary blob_: `bytes`
+- → [**MEGA event**](https://github.com/mega-distributed/event-mega) [`mega.event.Payload`]
+- **Data object** [`dict`]: JSON objects
+- **Plaintext** [`str`]: text that cannot be parsed as JSON (_not supported at the moment_)
+- **Binary blob** [`bytes`]: bytes that cannot be decoded as BSON (_not supported at the moment_)
 
 Please read the SQS MEGA documentation about → [message payloads](https://github.com/mega-distributed/sqs-mega#message-payloads).
 
