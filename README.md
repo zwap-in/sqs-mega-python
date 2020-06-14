@@ -407,6 +407,11 @@ A message subscriber is just a set of rules to match and process messages. The b
 If you have generic JSON payloads sent to your SQS queues, you can subscribe to them by subclassing the `mega.aws.sqs.subscribe.DataSubscriber`:
 
 ```python
+from mega.aws.sqs.subscribe import DataSubscriber, Result
+from mega.match.functions import match, one_of, gt, not_
+from datetime import date
+
+
 class UserNotificationSubscriber(DataSubscriber):
     pattern = dict(
         type=match(r'user:notification:(.*)'),
@@ -464,7 +469,7 @@ Just declare a subclass of `mega.aws.sqs.subscribe.EventSubscriber`, like in the
 Pattern matching rules are declared through class attributes. Here is another example:
 
 ```python
-from mega.aws.sqs.subscribe import EventSubscriber
+from mega.aws.sqs.subscribe import EventSubscriber, Result
 from mega.match.functions import match, any_, not_, empty, gt, gte, one_of
 from mega.event import Payload
 from datetime import date
