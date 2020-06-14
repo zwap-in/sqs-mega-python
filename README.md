@@ -455,6 +455,8 @@ Thus, the following data payload will **not** match the pattern from the example
 }
 ```
 
+> ⚠️ **WARNING**: the `pattern` class attribute is optional. In this case, the subscriber will match and process all data object payloads that are sent to a SQS queue. This can be useful in some scenarios, for example if you want to implement your custom pattern-match logic or forward messages to another system. But its inadvertent usage can have unintended consequences.
+
 #### Subscribing to MEGA events
 
 Just declare a subclass of `mega.aws.sqs.subscribe.EventSubscriber`, like in the `ShoppingCartItemAdded` example above.
