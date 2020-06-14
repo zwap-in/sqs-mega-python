@@ -413,7 +413,7 @@ from mega.match.functions import match, one_of, gt, not_
 from datetime import date
 
 
-class UserNotificationSubscriber(DataSubscriber):
+class UserNotification(DataSubscriber):
     pattern = dict(
         type=match(r'user:notification:(.*)'),
         notification_type=one_of('email', 'sms', 'push'),
@@ -582,7 +582,7 @@ import mega.event
 from mega.aws.sqs.subscribe import EventSubscriber, ProcessStatus
 
 
-class ShoppingCartCheckoutSubscriber(EventSubscriber):
+class ShoppingCartCheckout(EventSubscriber):
     ...
 
     def process(payload: mega.event.Payload) -> ProcessStatus:
