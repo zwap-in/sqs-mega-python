@@ -410,6 +410,7 @@ If you have generic JSON payloads sent to your SQS queues, you can subscribe to 
 ```python
 from mega.aws.sqs.subscribe import DataSubscriber, ProcessStatus
 from mega.match.functions import match, one_of, gt, not_
+
 from datetime import date
 
 
@@ -474,6 +475,7 @@ Pattern matching rules are declared through class attributes. Here is another ex
 import mega.event
 from mega.aws.sqs.subscribe import EventSubscriber, ProcessStatus
 from mega.match.functions import match, any_, not_, empty, gt, gte, one_of
+
 from datetime import date
 
 
