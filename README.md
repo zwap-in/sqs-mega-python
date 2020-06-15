@@ -431,6 +431,7 @@ class UserNotification(DataSubscriber):
 
         return ProcessStatus.DONE
 ```
+> ℹ️ Read more on the available pattern-match functions below.
 
 The `pattern` class attribute will determine the pattern rules used to match against a generic data payload. For example, the pattern declared above will match this JSON object:
 
@@ -503,6 +504,7 @@ class UserLogin(EventSubscriber):
 
         return ProcessStatus.DONE
 ```
+> ℹ️ Read more on the available pattern-match functions below.
 
 This will match the following MEGA event payload:
 
@@ -603,6 +605,90 @@ class ShoppingCartCheckout(EventSubscriber):
 Please be aware that Amazon SQS will ocasionally deliver duplicate messages, even shortly after being processed. Also, if multiple subscribers match the same message, when one subscriber retries processing with `ProcessStatus.RETRY_LATER` or a retriable exception, the message will be redelivered to all matching subscribers again, even those that already processed the message successfully.
 
 > ⚠️ **Design your subscribers to be idempotent**. Please read the → [best practices for processing asynchronous messages](https://github.com/mega-distributed/sqs-mega#best-practices-for-processing-asynchronous-messages).
+
+### Pattern-match
+
+Pattern matching works by applying a comparison function between the payload received from the SQS message, and the pattern declared in the subscriber. The payload is the _left-hand side_ (LHS) of the equation, and the pattern is the _right hand side_ (RHS). If the comparison evaluates to true, then there is a match and the message will be further processed.
+
+<p align="center">
+    <img alt="Pattern-match" src="./resources/diagrams/pattern-match.png">
+</p>
+
+The pattern-match rules are applied partially from the right to the left. If the _left-hand side_ payload has additional elements than the ones declared in the pattern, these extra attributes will be ignored. However, if the _right-hand side_ pattern requires more elements than the _left-hand side_ payload contains, they will not match.
+
+The pattern functions can be simple comparisons, like equality (_default_), greater-than (`gt`), less-than (`lt`) or a regular-expression (`match`). These functions can be combined with other functions, such as negation (`not_`), conjunction (`and_`) or disjunction (`or_`).
+
+Functions are combined in a postfix way, resembling the [_Reverse Polish Notation_](https://en.wikipedia.org/wiki/Reverse_Polish_notation) (RPN). For example, this pattern:
+
+```python
+'quantity': and_(gt(5), not_(gt(10))),
+```
+
+will only match a LHS value that is greater than 5 and not greater than 10. The LHS value 7 will match, whereas 2 and 13 will not.
+
+It is also possible to pass lambdas or functions, allowing for rich comparisons:
+
+```python
+subject = and_(
+    match(r'\d+'),
+    lambda lhs: User.exists(lhs),
+    not_(has_been_blocked)
+)
+```
+
+#### Values
+
+##### String [[`mega.match.values.String`](./mega/match/values/string.py)]
+
+Native type: `str`
+
+##### Number [[`mega.match.values.Number`](./mega/match/values/number.py)]
+
+Native types: `int`, `float` or `decimal.Decimal`
+
+##### Date-time [[`mega.match.values.DateTime`](./mega/match/values/datetime.py)]
+
+Native types: `datetime.date` or `datetime.datetime`
+
+##### Boolean [[`mega.match.values.Boolean`](./mega/match/values/boolean.py)]
+
+Native type: `bool`
+
+##### Collection [[`mega.match.values.Collection`](./mega/match/values/collection.py)]
+
+Native types: `list`, `tuple`, `set`
+
+##### Mapping [[`mega.match.values.Mapping`](./mega/match/values/mapping.py)]
+
+Native type: `dict`
+
+##### Function [[`mega.match.values.Function`](./mega/match/values/function.py)]
+
+Native type: `lambda`, a function that receives a LHS argument and returns `bool`
+
+#### Functions
+
+##### Equal [[`mega.match.functions.eq`](./mega/match/functions.py)]
+
+##### Match [[`mega.match.functions.match`](./mega/match/functions.py)]
+
+##### Greater-than [[`mega.match.functions.gt`](./mega/match/functions.py)]
+
+##### Greater-than-or-equal [[`mega.match.functions.gte`](./mega/match/functions.py)]
+
+##### Less-than [[`mega.match.functions.lt`](./mega/match/functions.py)]
+
+##### Less-than-or-equal [[`mega.match.functions.lte`](./mega/match/functions.py)]
+
+##### In [[`mega.match.functions.in_`](./mega/match/functions.py)]
+
+##### One-of [[`mega.match.functions.one_of`](./mega/match/functions.py)]
+
+##### Not [[`mega.match.functions.not_`](./mega/match/functions.py)]
+
+##### And [[`mega.match.functions.and_`](./mega/match/functions.py)]
+
+##### Or [[`mega.match.functions.or_`](./mega/match/functions.py)]
 
 ### SQS listener
 
