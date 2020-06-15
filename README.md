@@ -547,7 +547,7 @@ This will match the following MEGA event payload:
 
 Here is a list of all supported pattern-matching class attributes that can be declared in `mega.aws.sqs.subscribe.EventSubscriber`.
 
-|  `EventSuscriber` Class Attribute | Alias             | Value Type            | MEGA payload path  |
+|  `EventSuscriber` class attribute | Alias             | Value type            | MEGA payload path  |
 | --------------------------------- | ----------------- | --------------------- | ------------------ |
 | `event_name`                      | `name`            | String                | `event.name`       |
 | `event_domain`                    | `domain`          | String                | `event.domain`     |
@@ -713,7 +713,7 @@ listener = SqsListener(
 
 The following attributes correspond to the attributes passed to the Amazon SQS [`ReceiveMessage`](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ReceiveMessage.html) API:
 
-|  Attribute               | SQS Attribute         | Description | Default |
+|  Attribute               | SQS attribute         | Description | Default |
 | ------------------------ | --------------------- | ----------- | ------- |
 | `queue_url`              | `QueueUrl`            | The URL of the Amazon SQS queue from which messages are received. Please ensure the IAM user has both _read_ and _delete_ permissions to that queue. | - |
 | `max_number_of_messages` | `MaxNumberOfMessages` | The maximum number of messages to return. Amazon SQS never returns more messages than this value (however, fewer messages might be returned). It can range from 1 to 10. | 1 |
