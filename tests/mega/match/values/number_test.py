@@ -5,7 +5,7 @@ import pytest
 from parameterized import parameterized
 
 from mega.match.values.number import Number
-from mega.match.values.value import LeftHandSideTypeError, RightHandSideTypeError
+from mega.match.values.base import RightHandSideTypeError, LeftHandSideTypeError
 
 
 @parameterized.expand([

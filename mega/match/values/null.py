@@ -1,4 +1,4 @@
-from mega.match.values.value import RightHandSideValue
+from mega.match.values.base import RightHandSideValue
 
 
 class Null(RightHandSideValue):

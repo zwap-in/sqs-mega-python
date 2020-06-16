@@ -5,8 +5,8 @@ from typing import Optional
 import dateutil.parser
 from dateutil.tz import tzutc
 
-from mega.match.values.types import is_datetime, is_string, DateTimeType, Value
-from mega.match.values.value import ComparableValue
+from mega.match.values.base import ComparableValue
+from mega.match.values.type import is_datetime, is_string, DateTimeType, Value
 
 
 def _match_iso_date(string: str) -> re.Match:

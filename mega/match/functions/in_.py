@@ -1,5 +1,5 @@
 from mega.match.functions.base import CollectionFunction
-from mega.match.values.types import Value
+from mega.match.values.type import Value
 
 
 class In(CollectionFunction):

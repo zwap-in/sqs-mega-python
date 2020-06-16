@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Union
 
+from mega.match.values.base import RightHandSideValue, ComparableValue
 from mega.match.values.build import value, comparable_value, collection_value
 from mega.match.values.collection import Collection
-from mega.match.values.types import Value, CollectionType
-from mega.match.values.value import RightHandSideValue, ComparableValue
+from mega.match.values.type import Value, CollectionType
 
 
 class RightHandSideFunction(ABC):

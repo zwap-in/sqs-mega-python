@@ -1,5 +1,5 @@
 from mega.match.functions.base import ComparisonFunction
-from mega.match.values.types import Value
+from mega.match.values.type import Value
 
 
 class GreaterThan(ComparisonFunction):

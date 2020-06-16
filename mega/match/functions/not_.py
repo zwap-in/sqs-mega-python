@@ -2,8 +2,8 @@ from typing import Union
 
 from mega.match.functions.base import RightHandSideFunction, HigherOrderFunction
 from mega.match.functions.identity import identity
-from mega.match.values.types import Value
-from mega.match.values.value import RightHandSideValue
+from mega.match.values.type import Value
+from mega.match.values.base import RightHandSideValue
 
 
 class Not(HigherOrderFunction):
