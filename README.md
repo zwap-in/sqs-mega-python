@@ -668,27 +668,27 @@ Native type: `lambda`, a function that receives a LHS argument and returns `bool
 
 #### Functions
 
-##### Equal [[`mega.match.functions.eq`](./mega/match/functions.py)]
+##### Equal [[`mega.match.functions.eq`](./mega/match/functions/eq.py)]
 
-##### Match [[`mega.match.functions.match`](./mega/match/functions.py)]
+##### Match [[`mega.match.functions.match`](./mega/match/functions/match.py)]
 
-##### Greater-than [[`mega.match.functions.gt`](./mega/match/functions.py)]
+##### Greater-than [[`mega.match.functions.gt`](./mega/match/functions/gt.py)]
 
-##### Greater-than-or-equal [[`mega.match.functions.gte`](./mega/match/functions.py)]
+##### Greater-than-or-equal [[`mega.match.functions.gte`](./mega/match/functions/gte.py)]
 
-##### Less-than [[`mega.match.functions.lt`](./mega/match/functions.py)]
+##### Less-than [[`mega.match.functions.lt`](./mega/match/functions/lt.py)]
 
-##### Less-than-or-equal [[`mega.match.functions.lte`](./mega/match/functions.py)]
+##### Less-than-or-equal [[`mega.match.functions.lte`](./mega/match/functions/lte.py)]
 
-##### In [[`mega.match.functions.in_`](./mega/match/functions.py)]
+##### In [[`mega.match.functions.in_`](./mega/match/functions/in_.py)]
 
-##### One-of [[`mega.match.functions.one_of`](./mega/match/functions.py)]
+##### One-of [[`mega.match.functions.one_of`](./mega/match/functions/in_.py)]
 
-##### Not [[`mega.match.functions.not_`](./mega/match/functions.py)]
+##### Not [[`mega.match.functions.not_`](./mega/match/functions/not_.py)]
 
-##### And [[`mega.match.functions.and_`](./mega/match/functions.py)]
+##### And [[`mega.match.functions.and_`](./mega/match/functions/and_.py)]
 
-##### Or [[`mega.match.functions.or_`](./mega/match/functions.py)]
+##### Or [[`mega.match.functions.or_`](./mega/match/functions/or_.py)]
 
 ### SQS listener
 
