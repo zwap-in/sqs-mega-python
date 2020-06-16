@@ -1,6 +1,7 @@
 from typing import Union
 
-from mega.match.functions import RightHandSideFunction, Equal
+from mega.match.functions.base import RightHandSideFunction
+from mega.match.functions.eq import Equal
 from mega.match.values.base import RightHandSideValue
 from mega.match.values.type import Value
 
