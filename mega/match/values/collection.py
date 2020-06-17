@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from mega.match.values.base import RightHandSideValue, LeftHandSideTypeError, HigherOrderValue
 from mega.match.values.types import is_collection, is_scalar, ValueType
 
@@ -50,30 +52,27 @@ class Collection(HigherOrderValue):
         return False
 
     def _compare_collections(self, lhs, rhs, match_all_lhs_items):
-        lhs_matches = {
-            lhs_item: False
-            for lhs_item in lhs
-        }
+        lhs_matches = defaultdict(lambda: set())
 
         for rhs_item in rhs:
-            match = False
+            rhs_match = False
 
             for lhs_item in lhs:
-                if lhs_matches[lhs_item]:
-                    match = True
+                if rhs_item in lhs_matches[lhs_item]:
+                    rhs_match = True
                     break
 
                 if self._evaluate(lhs_item, rhs_item):
-                    lhs_matches[lhs_item] = True
-                    match = True
+                    lhs_matches[lhs_item].add(rhs_item)
+                    rhs_match = True
                     break
 
-            if not match:
+            if not rhs_match:
                 return False
 
         if match_all_lhs_items:
-            for match in lhs_matches.values():
-                if match is False:
+            for lhs_item in lhs:
+                if not lhs_matches[lhs_item]:
                     return False
 
         return True
