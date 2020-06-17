@@ -124,8 +124,12 @@ class ComparableValue(RightHandSideValue, ABC):
 
 class HigherOrderValue(RightHandSideValue, ABC):
     def _evaluate(self, lhs, rhs):
-        # Because of a cyclic dependency that proved impossible to solve, we must use meta-programming here
-        eval('from mega.match.evaluation import evaluate; evaluate(lhs, rhs)')
+        #
+        # PLEASE NOTE: because of a cyclic dependency between mega.match.value and mega.match.function modules, we
+        # must use meta-programming here. The alternative would be squashing everything in the same file!
+        #
+        exec('from mega.match.evaluation import evaluate; result = evaluate(lhs, rhs)')
+        return locals()['result']
 
 
 class RightHandSideTypeError(Exception):
