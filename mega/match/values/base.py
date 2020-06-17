@@ -122,6 +122,12 @@ class ComparableValue(RightHandSideValue, ABC):
         return not self._less_than(lhs)
 
 
+class HigherOrderValue(RightHandSideValue, ABC):
+    def _evaluate(self, lhs, rhs):
+        # Because of a cyclic dependency that proved impossible to solve, we must use meta-programming here
+        eval('from mega.match.evaluation import evaluate; evaluate(lhs, rhs)')
+
+
 class RightHandSideTypeError(Exception):
     def __init__(self, value_type: Type[RightHandSideValue], rhs: Value, context=None):
         message = '[{0}] Invalid right-hand side <{1}> ({2}).'.format(

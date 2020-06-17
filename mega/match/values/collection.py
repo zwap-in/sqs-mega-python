@@ -1,9 +1,8 @@
-from mega.match.evaluation import evaluate
+from mega.match.values.base import RightHandSideValue, LeftHandSideTypeError, HigherOrderValue
 from mega.match.values.type import is_collection, is_scalar, Value
-from mega.match.values.base import RightHandSideValue, LeftHandSideTypeError
 
 
-class Collection(RightHandSideValue):
+class Collection(HigherOrderValue):
     class FunctionType(RightHandSideValue.FunctionType):
         CONTAINS = 'contains'
 
@@ -43,15 +42,14 @@ class Collection(RightHandSideValue):
     def _contains(self, lhs: Value) -> bool:
         for rhs_item in self.rhs:
             try:
-                if evaluate(rhs_item, lhs):
+                if self._evaluate(rhs_item, lhs):
                     return True
             except LeftHandSideTypeError:
                 pass
 
         return False
 
-    @staticmethod
-    def _compare_collections(lhs, rhs, match_all_lhs_items):
+    def _compare_collections(self, lhs, rhs, match_all_lhs_items):
         lhs_matches = {
             lhs_item: False
             for lhs_item in lhs
@@ -65,7 +63,7 @@ class Collection(RightHandSideValue):
                     match = True
                     break
 
-                if evaluate(lhs_item, rhs_item):
+                if self._evaluate(lhs_item, rhs_item):
                     lhs_matches[lhs_item] = True
                     match = True
                     break

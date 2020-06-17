@@ -1,9 +1,8 @@
-from mega.match.evaluation import evaluate
-from mega.match.values.base import RightHandSideValue
+from mega.match.values.base import HigherOrderValue
 from mega.match.values.type import is_mapping, MappingType
 
 
-class Mapping(RightHandSideValue):
+class Mapping(HigherOrderValue):
 
     @classmethod
     def accepts_rhs(cls, rhs):
@@ -24,7 +23,7 @@ class Mapping(RightHandSideValue):
 
         for key in self.rhs:
             if key in lhs:
-                if not evaluate(lhs[key], self.rhs[key]):
+                if not self._evaluate(lhs[key], self.rhs[key]):
                     return False
 
         return True

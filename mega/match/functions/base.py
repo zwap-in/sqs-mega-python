@@ -1,3 +1,4 @@
+import typing
 from abc import ABC, abstractmethod
 from typing import Union
 
@@ -31,7 +32,7 @@ class CollectionFunction(ValueFunction, ABC):
 
 
 class CombinedFunction(RightHandSideFunction, ABC):
-    def __init__(self, *rhs: CollectionType[RightHandSideFunction]):
+    def __init__(self, rhs: typing.Collection[RightHandSideFunction]):
         if len(rhs) < 2:
             raise ValueError
 
