@@ -9,27 +9,27 @@ NumberType = Union[int, float, Decimal]
 DateTimeType = Union[date, datetime]
 CollectionType = Union[list, tuple, set]
 MappingType = Dict
-Scalar = Union[NullType, StringType, NumberType, BooleanType, DateTimeType]
-Value = Union[Scalar, CollectionType, MappingType]
+ScalarType = Union[NullType, StringType, NumberType, BooleanType, DateTimeType]
+ValueType = Union[ScalarType, CollectionType, MappingType]
 
 
-def is_string(value: Value) -> bool:
+def is_string(value: ValueType) -> bool:
     return isinstance(value, str)
 
 
-def is_number(value: Value) -> bool:
+def is_number(value: ValueType) -> bool:
     return type(value) in (int, float, Decimal)
 
 
-def is_boolean(value: Value) -> bool:
+def is_boolean(value: ValueType) -> bool:
     return type(value) is bool
 
 
-def is_datetime(value: Value) -> bool:
+def is_datetime(value: ValueType) -> bool:
     return type(value) in (date, datetime)
 
 
-def is_scalar(value: Value) -> bool:
+def is_scalar(value: ValueType) -> bool:
     return value is None or \
            is_string(value) or \
            is_number(value) or \
@@ -37,11 +37,11 @@ def is_scalar(value: Value) -> bool:
            is_datetime(value)
 
 
-def is_collection(value: Value) -> bool:
+def is_collection(value: ValueType) -> bool:
     return isinstance(value, list) or \
            isinstance(value, tuple) or \
            isinstance(value, set)
 
 
-def is_mapping(value: Value) -> bool:
+def is_mapping(value: ValueType) -> bool:
     return isinstance(value, dict)

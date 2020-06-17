@@ -1,9 +1,9 @@
 from mega.match.functions.base import CombinedFunction
-from mega.match.values.type import Value
+from mega.match.values.types import ValueType
 
 
 class Or(CombinedFunction):
-    def evaluate(self, lhs: Value) -> bool:
+    def evaluate(self, lhs: ValueType) -> bool:
         return any(
             i.evaluate(lhs)
             for i in self.rhs

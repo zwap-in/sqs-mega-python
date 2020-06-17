@@ -1,7 +1,7 @@
 import re
 
 from mega.match.values.base import RightHandSideValue
-from mega.match.values.type import StringType, is_string
+from mega.match.values.types import StringType, is_string
 
 
 class String(RightHandSideValue):

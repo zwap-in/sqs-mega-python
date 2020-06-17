@@ -1,5 +1,5 @@
 from mega.match.values.base import HigherOrderValue
-from mega.match.values.type import is_mapping, MappingType
+from mega.match.values.types import is_mapping, MappingType
 
 
 class Mapping(HigherOrderValue):

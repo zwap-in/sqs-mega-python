@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Set, Type, Any, Optional
 
-from mega.match.values.type import Value, is_scalar
+from mega.match.values.types import ValueType, is_scalar
 
 
 class RightHandSideValue(ABC):
@@ -11,11 +11,11 @@ class RightHandSideValue(ABC):
 
     @classmethod
     @abstractmethod
-    def accepts_rhs(cls, rhs: Value) -> bool:
+    def accepts_rhs(cls, rhs: ValueType) -> bool:
         pass
 
     @classmethod
-    def _matches_type(cls, value: Value, types: Set[Type[Any]]) -> bool:
+    def _matches_type(cls, value: ValueType, types: Set[Type[Any]]) -> bool:
         if not types:
             return False
 
@@ -24,31 +24,31 @@ class RightHandSideValue(ABC):
             for t in types
         )
 
-    def __init__(self, rhs: Value):
+    def __init__(self, rhs: ValueType):
         self._rhs = self._filter_rhs(rhs)
 
     @property
-    def rhs(self) -> Value:
+    def rhs(self) -> ValueType:
         return self._rhs
 
-    def _accepts_lhs(self, lhs: Value, function_type: str) -> bool:
+    def _accepts_lhs(self, lhs: ValueType, function_type: str) -> bool:
         if lhs is None:
             return True
         return self.accepts_rhs(lhs)
 
     @abstractmethod
-    def _needs_casting(self, value: Value, function_type: Optional[str] = None) -> bool:
+    def _needs_casting(self, value: ValueType, function_type: Optional[str] = None) -> bool:
         pass
 
     @abstractmethod
     def _cast(
-            self, value: Value,
-            reference_value: Optional[Value] = None,
+            self, value: ValueType,
+            reference_value: Optional[ValueType] = None,
             function_type: Optional[str] = None
-    ) -> Value:
+    ) -> ValueType:
         pass
 
-    def _filter_rhs(self, rhs: Value) -> Value:
+    def _filter_rhs(self, rhs: ValueType) -> ValueType:
         if not self.accepts_rhs(rhs):
             raise RightHandSideTypeError(type(self), rhs)
 
@@ -60,7 +60,7 @@ class RightHandSideValue(ABC):
 
         return rhs
 
-    def _filter_lhs(self, lhs: Value, function_type: str) -> Value:
+    def _filter_lhs(self, lhs: ValueType, function_type: str) -> ValueType:
         if not self._accepts_lhs(lhs, function_type):
             raise LeftHandSideTypeError(self, function_type, lhs)
 
@@ -72,20 +72,20 @@ class RightHandSideValue(ABC):
 
         return lhs
 
-    def equal(self, lhs: Value) -> bool:
+    def equal(self, lhs: ValueType) -> bool:
         lhs = self._filter_lhs(lhs, self.FunctionType.EQUAL)
         return self._equal(lhs)
 
     @abstractmethod
-    def _equal(self, lhs: Value) -> bool:
+    def _equal(self, lhs: ValueType) -> bool:
         pass
 
-    def match(self, lhs: Value) -> bool:
+    def match(self, lhs: ValueType) -> bool:
         lhs = self._filter_lhs(lhs, self.FunctionType.MATCH)
         return self._match(lhs)
 
     @abstractmethod
-    def _match(self, lhs: Value) -> bool:
+    def _match(self, lhs: ValueType) -> bool:
         pass
 
 
@@ -101,23 +101,23 @@ class ComparableValue(RightHandSideValue, ABC):
             return function_type in (self.FunctionType.EQUAL, self.FunctionType.MATCH)
         return self.accepts_rhs(lhs)
 
-    def less_than(self, lhs: Value) -> bool:
+    def less_than(self, lhs: ValueType) -> bool:
         lhs = self._filter_lhs(lhs, self.FunctionType.LESS_THAN)
         return self._less_than(lhs)
 
     @abstractmethod
-    def _less_than(self, lhs: Value) -> bool:
+    def _less_than(self, lhs: ValueType) -> bool:
         pass
 
-    def less_than_or_equal(self, lhs: Value) -> bool:
+    def less_than_or_equal(self, lhs: ValueType) -> bool:
         lhs = self._filter_lhs(lhs, self.FunctionType.LESS_THAN_OR_EQUAL)
         return self._less_than(lhs) or self._equal(lhs)
 
-    def greater_than(self, lhs: Value) -> bool:
+    def greater_than(self, lhs: ValueType) -> bool:
         lhs = self._filter_lhs(lhs, self.FunctionType.GREATER_THAN)
         return not (self._less_than(lhs) or self._equal(lhs))
 
-    def greater_than_or_equal(self, lhs: Value) -> bool:
+    def greater_than_or_equal(self, lhs: ValueType) -> bool:
         lhs = self._filter_lhs(lhs, self.FunctionType.GREATER_THAN_OR_EQUAL)
         return not self._less_than(lhs)
 
@@ -133,7 +133,7 @@ class HigherOrderValue(RightHandSideValue, ABC):
 
 
 class RightHandSideTypeError(Exception):
-    def __init__(self, value_type: Type[RightHandSideValue], rhs: Value, context=None):
+    def __init__(self, value_type: Type[RightHandSideValue], rhs: ValueType, context=None):
         message = '[{0}] Invalid right-hand side <{1}> ({2}).'.format(
             value_type.__name__,
             type(rhs).__name__,
@@ -148,7 +148,7 @@ class RightHandSideTypeError(Exception):
 
 
 class LeftHandSideTypeError(Exception):
-    def __init__(self, value: RightHandSideValue, function_type: str, lhs: Value, context=None):
+    def __init__(self, value: RightHandSideValue, function_type: str, lhs: ValueType, context=None):
         rhs = value.rhs
         message = (
             '[{0}.{1}] Could not apply left-hand side <{2}> ({3}) to right-hand side <{4}> ({5}).'.format(

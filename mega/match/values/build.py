@@ -7,11 +7,11 @@ from mega.match.values.datetime import DateTime
 from mega.match.values.number import Number
 from mega.match.values.string import String
 from mega.match.values.null import Null
-from mega.match.values.type import Value
+from mega.match.values.types import ValueType
 from mega.match.values.base import RightHandSideValue, ComparableValue
 
 
-def value(rhs: Union[Value, RightHandSideValue]) -> RightHandSideValue:
+def value(rhs: Union[ValueType, RightHandSideValue]) -> RightHandSideValue:
     if isinstance(rhs, RightHandSideValue):
         return rhs
 

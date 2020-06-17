@@ -1,9 +1,9 @@
 from mega.match.functions.base import ValueFunction
-from mega.match.values.type import Value
+from mega.match.values.types import ValueType
 
 
 class Match(ValueFunction):
-    def evaluate(self, lhs: Value) -> bool:
+    def evaluate(self, lhs: ValueType) -> bool:
         return self.rhs.match(lhs)
 
 

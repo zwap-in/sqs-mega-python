@@ -6,7 +6,7 @@ import dateutil.parser
 from dateutil.tz import tzutc
 
 from mega.match.values.base import ComparableValue
-from mega.match.values.type import is_datetime, is_string, DateTimeType, Value
+from mega.match.values.types import is_datetime, is_string, DateTimeType, ValueType
 
 
 def _match_iso_date(string: str) -> re.Match:
@@ -63,12 +63,12 @@ class DateTime(ComparableValue):
 
         return lhs < rhs
 
-    def __normalize_rhs(self, rhs: Value) -> Value:
+    def __normalize_rhs(self, rhs: ValueType) -> ValueType:
         if is_string(rhs):
             return _parse_iso_date(rhs) or rhs
         return self.__normalize_value(rhs)
 
-    def __normalize_value(self, value: Value) -> Value:
+    def __normalize_value(self, value: ValueType) -> ValueType:
         if type(value) is datetime:
             return self.__normalize_native_datetime(value)
         return value
@@ -79,7 +79,8 @@ class DateTime(ComparableValue):
             return dt.replace(tzinfo=tzutc(), microsecond=0)
         return dt.replace(microsecond=0)
 
-    def __default_datetime_attributes(self, value_to_cast: Value, reference_value: DateTimeType) -> Optional[datetime]:
+    def __default_datetime_attributes(
+            self, value_to_cast: ValueType, reference_value: DateTimeType) -> Optional[datetime]:
         if type(reference_value) is not datetime:
             return None
 

@@ -1,5 +1,5 @@
 from mega.match.values.base import RightHandSideValue, LeftHandSideTypeError, HigherOrderValue
-from mega.match.values.type import is_collection, is_scalar, Value
+from mega.match.values.types import is_collection, is_scalar, ValueType
 
 
 class Collection(HigherOrderValue):
@@ -23,23 +23,23 @@ class Collection(HigherOrderValue):
     def _cast(self, value, function_type=None, reference_value=None):
         pass
 
-    def _equal(self, lhs: Value) -> bool:
+    def _equal(self, lhs: ValueType) -> bool:
         if lhs is None:
             return not self.rhs
 
         return self._compare_collections(lhs, self.rhs, match_all_lhs_items=True)
 
-    def _match(self, lhs: Value) -> bool:
+    def _match(self, lhs: ValueType) -> bool:
         if is_scalar(lhs):
             return self._contains(lhs)
 
         return self._compare_collections(lhs, self.rhs, match_all_lhs_items=False)
 
-    def contains(self, lhs: Value) -> bool:
+    def contains(self, lhs: ValueType) -> bool:
         lhs = self._filter_lhs(lhs, self.FunctionType.CONTAINS)
         return self._contains(lhs)
 
-    def _contains(self, lhs: Value) -> bool:
+    def _contains(self, lhs: ValueType) -> bool:
         for rhs_item in self.rhs:
             try:
                 if self._evaluate(rhs_item, lhs):

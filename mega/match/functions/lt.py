@@ -1,9 +1,9 @@
 from mega.match.functions.base import ComparisonFunction
-from mega.match.values.type import Value
+from mega.match.values.types import ValueType
 
 
 class LessThan(ComparisonFunction):
-    def evaluate(self, lhs: Value) -> bool:
+    def evaluate(self, lhs: ValueType) -> bool:
         return self.rhs.less_than(lhs)
 
 
