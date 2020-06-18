@@ -70,16 +70,11 @@ class Collection(HigherOrderValue):
                     rhs_match = True
                     break
 
-                try:
-                    if self._evaluate(lhs_item, rhs_item):
-                        lhs_matches[lhs_item].add(rhs_item)
-                        rhs_match = True
-                        break
-                except LeftHandSideTypeError as e:
-                    raise LeftHandSideTypeError(
-                        self, function_type, lhs,
-                        context='Collections have incompatible types. {}'.format(e)
-                    ) from e
+                match = self.__evaluate_comparison_items(lhs_item, rhs_item, function_type, lhs)
+                if match:
+                    lhs_matches[lhs_item].add(rhs_item)
+                    rhs_match = True
+                    break
 
             if not rhs_match:
                 return False
@@ -90,3 +85,12 @@ class Collection(HigherOrderValue):
                     return False
 
         return True
+
+    def __evaluate_comparison_items(self, lhs_item, rhs_item, function_type, lhs):
+        try:
+            return self._evaluate(lhs_item, rhs_item)
+        except LeftHandSideTypeError as e:
+            raise LeftHandSideTypeError(
+                self, function_type, lhs,
+                context='Collections have incompatible types. {}'.format(e)
+            ) from e
