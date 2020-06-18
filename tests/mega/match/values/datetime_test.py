@@ -23,6 +23,7 @@ def test_datetime_rhs_is_not_equal_nor_match_none_lhs(rhs):
 
 
 @parameterized.expand([
+    [None],
     [''],
     ['2020-05-15#!'],
     [True],
