@@ -1,7 +1,7 @@
-from mega.match.values.base import RightHandSideValue
+from mega.match.values.value import Value
 
 
-class Null(RightHandSideValue):
+class Null(Value):
     def __init__(self):
         super().__init__(None)
 

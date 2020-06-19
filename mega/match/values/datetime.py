@@ -1,12 +1,12 @@
 import re
 from datetime import date, datetime
-from typing import Optional
+from typing import Optional, Union
 
 import dateutil.parser
 from dateutil.tz import tzutc
 
-from mega.match.values.base import ComparableValue
-from mega.match.values.types import is_datetime, is_string, DateTimeType, ValueType
+from mega.match.types import is_datetime, is_string, DateTimeType, ValueType
+from mega.match.values.value import ComparableValue
 
 
 def _match_iso_date(string: str) -> re.Match:
@@ -26,7 +26,7 @@ def _parse_iso_date(string: str) -> Optional[date]:
 
 class DateTime(ComparableValue):
 
-    def __init__(self, rhs):
+    def __init__(self, rhs: Union[DateTimeType, str]):
         super().__init__(self.__normalize_rhs(rhs))
 
     @classmethod

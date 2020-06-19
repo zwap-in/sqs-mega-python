@@ -1,13 +1,21 @@
 from abc import ABC, abstractmethod
 from typing import Set, Type, Any, Optional
 
-from mega.match.values.types import ValueType, is_scalar
+from mega.match.types import ValueType, is_scalar, RightHandSideValue, ComparableRightHandSideValue, \
+    RightHandSideType, ComparableType
 
 
-class RightHandSideValue(ABC):
+class Value(RightHandSideValue, ABC):
     class FunctionType:
         EQUAL = 'equal'
         MATCH = 'match'
+
+    def __init__(self, rhs: ValueType):
+        self._rhs = self._filter_rhs(rhs)
+
+    @property
+    def rhs(self) -> ValueType:
+        return self._rhs
 
     @classmethod
     @abstractmethod
@@ -23,13 +31,6 @@ class RightHandSideValue(ABC):
             isinstance(value, t)
             for t in types
         )
-
-    def __init__(self, rhs: ValueType):
-        self._rhs = self._filter_rhs(rhs)
-
-    @property
-    def rhs(self) -> ValueType:
-        return self._rhs
 
     def _accepts_lhs(self, lhs: ValueType, function_type: str) -> bool:
         if lhs is None:
@@ -89,12 +90,15 @@ class RightHandSideValue(ABC):
         pass
 
 
-class ComparableValue(RightHandSideValue, ABC):
-    class FunctionType(RightHandSideValue.FunctionType):
+class ComparableValue(Value, ComparableRightHandSideValue, ABC):
+    class FunctionType(Value.FunctionType):
         LESS_THAN = 'less_than'
         LESS_THAN_OR_EQUAL = 'less_than_or_equal'
         GREATER_THAN = 'greater_than'
         GREATER_THAN_OR_EQUAL = 'greater_than_or_equal'
+
+    def __init__(self, rhs: ComparableType):
+        super().__init__(rhs)
 
     def _accepts_lhs(self, lhs, function_type):
         if lhs is None:
@@ -122,10 +126,11 @@ class ComparableValue(RightHandSideValue, ABC):
         return not self._less_than(lhs)
 
 
-class HigherOrderValue(RightHandSideValue, ABC):
-    def _evaluate(self, lhs, rhs):
+class HigherOrderValue(Value, ABC):
+    @staticmethod
+    def _evaluate(lhs: ValueType, rhs: RightHandSideType) -> bool:
         #
-        # PLEASE NOTE: because of a cyclic dependency between mega.match.value and mega.match.function modules, we
+        # PLEASE NOTE: because of a cyclic dependency between mega.match.values and mega.match.function modules, we
         # must use meta-programming here. The alternative would be squashing everything in the same file!
         #
         exec('from mega.match.evaluation import evaluate; result = evaluate(lhs, rhs)')
@@ -133,31 +138,30 @@ class HigherOrderValue(RightHandSideValue, ABC):
 
 
 class RightHandSideTypeError(Exception):
-    def __init__(self, value_type: Type[RightHandSideValue], rhs: ValueType, context=None):
+    def __init__(self, rhs_type: Type[Value], rhs_value, context=None):
         message = '[{0}] Invalid right-hand side <{1}> ({2}).'.format(
-            value_type.__name__,
-            type(rhs).__name__,
-            rhs if is_scalar(rhs) else '[…]'
+            rhs_type.__name__,
+            type(rhs_value).__name__,
+            rhs_value if is_scalar(rhs_value) else '[…]'
         )
         if context:
             message = '{0} {1}'.format(message, context)
         super().__init__(message)
-
-        self.value_type = value_type
-        self.rhs = rhs
+        self.rhs_type = rhs_type
+        self.rhs_value = rhs_value
 
 
 class LeftHandSideTypeError(Exception):
-    def __init__(self, value: RightHandSideValue, function_type: str, lhs: ValueType, context=None):
-        rhs = value.rhs
+    def __init__(self, rhs: Value, function_type: str, lhs: ValueType, context=None):
+        rhs_value = rhs.rhs
         message = (
             '[{0}.{1}] Could not apply left-hand side <{2}> ({3}) to right-hand side <{4}> ({5}).'.format(
-                type(value).__name__,
+                type(rhs).__name__,
                 function_type,
                 type(lhs).__name__,
                 lhs if is_scalar(lhs) else '[…]',
-                type(rhs).__name__,
-                rhs if is_scalar(rhs) else '[…]'
+                type(rhs_value).__name__,
+                rhs_value if is_scalar(rhs_value) else '[…]'
             )
         )
         if context:
@@ -165,6 +169,6 @@ class LeftHandSideTypeError(Exception):
 
         super().__init__(message)
 
-        self.value = value
+        self.rhs = rhs
         self.function_type = function_type
         self.lhs = lhs

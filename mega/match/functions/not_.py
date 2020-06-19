@@ -1,14 +1,11 @@
-from typing import Union
-
-from mega.match.functions.base import RightHandSideFunction, HigherOrderFunction
+from mega.match.functions.higher_order import HigherOrderFunction
 from mega.match.functions.identity import identity
-from mega.match.values.types import ValueType
-from mega.match.values.base import RightHandSideValue
+from mega.match.types import ValueType, RightHandSideType
 
 
 class Not(HigherOrderFunction):
 
-    def __init__(self, rhs: Union[ValueType, RightHandSideValue, RightHandSideFunction]):
+    def __init__(self, rhs: RightHandSideType):
         super().__init__(identity(rhs))
 
     def evaluate(self, lhs: ValueType) -> bool:

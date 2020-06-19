@@ -1,12 +1,15 @@
 from collections import defaultdict
 
-from mega.match.values.base import RightHandSideValue, LeftHandSideTypeError, HigherOrderValue
-from mega.match.values.types import is_collection, is_scalar, ValueType
+from mega.match.types import is_collection, is_scalar, ValueType, CollectionRightHandSideValue, CollectionType
+from mega.match.values.value import Value, LeftHandSideTypeError, HigherOrderValue
 
 
-class Collection(HigherOrderValue):
-    class FunctionType(RightHandSideValue.FunctionType):
+class Collection(HigherOrderValue, CollectionRightHandSideValue):
+    class FunctionType(Value.FunctionType):
         CONTAINS = 'contains'
+
+    def __init__(self, rhs: CollectionType):
+        super().__init__(rhs)
 
     @classmethod
     def accepts_rhs(cls, rhs):

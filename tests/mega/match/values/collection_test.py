@@ -3,7 +3,7 @@ from parameterized import parameterized
 
 from mega.match.functions import eq, gt, not_, match, one_of, gte, and_, lt
 from mega.match.values import Collection
-from mega.match.values.base import RightHandSideTypeError, LeftHandSideTypeError
+from mega.match.values.value import RightHandSideTypeError, LeftHandSideTypeError
 
 
 def test_empty_collection_rhs_is_equal_to_none_lhs():

@@ -1,10 +1,6 @@
-from typing import Union
-
-from mega.match.functions.base import RightHandSideFunction
 from mega.match.functions.identity import identity
-from mega.match.values.base import RightHandSideValue
-from mega.match.values.types import ValueType
+from mega.match.types import ValueType, RightHandSideType
 
 
-def evaluate(lhs: ValueType, rhs: Union[ValueType, RightHandSideValue, RightHandSideFunction]) -> bool:
+def evaluate(lhs: ValueType, rhs: RightHandSideType) -> bool:
     return identity(rhs).evaluate(lhs)

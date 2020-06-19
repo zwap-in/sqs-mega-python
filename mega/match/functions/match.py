@@ -1,5 +1,5 @@
-from mega.match.functions.base import ValueFunction
-from mega.match.values.types import ValueType
+from mega.match.functions.value import ValueFunction
+from mega.match.types import ValueType
 
 
 class Match(ValueFunction):

@@ -7,7 +7,7 @@ from parameterized import parameterized
 
 from mega.match.functions import eq, Equal, match, one_of, gt, not_, and_, lt, gte
 from mega.match.values import String, Boolean, DateTime, Null, Collection, Mapping, Number
-from mega.match.values.base import LeftHandSideTypeError
+from mega.match.values.value import LeftHandSideTypeError
 
 
 @parameterized.expand([

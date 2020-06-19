@@ -1,8 +1,11 @@
-from mega.match.values.base import HigherOrderValue
-from mega.match.values.types import is_mapping, MappingType
+from mega.match.types import is_mapping, MappingType
+from mega.match.values.value import HigherOrderValue
 
 
 class Mapping(HigherOrderValue):
+
+    def __init__(self, rhs: MappingType):
+        super().__init__(rhs)
 
     @classmethod
     def accepts_rhs(cls, rhs):

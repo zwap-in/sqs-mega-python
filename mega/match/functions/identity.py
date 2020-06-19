@@ -1,12 +1,13 @@
-from typing import Union
-
-from mega.match.functions.base import RightHandSideFunction
 from mega.match.functions.eq import Equal
-from mega.match.values.base import RightHandSideValue
-from mega.match.values.types import ValueType
+from mega.match.functions.lambda_ import Lambda
+from mega.match.types import is_function, RightHandSideFunction, RightHandSideType
 
 
-def identity(rhs: Union[ValueType, RightHandSideValue, RightHandSideFunction]) -> RightHandSideFunction:
+def identity(rhs: RightHandSideType) -> RightHandSideFunction:
     if isinstance(rhs, RightHandSideFunction):
         return rhs
+
+    if is_function(rhs):
+        return Lambda(rhs)
+
     return Equal(rhs)

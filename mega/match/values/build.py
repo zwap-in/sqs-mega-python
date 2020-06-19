@@ -1,17 +1,15 @@
-from typing import Union
-
-from mega.match.values.collection import Collection
-from mega.match.values.mapping import Mapping
+from mega.match.types import RightHandSideValueType, RightHandSideValue, ComparableRightHandSideValue, \
+    CollectionRightHandSideValue
 from mega.match.values.boolean import Boolean
+from mega.match.values.collection import Collection
 from mega.match.values.datetime import DateTime
+from mega.match.values.mapping import Mapping
+from mega.match.values.null import Null
 from mega.match.values.number import Number
 from mega.match.values.string import String
-from mega.match.values.null import Null
-from mega.match.values.types import ValueType
-from mega.match.values.base import RightHandSideValue, ComparableValue
 
 
-def value(rhs: Union[ValueType, RightHandSideValue]) -> RightHandSideValue:
+def value(rhs: RightHandSideValueType) -> RightHandSideValue:
     if isinstance(rhs, RightHandSideValue):
         return rhs
 
@@ -33,15 +31,15 @@ def value(rhs: Union[ValueType, RightHandSideValue]) -> RightHandSideValue:
     raise TypeError('Right-hand side value type is not supported: {}'.format(type(rhs).__name__))
 
 
-def comparable_value(rhs) -> ComparableValue:
+def comparable_value(rhs) -> ComparableRightHandSideValue:
     comparable = value(rhs)
-    if not isinstance(comparable, ComparableValue):
+    if not isinstance(comparable, ComparableRightHandSideValue):
         raise TypeError
     return comparable
 
 
-def collection_value(rhs) -> Collection:
+def collection_value(rhs) -> CollectionRightHandSideValue:
     collection = value(rhs)
-    if not isinstance(collection, Collection):
+    if not isinstance(collection, CollectionRightHandSideValue):
         raise TypeError
     return collection

@@ -1,10 +1,14 @@
 import decimal
+from typing import Union
 
-from mega.match.values.base import ComparableValue
-from mega.match.values.types import is_number, is_string, NumberType
+from mega.match.types import is_number, is_string, NumberType
+from mega.match.values.value import ComparableValue
 
 
 class Number(ComparableValue):
+
+    def __init__(self, rhs: Union[NumberType, str]):
+        super().__init__(rhs)
 
     @classmethod
     def accepts_rhs(cls, value):

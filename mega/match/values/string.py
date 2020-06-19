@@ -1,10 +1,10 @@
 import re
 
-from mega.match.values.base import RightHandSideValue
-from mega.match.values.types import StringType, is_string
+from mega.match.types import StringType, is_string
+from mega.match.values.value import Value
 
 
-class String(RightHandSideValue):
+class String(Value):
 
     def __init__(self, rhs: StringType):
         super().__init__(rhs)

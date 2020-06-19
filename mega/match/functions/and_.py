@@ -1,5 +1,5 @@
-from mega.match.functions.base import CombinedFunction
-from mega.match.values.types import ValueType
+from mega.match.functions.higher_order import CombinedFunction
+from mega.match.types import ValueType
 
 
 class And(CombinedFunction):

@@ -1,8 +1,11 @@
-from mega.match.values.base import RightHandSideValue
-from mega.match.values.types import is_boolean, is_string
+from mega.match.types import is_boolean, is_string, BooleanType
+from mega.match.values.value import Value
 
 
-class Boolean(RightHandSideValue):
+class Boolean(Value):
+
+    def __init__(self, rhs: BooleanType):
+        super().__init__(rhs)
 
     @classmethod
     def accepts_rhs(cls, rhs):
