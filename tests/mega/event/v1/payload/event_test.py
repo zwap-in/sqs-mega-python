@@ -5,7 +5,7 @@ import freezegun
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import Event
+from sqs_mega_python_zwap.event.v1.payload import Event
 
 
 def build_event_kwargs():

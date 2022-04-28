@@ -6,9 +6,9 @@ import bson
 import dateutil.parser
 import pytest
 
-import mega.event
-from mega.aws.sqs.api import logger
-from mega.aws.sqs.publish.api import SqsPublisher
+import sqs_mega_python_zwap.event
+from sqs_mega_python_zwap.aws.sqs.api import logger
+from sqs_mega_python_zwap.aws.sqs.publish.api import SqsPublisher
 from tests.mega.aws.sqs import get_sqs_request_data, get_queue_url_from_request, get_sqs_response_data
 from tests.vcr import build_vcr
 
@@ -45,8 +45,8 @@ def build_generic_data():
 
 
 def build_mega_payload():
-    return mega.event.Payload(
-        event=mega.event.Event(
+    return sqs_mega_python_zwap.event.Payload(
+        event=sqs_mega_python_zwap.event.Event(
             name='user.updated',
             timestamp=dateutil.parser.parse('2020-05-04T15:53:27.823'),
             domain='user',
@@ -57,7 +57,7 @@ def build_mega_payload():
                 'username': 'john.doe'
             }
         ),
-        object=mega.event.ObjectData(
+        object=sqs_mega_python_zwap.event.ObjectData(
             current={
                 'id': 987650,
                 'full_name': 'John Doe',
@@ -183,7 +183,7 @@ def test_publish_mega_payload_as_plaintext_json(sqs):
     assert get_queue_url_from_request(request_data) == sqs.queue_url
 
     message_body = get_message_body_from_request(request_data)
-    assert mega.event.deserialize_payload(json.loads(message_body)) == mega_payload
+    assert sqs_mega_python_zwap.event.deserialize_payload(json.loads(message_body)) == mega_payload
     assert get_message_id_from_response(cassette) == message_id
 
 
@@ -217,7 +217,7 @@ def test_publish_mega_payload_as_binary_bson(sqs):
 
     message_body = get_message_body_from_request(request_data)
     blob = b64decode(message_body)
-    assert mega.event.deserialize_payload(bson.loads(blob)) == mega_payload
+    assert sqs_mega_python_zwap.event.deserialize_payload(bson.loads(blob)) == mega_payload
     assert get_message_id_from_response(cassette) == message_id
 
 

@@ -2,7 +2,7 @@ from datetime import date
 
 from parameterized import parameterized
 
-from mega.match.values.null import Null
+from sqs_mega_python_zwap.match.values.null import Null
 
 FALSEY_VALUES = [
     [[]],

@@ -1,7 +1,7 @@
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import ObjectData
+from sqs_mega_python_zwap.event.v1.payload import ObjectData
 
 
 def build_object_kwargs():

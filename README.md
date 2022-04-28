@@ -39,7 +39,7 @@ Other settings are needed for reading or writing to SQS queues (such as _queue U
 The `mega.aws.sqs.publish.SqsPublisher` class allows you to send messages to a SQS queue directly.
 
 ```python
-from mega.aws.sqs.publish import SqsPublisher
+from sqs_mega_python_zwap.aws.sqs.publish import SqsPublisher
 
 publisher = SqsPublisher(
     aws_access_key_id='AKIAIOSFODNN7EXAMPLE',
@@ -63,7 +63,7 @@ The `mega.aws.sns.publish.SnsPublisher` class allows you to publish notification
 You can configure SNS to forward messages to a SQS queue in raw format. The SNS notification can also be embedded inside a SQS message body. SQS MEGA is able to automatically detect both types of configurations, and message payloads are deserialized in a transparent manner.
 
 ```python
-from mega.aws.sns import SnsPublisher
+from sqs_mega_python_zwap.aws.sns import SnsPublisher
 
 publisher = SnsPublisher(
     aws_access_key_id='AKIAIOSFODNN7EXAMPLE',
@@ -127,8 +127,7 @@ The `mega.event.PayloadBuilder` class can help you build a MEGA event payload.
 You can publish a very simple event, like this one:
 
 ```python
-from mega.event import PayloadBuilder
-
+from sqs_mega_python_zwap.event import PayloadBuilder
 
 builder = PayloadBuilder()
 payload = (
@@ -154,8 +153,7 @@ publisher.publish(payload)
 You can also create events with complex data and rich payloads:
 
 ```python
-from mega.event import PayloadBuilder
-
+from sqs_mega_python_zwap.event import PayloadBuilder
 
 builder = PayloadBuilder()
 
@@ -337,9 +335,9 @@ In this example, we are interested in matching MEGA events that are like:
 First, we must declare a message subscriber. Since this is a MEGA event, not a generic JSON payload, we will use the `mega.aws.sqs.subscribe.EventSubscriber` class:
 
 ```python
-from mega.aws.sqs.subscribe import EventSubscriber, ProcessStatus
-from mega.event import Payload
-from mega.match.functions import one_of, gt, not_, empty
+from sqs_mega_python_zwap.aws.sqs.subscribe import EventSubscriber, ProcessStatus
+from sqs_mega_python_zwap.event import Payload
+from sqs_mega_python_zwap.match.functions import one_of, gt, not_, empty
 
 
 class ShoppingCartItemAdded(EventSubscriber):
@@ -381,9 +379,9 @@ class ShoppingCartCheckout(EventSubscriber):
 Then, we must instantiate the SQS listener process and register our subscribers:
 
 ```python
-from mega.aws.sqs.subscribe import SqsListener
-...
+from sqs_mega_python_zwap.aws.sqs.subscribe import SqsListener
 
+...
 
 listener = SqsListener(
     queue_url='https://sqs.us-east-2.amazonaws.com/424566909325/sqs-mega-test',
@@ -408,8 +406,8 @@ A message subscriber is just a set of rules to match and process messages. The b
 If you have generic JSON payloads sent to your SQS queues, you can subscribe to them by subclassing the `mega.aws.sqs.subscribe.DataSubscriber`:
 
 ```python
-from mega.aws.sqs.subscribe import DataSubscriber, ProcessStatus
-from mega.match.functions import match, one_of, gt, not_
+from sqs_mega_python_zwap.aws.sqs.subscribe import DataSubscriber, ProcessStatus
+from sqs_mega_python_zwap.match.functions import match, one_of, gt, not_
 
 from datetime import date
 
@@ -473,9 +471,9 @@ Just declare a subclass of `mega.aws.sqs.subscribe.EventSubscriber`, like in the
 Pattern matching rules are declared through class attributes. Here is another example:
 
 ```python
-import mega.event
-from mega.aws.sqs.subscribe import EventSubscriber, ProcessStatus
-from mega.match.functions import match, any_, not_, empty, gt, gte, one_of
+import sqs_mega_python_zwap.event
+from sqs_mega_python_zwap.aws.sqs.subscribe import EventSubscriber, ProcessStatus
+from sqs_mega_python_zwap.match.functions import match, any_, not_, empty, gt, gte, one_of
 
 from datetime import date
 
@@ -498,7 +496,7 @@ class UserLogin(EventSubscriber):
         created_at=gte(date(2020, 1, 1))
     )
 
-    def process(self, payload: mega.event.Payload) -> ProcessStatus:
+    def process(self, payload: sqs_mega_python_zwap.event.Payload) -> ProcessStatus:
         user_id = payload.event.subject
         ...
 
@@ -582,14 +580,14 @@ A subscriber must declare a `process` method, which is intended for consuming an
 Here's an example:
 
 ```python
-import mega.event
-from mega.aws.sqs.subscribe import EventSubscriber, ProcessStatus
+import sqs_mega_python_zwap.event
+from sqs_mega_python_zwap.aws.sqs.subscribe import EventSubscriber, ProcessStatus
 
 
 class ShoppingCartCheckout(EventSubscriber):
     ...
 
-    def process(payload: mega.event.Payload) -> ProcessStatus:
+    def process(payload: sqs_mega_python_zwap.event.Payload) -> ProcessStatus:
         lock_name = 'shopping_cart.checkout:' + str(payload.object.id)
 
         try:
@@ -638,64 +636,64 @@ subject = and_(
 
 #### Values
 
-##### String [[`mega.match.values.String`](./mega/match/values/string.py)]
+##### String [[`mega.match.values.String`](sqs_mega_python_zwap/match/values/string.py)]
 
 Native type: `str`
 
-##### Number [[`mega.match.values.Number`](./mega/match/values/number.py)]
+##### Number [[`mega.match.values.Number`](sqs_mega_python_zwap/match/values/number.py)]
 
 Native types: `int`, `float` or `decimal.Decimal`
 
-##### Date-time [[`mega.match.values.DateTime`](./mega/match/values/datetime.py)]
+##### Date-time [[`mega.match.values.DateTime`](sqs_mega_python_zwap/match/values/datetime.py)]
 
 Native types: `datetime.date` or `datetime.datetime`
 
-##### Boolean [[`mega.match.values.Boolean`](./mega/match/values/boolean.py)]
+##### Boolean [[`mega.match.values.Boolean`](sqs_mega_python_zwap/match/values/boolean.py)]
 
 Native type: `bool`
 
-##### Collection [[`mega.match.values.Collection`](./mega/match/values/collection.py)]
+##### Collection [[`mega.match.values.Collection`](sqs_mega_python_zwap/match/values/collection.py)]
 
 Native types: `list`, `tuple`, `set`
 
-##### Mapping [[`mega.match.values.Mapping`](./mega/match/values/mapping.py)]
+##### Mapping [[`mega.match.values.Mapping`](sqs_mega_python_zwap/match/values/mapping.py)]
 
 Native type: `dict`
 
-##### Function [[`mega.match.values.Function`](./mega/match/values/function.py)]
+##### Function [[`mega.match.values.Function`](sqs_mega_python_zwap/match/values/function.py)]
 
 Native type: `lambda`, a function that receives a LHS argument and returns `bool`
 
 #### Functions
 
-##### Equal [[`mega.match.functions.eq`](./mega/match/functions/eq.py)]
+##### Equal [[`mega.match.functions.eq`](sqs_mega_python_zwap/match/functions/eq.py)]
 
-##### Match [[`mega.match.functions.match`](./mega/match/functions/match.py)]
+##### Match [[`mega.match.functions.match`](sqs_mega_python_zwap/match/functions/match.py)]
 
-##### Greater-than [[`mega.match.functions.gt`](./mega/match/functions/gt.py)]
+##### Greater-than [[`mega.match.functions.gt`](sqs_mega_python_zwap/match/functions/gt.py)]
 
-##### Greater-than-or-equal [[`mega.match.functions.gte`](./mega/match/functions/gte.py)]
+##### Greater-than-or-equal [[`mega.match.functions.gte`](sqs_mega_python_zwap/match/functions/gte.py)]
 
-##### Less-than [[`mega.match.functions.lt`](./mega/match/functions/lt.py)]
+##### Less-than [[`mega.match.functions.lt`](sqs_mega_python_zwap/match/functions/lt.py)]
 
-##### Less-than-or-equal [[`mega.match.functions.lte`](./mega/match/functions/lte.py)]
+##### Less-than-or-equal [[`mega.match.functions.lte`](sqs_mega_python_zwap/match/functions/lte.py)]
 
-##### In [[`mega.match.functions.in_`](./mega/match/functions/in_.py)]
+##### In [[`mega.match.functions.in_`](sqs_mega_python_zwap/match/functions/in_.py)]
 
-##### One-of [[`mega.match.functions.one_of`](./mega/match/functions/in_.py)]
+##### One-of [[`mega.match.functions.one_of`](sqs_mega_python_zwap/match/functions/in_.py)]
 
-##### Not [[`mega.match.functions.not_`](./mega/match/functions/not_.py)]
+##### Not [[`mega.match.functions.not_`](sqs_mega_python_zwap/match/functions/not_.py)]
 
-##### And [[`mega.match.functions.and_`](./mega/match/functions/and_.py)]
+##### And [[`mega.match.functions.and_`](sqs_mega_python_zwap/match/functions/and_.py)]
 
-##### Or [[`mega.match.functions.or_`](./mega/match/functions/or_.py)]
+##### Or [[`mega.match.functions.or_`](sqs_mega_python_zwap/match/functions/or_.py)]
 
 ### SQS listener
 
 The `mega.aws.sqs.subscribe.SqsListener` listens to messages from a SQS queue and dispatches them to registered subscribers, in an endless long-polling loop.
 
 ```python
-from mega.aws.sqs.subscribe import SqsListener
+from sqs_mega_python_zwap.aws.sqs.subscribe import SqsListener
 
 listener = SqsListener(
     aws_access_key_id='AKIAIOSFODNN7EXAMPLE',

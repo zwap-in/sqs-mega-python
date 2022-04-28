@@ -1,8 +1,8 @@
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import ObjectData
-from mega.event.v1.schema import ObjectSchema, SchemaError
+from sqs_mega_python_zwap.event.v1.payload import ObjectData
+from sqs_mega_python_zwap.event.v1.schema import ObjectSchema, SchemaError
 
 
 def build_current_object_data():

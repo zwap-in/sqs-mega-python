@@ -6,12 +6,12 @@ import dateutil.parser
 import pytest
 from parameterized import parameterized
 
-import mega.event
-from mega.aws.message import MessageType
-from mega.aws.payload import PayloadType
-from mega.aws.sns.message import SnsNotification, SnsMessageType, SnsSubscriptionConfirmation, \
+import sqs_mega_python_zwap.event
+from sqs_mega_python_zwap.aws.message import MessageType
+from sqs_mega_python_zwap.aws.payload import PayloadType
+from sqs_mega_python_zwap.aws.sns.message import SnsNotification, SnsMessageType, SnsSubscriptionConfirmation, \
     SnsUnsubscribeConfirmation
-from mega.aws.sns.schema import deserialize_sns_message, SnsSchemaError, matches_sns_message
+from sqs_mega_python_zwap.aws.sns.schema import deserialize_sns_message, SnsSchemaError, matches_sns_message
 
 
 def build_sns_notification_data(**kwargs):
@@ -200,7 +200,7 @@ def assert_sns_notification_matches_data_attributes(message, data):
 def assert_has_mega_payload(message):
     assert message.payload_type == PayloadType.MEGA
     assert message.payload is not None
-    assert isinstance(message.payload, mega.event.Payload)
+    assert isinstance(message.payload, sqs_mega_python_zwap.event.Payload)
 
 
 def assert_mega_payload_matches_data(mega_payload, data):

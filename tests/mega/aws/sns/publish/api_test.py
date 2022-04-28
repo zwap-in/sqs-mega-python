@@ -8,8 +8,8 @@ import bson
 import dateutil.parser
 import pytest
 
-import mega.event
-from mega.aws.sns.publish.api import SnsPublisher, logger
+import sqs_mega_python_zwap.event
+from sqs_mega_python_zwap.aws.sns.publish.api import SnsPublisher, logger
 from tests.vcr import build_vcr
 
 vcr = build_vcr(
@@ -38,8 +38,8 @@ def build_generic_data():
 
 
 def build_mega_payload():
-    return mega.event.Payload(
-        event=mega.event.Event(
+    return sqs_mega_python_zwap.event.Payload(
+        event=sqs_mega_python_zwap.event.Event(
             name='user.updated',
             timestamp=dateutil.parser.parse('2020-05-04T15:53:27.823'),
             domain='user',
@@ -50,7 +50,7 @@ def build_mega_payload():
                 'username': 'john.doe'
             }
         ),
-        object=mega.event.ObjectData(
+        object=sqs_mega_python_zwap.event.ObjectData(
             current={
                 'id': 987650,
                 'full_name': 'John Doe',
@@ -204,7 +204,7 @@ def test_publish_mega_payload_as_plaintext_json(sns):
     assert get_topic_arn(request_data) == sns.topic_arn
 
     message = get_message(request_data)
-    assert mega.event.deserialize_payload(json.loads(message)) == mega_payload
+    assert sqs_mega_python_zwap.event.deserialize_payload(json.loads(message)) == mega_payload
     assert_matches_message_id(cassette, message_id)
 
 
@@ -238,7 +238,7 @@ def test_publish_mega_payload_as_binary_bson(sns):
 
     message = get_message(request_data)
     blob = b64decode(message)
-    assert mega.event.deserialize_payload(bson.loads(blob)) == mega_payload
+    assert sqs_mega_python_zwap.event.deserialize_payload(bson.loads(blob)) == mega_payload
     assert_matches_message_id(cassette, message_id)
 
 

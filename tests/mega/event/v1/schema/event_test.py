@@ -4,8 +4,8 @@ import dateutil.parser
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import Event
-from mega.event.v1.schema import EventSchema, SchemaError
+from sqs_mega_python_zwap.event.v1.payload import Event
+from sqs_mega_python_zwap.event.v1.schema import EventSchema, SchemaError
 
 
 def build_event_attributes():

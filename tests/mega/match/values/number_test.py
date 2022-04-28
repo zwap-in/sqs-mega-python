@@ -4,8 +4,8 @@ from decimal import Decimal
 import pytest
 from parameterized import parameterized
 
-from mega.match.values.number import Number
-from mega.match.values.value import RightHandSideTypeError, LeftHandSideTypeError
+from sqs_mega_python_zwap.match.values.number import Number
+from sqs_mega_python_zwap.match.values.value import RightHandSideTypeError, LeftHandSideTypeError
 
 
 @parameterized.expand([

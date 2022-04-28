@@ -5,11 +5,11 @@ import bson
 import pytest
 from parameterized import parameterized
 
-from mega.aws.message import MessageType
-from mega.aws.payload import PayloadType
-from mega.aws.sns.message import SnsNotification, SnsMessageType
-from mega.aws.sqs.schema import deserialize_sqs_message, SqsSchemaError
-from mega.event import deserialize_payload
+from sqs_mega_python_zwap.aws.message import MessageType
+from sqs_mega_python_zwap.aws.payload import PayloadType
+from sqs_mega_python_zwap.aws.sns.message import SnsNotification, SnsMessageType
+from sqs_mega_python_zwap.aws.sqs.schema import deserialize_sqs_message, SqsSchemaError
+from sqs_mega_python_zwap.event import deserialize_payload
 from tests.mega.aws.sns.schema_test import build_sns_notification_data
 
 

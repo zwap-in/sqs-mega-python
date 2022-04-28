@@ -3,8 +3,8 @@ import freezegun
 import pytest
 from parameterized import parameterized
 
-from mega.event.v1.payload import ObjectData, Event, Payload
-from mega.event.v1.schema import deserialize_payload, SchemaError, matches_payload, serialize_payload
+from sqs_mega_python_zwap.event.v1.payload import ObjectData, Event, Payload
+from sqs_mega_python_zwap.event.v1.schema import deserialize_payload, SchemaError, matches_payload, serialize_payload
 from tests.mega.event.v1.schema.event_test import build_event_data, build_event_attributes
 from tests.mega.event.v1.schema.object_test import build_object_data, build_previous_object_data, \
     build_current_object_data

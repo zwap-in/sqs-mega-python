@@ -4,7 +4,7 @@ from base64 import b64encode, b64decode
 
 import bson
 
-from mega.aws.encoding import try_decode_base64, try_decode_bson, try_decode_json, decode_value, encode_blob, \
+from sqs_mega_python_zwap.aws.encoding import try_decode_base64, try_decode_bson, try_decode_json, decode_value, encode_blob, \
     encode_json, encode_bson, encode_data
 
 

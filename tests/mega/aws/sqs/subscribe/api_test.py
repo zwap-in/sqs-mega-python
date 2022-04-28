@@ -5,14 +5,14 @@ from base64 import b64decode
 import bson
 import pytest
 
-from mega.aws.message import MessageType
-from mega.aws.payload import PayloadType
-from mega.aws.sns.message import SnsNotification, SnsMessageType
-from mega.aws.sqs.api import logger
-from mega.aws.sqs.message import SqsMessage
-from mega.aws.sqs.schema import deserialize_sqs_message
-from mega.aws.sqs.subscribe.api import SqsReceiver
-from mega.event import deserialize_payload
+from sqs_mega_python_zwap.aws.message import MessageType
+from sqs_mega_python_zwap.aws.payload import PayloadType
+from sqs_mega_python_zwap.aws.sns.message import SnsNotification, SnsMessageType
+from sqs_mega_python_zwap.aws.sqs.api import logger
+from sqs_mega_python_zwap.aws.sqs.message import SqsMessage
+from sqs_mega_python_zwap.aws.sqs.schema import deserialize_sqs_message
+from sqs_mega_python_zwap.aws.sqs.subscribe.api import SqsReceiver
+from sqs_mega_python_zwap.event import deserialize_payload
 from tests.mega.aws.sqs import get_sqs_request_data, get_queue_url_from_request, get_request_attribute, \
     get_sqs_response_data
 from tests.vcr import build_vcr

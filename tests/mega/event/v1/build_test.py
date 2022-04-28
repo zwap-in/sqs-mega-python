@@ -4,8 +4,8 @@ import dateutil.parser
 import pytest
 from freezegun import freeze_time
 
-from mega.event.v1.build import PayloadBuilder
-from mega.event.v1.payload import Payload, Event, ObjectData
+from sqs_mega_python_zwap.event.v1.build import PayloadBuilder
+from sqs_mega_python_zwap.event.v1.payload import Payload, Event, ObjectData
 
 
 def test_build_minimal_mega_payload():

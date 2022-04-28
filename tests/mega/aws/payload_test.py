@@ -5,9 +5,9 @@ import bson
 import dateutil.parser
 import pytest
 
-import mega.event
-from mega.aws.payload import deserialize_payload, PayloadType, serialize_payload
-from mega.event.v1.schema import SchemaError
+import sqs_mega_python_zwap.event
+from sqs_mega_python_zwap.aws.payload import deserialize_payload, PayloadType, serialize_payload
+from sqs_mega_python_zwap.event.v1.schema import SchemaError
 
 
 def test_deserialize_plaintext_payload():
@@ -153,13 +153,13 @@ def test_serialize_data_payload_as_bson_encoded_as_base64_string():
 
 def test_serialize_mega_payload_as_json_string():
     timestamp = '2020-05-20T20:07:22.589063'
-    payload = mega.event.Payload(
-        event=mega.event.Event(
+    payload = sqs_mega_python_zwap.event.Payload(
+        event=sqs_mega_python_zwap.event.Event(
             name='foo.bar',
             timestamp=dateutil.parser.parse(timestamp),
             subject='991'
         ),
-        object=mega.event.ObjectData(
+        object=sqs_mega_python_zwap.event.ObjectData(
             current={'foo': 'bar'}
         )
     )
@@ -186,13 +186,13 @@ def test_serialize_mega_payload_as_json_string():
 
 def test_serialize_mega_payload_as_bson_encoded_as_base64_string():
     timestamp = '2020-05-20T20:07:22.589063'
-    payload = mega.event.Payload(
-        event=mega.event.Event(
+    payload = sqs_mega_python_zwap.event.Payload(
+        event=sqs_mega_python_zwap.event.Event(
             name='foo.bar',
             timestamp=dateutil.parser.parse(timestamp),
             subject='991'
         ),
-        object=mega.event.ObjectData(
+        object=sqs_mega_python_zwap.event.ObjectData(
             current={'foo': 'bar'}
         )
     )
@@ -219,12 +219,12 @@ def test_serialize_mega_payload_as_bson_encoded_as_base64_string():
 
 
 def test_fail_to_serialize_invalid_mega_payload():
-    payload = mega.event.Payload(
-        event=mega.event.Event(
+    payload = sqs_mega_python_zwap.event.Payload(
+        event=sqs_mega_python_zwap.event.Event(
             name='foo.bar',
             subject='991'
         ),
-        object=mega.event.ObjectData(
+        object=sqs_mega_python_zwap.event.ObjectData(
             current={'foo': 'bar'}
         )
     )

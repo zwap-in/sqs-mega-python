@@ -1,8 +1,8 @@
 import pytest
 from parameterized import parameterized
 
-from mega.match.values.string import String
-from mega.match.values.value import RightHandSideTypeError, LeftHandSideTypeError
+from sqs_mega_python_zwap.match.values.string import String
+from sqs_mega_python_zwap.match.values.value import RightHandSideTypeError, LeftHandSideTypeError
 
 
 @parameterized.expand([
