@@ -15,8 +15,8 @@ class SqsReceiver(BaseSqsApi):
             region_name: Optional[str] = None,
             queue_url: Optional[str] = None,
             max_number_of_messages: int = 1,
-            wait_time_seconds: int = 20,
-            visibility_timeout: int = 30
+            wait_time_seconds: int = 1,
+            visibility_timeout: int = 1
     ):
         super().__init__(
             aws_access_key_id,
@@ -73,7 +73,10 @@ class SqsReceiver(BaseSqsApi):
             QueueUrl=queue_url,
             MaxNumberOfMessages=max_number_of_messages,
             WaitTimeSeconds=wait_time_seconds,
-            VisibilityTimeout=visibility_timeout
+            VisibilityTimeout=visibility_timeout,
+            MessageAttributeNames=[
+                'All'
+            ]
         )
         return response
 
@@ -81,7 +84,8 @@ class SqsReceiver(BaseSqsApi):
         messages = []
         for data in response['Messages']:
             self.__log_message_data(queue_url, data)
-            messages.append(deserialize_sqs_message(data))
+            sqs_message = deserialize_sqs_message(data)
+            messages.append(sqs_message)
         return messages
 
     def __log_message_data(self, queue_url, data):
