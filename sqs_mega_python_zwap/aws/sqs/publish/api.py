@@ -24,6 +24,8 @@ class SqsPublisher(BaseSqsApi, Publisher):
                             queue_url: Optional[str] = None,
                             message_attributes: Optional[dict] = None,
                             **_kwargs) -> str:
+        if message_attributes is None:
+            message_attributes = {}
         queue_url = self._get_queue_url(queue_url)
 
         response = self._client.send_message(
