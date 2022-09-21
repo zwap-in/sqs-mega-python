@@ -54,7 +54,7 @@ class SqsReceiver(BaseSqsApi):
         wait_time_seconds = self._wait_time_seconds if wait_time_seconds is None else wait_time_seconds
         visibility_timeout = self._visibility_timeout if visibility_timeout is None else visibility_timeout
 
-        response = self.__receive_raw_messages(queue_url, max_number_of_messages, wait_time_seconds, visibility_timeout)
+        response = self.receive_raw_messages(queue_url, max_number_of_messages, wait_time_seconds, visibility_timeout)
 
         if 'Messages' not in response:
             self._log(DEBUG, queue_url, 'No messages received')
@@ -62,7 +62,7 @@ class SqsReceiver(BaseSqsApi):
 
         return self.__extract_messages(queue_url, response)
 
-    def __receive_raw_messages(self, queue_url, max_number_of_messages, wait_time_seconds, visibility_timeout):
+    def receive_raw_messages(self, queue_url, max_number_of_messages, wait_time_seconds, visibility_timeout):
         self._log(
             DEBUG, queue_url,
             'Querying messages. MaxNumberOfMessages={}; WaitTimeSeconds={}; VisibilityTimeout={}'.format(
