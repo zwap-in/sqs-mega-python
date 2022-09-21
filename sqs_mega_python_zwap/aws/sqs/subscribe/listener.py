@@ -30,7 +30,6 @@ class SqsListener:
                 "event_data": event_data
             }
             self.__topic_callbacks[topic](data)
-            self.__listener.delete_message(message)
 
     def listener(self) -> None:
         """
@@ -41,3 +40,4 @@ class SqsListener:
             messages = self.__listener.receive_messages()
             for message in messages:
                 self.handle_message(message)
+                self.__listener.delete_message(message)
