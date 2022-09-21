@@ -2,6 +2,7 @@
 from typing import Dict
 
 # IMPORTING LOCAL PACKAGES
+from sqs_mega_python_zwap.aws.sqs.message import SqsMessage
 from sqs_mega_python_zwap.aws.sqs.subscribe.api import SqsReceiver
 
 
@@ -18,6 +19,19 @@ class SqsListener:
         self.__listener = listener
         self.__topic_callbacks = topic_callbacks
 
+    def handle_message(self, message: SqsMessage):
+
+        publisher = message.payload.event.publisher
+        topic = message.payload.event.subject
+        event_data = message.payload.event.attributes
+        if topic in self.__topic_callbacks.keys():
+            data = {
+                "publisher": publisher,
+                "event_data": event_data
+            }
+            self.__topic_callbacks[topic](data)
+            self.__listener.delete_message(message)
+
     def listener(self) -> None:
         """
         Description: Listener function to get the messages and handle with the callback
@@ -26,13 +40,4 @@ class SqsListener:
         while True:
             messages = self.__listener.receive_messages()
             for message in messages:
-                publisher = message.payload.event.publisher
-                topic = message.payload.event.subject
-                event_data = message.payload.event.attributes
-                if topic in self.__topic_callbacks.keys():
-                    data = {
-                        "publisher": publisher,
-                        "event_data": event_data
-                    }
-                    self.__topic_callbacks[topic](data)
-                    self.__listener.delete_message(message)
+                self.handle_message(message)

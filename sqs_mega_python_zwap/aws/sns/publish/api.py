@@ -42,7 +42,19 @@ class SnsPublisher(Publisher):
 
         response = self._client.publish(
             TopicArn=topic_arn,
-            Message=message
+            Message=message,
+            MessageGroupId="",
+            MessageDeduplicationId="",
+            MessageAttributes={
+                "taal25": {
+                    "DataType": "String",
+                    "StringValue": "Orchestration.Services.Model.Pollution.PollutionMessage"
+                },
+                "website": {
+                    "DataType": "String",
+                    "StringValue": "medium"
+                }
+            }
         )
 
         message_id = response.get('MessageId')
