@@ -39,20 +39,14 @@ class SnsPublisher(Publisher):
 
     def publish_raw_message(self, message: str, topic_arn: Optional[str] = None, **_kwargs) -> str:
         topic_arn = self._get_topic_arn(topic_arn)
-
+        event_name = _kwargs.get("event_name", None)
         response = self._client.publish(
             TopicArn=topic_arn,
             Message=message,
-            MessageGroupId="",
-            MessageDeduplicationId="",
             MessageAttributes={
-                "taal25": {
+                "event_name": {
                     "DataType": "String",
-                    "StringValue": "Orchestration.Services.Model.Pollution.PollutionMessage"
-                },
-                "website": {
-                    "DataType": "String",
-                    "StringValue": "medium"
+                    "StringValue": event_name
                 }
             }
         )
