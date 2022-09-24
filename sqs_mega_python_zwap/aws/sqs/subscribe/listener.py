@@ -13,23 +13,27 @@ class SqsListener:
 
     __listener: SqsReceiver
     __topic_callbacks: Dict[str, callable]
+    __all_topics: bool
 
-    def __init__(self, listener: SqsReceiver, topic_callbacks: Dict[str, callable]):
+    def __init__(self, listener: SqsReceiver, topic_callbacks: Dict[str, callable], all_topics: bool = False):
 
         self.__listener = listener
         self.__topic_callbacks = topic_callbacks
+        self.__all_topics = all_topics
 
     def handle_message(self, message: SqsMessage):
 
         topic = message.payload.event.subject
         event_data = message.payload.event.attributes
+        data = {
+            "event_data": event_data,
+            "publisher": message.payload.event.publisher,
+            "topic": message.payload.event.subject
+        }
         if topic in self.__topic_callbacks.keys():
-            data = {
-                "event_data": event_data,
-                "publisher": message.payload.event.publisher,
-                "topic": message.payload.event.subject
-            }
             self.__topic_callbacks[topic](data)
+        elif self.__all_topics:
+            self.__topic_callbacks["*"](data)
 
     def listener(self) -> None:
         """
