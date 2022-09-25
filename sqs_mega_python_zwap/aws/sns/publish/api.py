@@ -1,4 +1,6 @@
 import logging
+import uuid
+
 from typing import Optional
 
 import boto3
@@ -50,7 +52,9 @@ class SnsPublisher(Publisher):
                     "DataType": "String",
                     "StringValue": event_name
                 }
-            }
+            },
+            MessageGroupId=str(uuid.uuid4()),
+            MessageDeduplicationId=str(uuid.uuid4())
         )
 
         message_id = response.get('MessageId')
