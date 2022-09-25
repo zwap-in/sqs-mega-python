@@ -32,10 +32,12 @@ class SnsPublisher(Publisher):
 
     def publish(
             self, payload: MessagePayload,
-            binary_encoding=False, topic_arn: Optional[str] = None, **_kwargs
+            binary_encoding=False, topic_arn: Optional[str] = None
     ) -> str:
         serialized = serialize_payload(payload, binary_encoding=binary_encoding)
-        return self.publish_raw_message(serialized, topic_arn=topic_arn, **_kwargs)
+        return self.publish_raw_message(serialized, topic_arn=topic_arn, **{
+            "event_name": payload.event.name
+        })
 
     def publish_raw_message(self, message: str, topic_arn: Optional[str] = None, **_kwargs) -> str:
         topic_arn = self._get_topic_arn(topic_arn)

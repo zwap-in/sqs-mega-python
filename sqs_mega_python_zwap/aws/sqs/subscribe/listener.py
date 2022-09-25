@@ -23,15 +23,16 @@ class SqsListener:
 
     def handle_message(self, message: SqsMessage):
 
-        topic = message.payload.event.subject
+        event_name = message.payload.event.name
         event_data = message.payload.event.attributes
+        publisher = message.payload.event.publisher
         data = {
             "event_data": event_data,
-            "publisher": message.payload.event.publisher,
-            "topic": message.payload.event.subject
+            "publisher": publisher,
+            "event_name": event_name
         }
-        if topic in self.__topic_callbacks.keys():
-            self.__topic_callbacks[topic](data)
+        if event_name in self.__topic_callbacks.keys():
+            self.__topic_callbacks[event_name](data)
         elif self.__all_topics:
             self.__topic_callbacks["*"](data)
 
