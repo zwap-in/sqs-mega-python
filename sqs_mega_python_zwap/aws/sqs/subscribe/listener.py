@@ -45,4 +45,3 @@ class SqsListener:
             messages = self.__listener.receive_messages()
             for message in messages:
                 self.handle_message(message)
-                self.__listener.delete_message(message)
