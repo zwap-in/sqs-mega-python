@@ -1,4 +1,6 @@
 # IMPORTING STANDARD PACKAGES
+import re
+
 from typing import Dict
 
 # IMPORTING LOCAL PACKAGES
@@ -31,10 +33,14 @@ class SqsListener:
             "publisher": publisher,
             "event_name": event_name
         }
-        if event_name in self.__topic_callbacks.keys():
-            self.__topic_callbacks[event_name](data)
-        elif self.__all_topics:
+        if self.__all_topics:
             self.__topic_callbacks["*"](data)
+        else:
+            keys = self.__topic_callbacks.keys()
+            for key in keys:
+                check = re.search(key, event_name) is not None
+                if check:
+                    self.__topic_callbacks[key](data)
 
     def listener(self) -> None:
         """
