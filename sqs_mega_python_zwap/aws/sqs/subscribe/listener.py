@@ -28,12 +28,12 @@ class SqsListener:
         self.__topic_callbacks = topic_callbacks
         self.__all_topics = all_topics
 
-    def handle_message(self, message: Union[SqsMessage, dict], **kwargs):
+    def handle_message(self, message: Union[SqsMessage, dict]):
 
         if self.__is_gcloud:
-            event_name = kwargs.get("event_name", None)
-            event_data = message
-            publisher = kwargs.get("publisher", None)
+            event_name = message.get("event_name", None)
+            event_data = message.get("event_data", {})
+            publisher = message.get("publisher", None)
         else:
             event_name = message.payload.event.name
             event_data = message.payload.event.attributes
