@@ -1,7 +1,7 @@
 # IMPORTING STANDARD PACKAGES
 import re
 
-from typing import Dict, Union
+from typing import Dict, Union, Optional
 
 # IMPORTING LOCAL PACKAGES
 from sqs_mega_python_zwap.aws.sqs.message import SqsMessage
@@ -13,17 +13,20 @@ class SqsListener:
     Description: Custom listener function to handle the data from the sqs queue
     """
 
-    __listener: SqsReceiver
+    __listener: Optional[SqsReceiver]
     __topic_callbacks: Dict[str, callable]
     __all_topics: bool
     __is_gcloud: bool
 
-    def __init__(self, listener: SqsReceiver, topic_callbacks: Dict[str, callable], all_topics: bool = False, is_gcloud: bool = False):
+    def __init__(self, topic_callbacks: Dict[str, callable], all_topics: bool = False, is_gcloud: bool = False,
+                 listener: SqsReceiver = None):
 
+        self.__is_gcloud = is_gcloud
+        if self.__is_gcloud is False:
+            assert listener is not None
         self.__listener = listener
         self.__topic_callbacks = topic_callbacks
         self.__all_topics = all_topics
-        self.__is_gcloud = is_gcloud
 
     def handle_message(self, message: Union[SqsMessage, dict], **kwargs):
 
