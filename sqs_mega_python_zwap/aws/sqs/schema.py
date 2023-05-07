@@ -50,4 +50,7 @@ class SqsMessageSchema(Schema):
 
 
 def deserialize_sqs_message(data: dict) -> SqsMessage:
-    return SqsMessageSchema().load(data)
+    from django.conf import settings
+
+    is_gcloud = getattr(settings, "IS_GCLOUD", False)
+    return SqsMessageSchema().load(data) if is_gcloud is False else data
