@@ -46,11 +46,12 @@ class SqsListener:
         if self.__all_topics:
             self.__topic_callbacks["*"](data)
         else:
-            keys = self.__topic_callbacks.keys()
-            for key in keys:
-                check = re.search(key, event_name) is not None
-                if check:
-                    self.__topic_callbacks[key](data)
+            if event_name is not None:
+                keys = self.__topic_callbacks.keys()
+                for key in keys:
+                    check = re.search(key, event_name) is not None
+                    if check:
+                        self.__topic_callbacks[key](data)
 
     def listener(self) -> None:
         """
