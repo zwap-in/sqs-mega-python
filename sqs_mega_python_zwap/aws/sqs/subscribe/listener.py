@@ -2,6 +2,7 @@
 import re
 
 from typing import Dict, Union, Optional
+from django.conf import settings
 
 # IMPORTING LOCAL PACKAGES
 from sqs_mega_python_zwap.aws.sqs.message import SqsMessage
@@ -16,21 +17,26 @@ class SqsListener:
     __listener: Optional[SqsReceiver]
     __topic_callbacks: Dict[str, callable]
     __all_topics: bool
-    __is_gcloud: bool
 
-    def __init__(self, topic_callbacks: Dict[str, callable], all_topics: bool = False, is_gcloud: bool = False,
+    def __init__(self, topic_callbacks: Dict[str, callable], all_topics: bool = False,
                  listener: SqsReceiver = None):
 
-        self.__is_gcloud = is_gcloud
-        if self.__is_gcloud is False:
-            assert listener is not None
         self.__listener = listener
         self.__topic_callbacks = topic_callbacks
         self.__all_topics = all_topics
 
+    @property
+    def is_gcloud(self) -> bool:
+
+        try:
+            return settings.IS_GCLOUD
+        except Exception as e:
+            pass
+        return False
+
     def handle_message(self, message: Union[SqsMessage, dict]):
 
-        if self.__is_gcloud:
+        if self.is_gcloud:
             event_name = message.get("event_name", None)
             event_data = message.get("event_data", {})
             publisher = message.get("publisher", None)
@@ -58,7 +64,7 @@ class SqsListener:
         Description: Listener function to get the messages and handle with the callback
         """
 
-        if self.__is_gcloud is False:
+        if self.is_gcloud is False:
             while True:
                 messages = self.__listener.receive_messages()
                 for message in messages:
